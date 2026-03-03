@@ -4,38 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VPN Tatar — Надежный доступ в сеть</title>
-    <!-- Современная темная тема -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net">
     <style>
         body { max-width: 800px; margin: 0 auto; padding: 20px; background-color: #0d1117; color: #c9d1d9; }
-        h1, h2, h3 { color: #00ff88; } /* Зеленый акцент */
+        h1, h2, h3 { color: #00ff88; }
         .pricing { display: flex; gap: 20px; justify-content: space-around; margin-top: 30px; flex-wrap: wrap; }
-        .plan { 
-            border: 2px solid #30363d; 
-            padding: 25px; 
-            border-radius: 12px; 
-            text-align: center; 
-            width: 40%; 
-            background: #161b22;
-            transition: transform 0.2s;
-        }
-        .plan:hover { transform: translateY(-5px); border-color: #00ff88; }
-        .plan h3 { margin-top: 0; }
+        .plan { border: 2px solid #30363d; padding: 25px; border-radius: 12px; text-align: center; width: 40%; background: #161b22; }
         .price { font-size: 1.5em; font-weight: bold; margin: 10px 0; color: #ffffff; }
         .discount { color: #00ff88; font-weight: bold; }
-        footer { margin-top: 60px; font-size: 0.85em; text-align: center; border-top: 1px solid #30363d; padding-top: 25px; }
-        .cta-button { 
-            display: inline-block;
-            background-color: #00ff88; 
-            color: #0d1117 !important; 
-            padding: 12px 24px; 
-            text-decoration: none; 
-            border-radius: 6px; 
-            font-weight: bold;
-            margin-top: 15px;
-        }
-        .features { margin: 20px 0; padding-left: 20px; }
-        .features li { margin-bottom: 8px; }
+        .cta-button { display: inline-block; background-color: #00ff88; color: #0d1117 !important; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 15px; }
+        .payment-methods { margin-top: 40px; text-align: center; background: #161b22; padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+        .payment-icons { display: flex; justify-content: center; gap: 25px; filter: brightness(1.5); opacity: 0.9; margin-top: 15px; }
+        .payment-icons img { height: 25px; }
+        footer { margin-top: 40px; font-size: 0.85em; text-align: center; border-top: 1px solid #30363d; padding-top: 25px; }
     </style>
 </head>
 <body>
@@ -48,7 +29,7 @@
     <main>
         <section>
             <h2>Преимущества сервиса:</h2>
-            <ul class="features">
+            <ul>
                 <li>🚀 Стабильная скорость до 1 Гбит/с</li>
                 <li>🌍 Локации в Европе и Азии</li>
                 <li>📱 Работает на iOS, Android, Windows и Linux</li>
@@ -73,18 +54,27 @@
                 </div>
             </div>
         </section>
+
+        <section class="payment-methods">
+            <p>Доступные способы оплаты:</p>
+            <div class="payment-icons">
+                <img src="https://upload.wikimedia.org" alt="МИР">
+                <img src="https://upload.wikimedia.org" alt="Visa">
+                <img src="https://upload.wikimedia.org" alt="Mastercard">
+                <img src="https://upload.wikimedia.org" alt="СБП">
+            </div>
+            <p style="font-size: 0.8em; margin-top: 10px; color: #8b949e;">Безопасные платежи через Lava Business</p>
+        </section>
     </main>
 
     <footer>
-        <p>Принимаем к оплате: 💳 Карты РФ (МИР, Visa, MC), СБП, LAVA</p>
         <p>
             <a href="terms.html">Условия использования</a> | 
             <a href="privacy.html">Конфиденциальность</a>
         </p>
-        <p>Техническая поддержка: <b>@vash_telegram_тут</b></p>
+        <p>Техническая поддержка: <b>@RKGZFS</b></p>
         <p>&copy; 2026 VPN Tatar — Проект команды InquisitiveIT</p>
     </footer>
 
 </body>
 </html>
-
