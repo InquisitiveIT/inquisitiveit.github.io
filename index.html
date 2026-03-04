@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VPN Tatar — Надежный доступ в сеть</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+    <title>Inquisitive IT — Безопасные сетевые решения</title>
     <style>
-        body { max-width: 800px; margin: 0 auto; padding: 20px; background-color: #0d1117; color: #c9d1d9; }
+        body { max-width: 800px; margin: 0 auto; padding: 20px; background-color: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
         h1, h2, h3 { color: #00ff88; }
         
-        /* Стиль для логотипа в заголовке */
         .header-logo { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
         .header-logo img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
         
         .pricing { display: flex; gap: 20px; justify-content: space-around; margin-top: 30px; flex-wrap: wrap; }
-        .plan { border: 2px solid #30363d; padding: 25px; border-radius: 12px; text-align: center; width: 40%; background: #161b22; }
+        .plan { border: 2px solid #30363d; padding: 25px; border-radius: 12px; text-align: center; width: 40%; background: #161b22; transition: transform 0.2s; }
+        .plan:hover { transform: translateY(-5px); border-color: #00ff88; }
         .price { font-size: 1.5em; font-weight: bold; margin: 10px 0; color: #ffffff; }
         .discount { color: #00ff88; font-weight: bold; }
         .cta-button { display: inline-block; background-color: #00ff88; color: #0d1117 !important; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 15px; }
+        
         .payment-methods { margin-top: 40px; text-align: center; background: #161b22; padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
-        .payment-icons { display: flex; justify-content: center; gap: 25px; filter: brightness(1.5); opacity: 0.9; margin-top: 15px; }
+        .payment-icons { display: flex; justify-content: center; gap: 25px; filter: grayscale(1) brightness(1.5); opacity: 0.7; margin-top: 15px; }
         .payment-icons img { height: 25px; }
-        footer { margin-top: 40px; font-size: 0.85em; text-align: center; border-top: 1px solid #30363d; padding-top: 25px; }
+        
+        footer { margin-top: 40px; font-size: 0.85em; text-align: center; border-top: 1px solid #30363d; padding-top: 25px; line-height: 1.6; }
+        footer a { color: #58a6ff; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -29,19 +32,19 @@
     <header>
         <div class="header-logo">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy7PN1C3UuHDpItAKldlr9QcCAR8CVp0gLZA&s" alt="Logo">
-            <h1>VPN Tatar</h1>
+            <h1>Inquisitive IT</h1>
         </div>
-        <p>Ваш персональный доступ к безопасному интернету. Стабильное соединение, высокая скорость и простая настройка на любом устройстве.</p>
+        <p>Ваш персональный шлюз для безопасной работы в сети. Стабильное зашифрованное соединение, высокая скорость и защита ваших данных при использовании публичных точек доступа.</p>
     </header>
 
     <main>
         <section>
             <h2>Преимущества сервиса:</h2>
             <ul>
-                <li>🚀 Стабильная скорость до 1 Гбит/с</li>
-                <li>🌍 Локации в Европе и Азии</li>
-                <li>📱 Работает на iOS, Android, Windows и Linux</li>
-                <li>🔑 Протоколы нового поколения</li>
+                <li>🚀 Высокая пропускная способность до 1 Гбит/с</li>
+                <li>🌍 Стабильные узлы в ключевых локациях Европы и Азии</li>
+                <li>📱 Поддержка всех современных ОС: iOS, Android, Windows, Linux</li>
+                <li>🔑 Протоколы шифрования последнего поколения (VLESS/Shadowsocks)</li>
             </ul>
         </section>
 
@@ -49,16 +52,16 @@
             <h2>Тарифные планы:</h2>
             <div class="pricing">
                 <div class="plan">
-                    <h3>1 Месяц</h3>
+                    <h3>Подписка 1 Месяц</h3>
                     <div class="price">149 ₽</div>
-                    <p>Базовый доступ<br>Без ограничений</p>
-                    <a href="https://t.me" class="cta-button">Подключить</a>
+                    <p>Доступ к персональному узлу<br>Без лимитов по трафику</p>
+                    <a href="https://t.me/ваша_ссылка" class="cta-button">Подключить</a>
                 </div>
                 <div class="plan">
-                    <h3>1 Год</h3>
+                    <h3>Подписка 1 Год</h3>
                     <div class="price">1250 ₽</div>
-                    <p>Выгодный тариф<br><span class="discount">Экономия 30%</span></p>
-                    <a href="https://t.me" class="cta-button">Подключить</a>
+                    <p>Премиальное обслуживание<br><span class="discount">Выгода 30%</span></p>
+                    <a href="https://t.me/ваша_ссылка" class="cta-button">Подключить</a>
                 </div>
             </div>
         </section>
@@ -66,22 +69,23 @@
         <section class="payment-methods">
             <p>Доступные способы оплаты:</p>
             <div class="payment-icons">
-                <img src="https://upload.wikimedia.org" alt="МИР">
-                <img src="https://upload.wikimedia.org" alt="Visa">
-                <img src="https://upload.wikimedia.org" alt="Mastercard">
-                <img src="https://upload.wikimedia.org" alt="СБП">
+                <span>МИР</span>
+                <span>VISA</span>
+                <span>MASTERCARD</span>
+                <span>СБП</span>
             </div>
-            <p style="font-size: 0.8em; margin-top: 10px; color: #8b949e;">Безопасные платежи через Lava Business</p>
+            <p style="font-size: 0.8em; margin-top: 10px; color: #8b949e;">Безопасные платежи через сертифицированные шлюзы (AAIO)</p>
         </section>
     </main>
 
     <footer>
         <p>
-            <a href="terms.html">Условия использования</a> | 
-            <a href="privacy.html">Конфиденциальность</a>
+            <a href="terms.html">Пользовательское соглашение</a> | 
+            <a href="privacy.html">Политика конфиденциальности</a> | 
+            <a href="refund.html">Условия возврата</a>
         </p>
-        <p>Техническая поддержка: <b>@RKGZFS</b></p>
-        <p>&copy; 2026 VPN Tatar — Проект команды InquisitiveIT</p>
+        <p>Контактные данные: <b>@RKGZFS</b> | Email: chester16@mail.ru</p>
+        <p>&copy; 2026 Inquisitive IT Solutions — Программные решения для сетевой безопасности</p>
     </footer>
 
 </body>
