@@ -3,28 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inquisitive IT — Персональные сетевые решения</title>
+    <title>Inquisitive IT — Персональные решения</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { max-width: 800px; margin: 0 auto; padding: 20px; background-color: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
         h1, h2, h3 { color: #00ff88; }
-        
         .header-logo { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
         .header-logo img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
-        
         .pricing { display: flex; gap: 20px; justify-content: space-around; margin-top: 30px; flex-wrap: wrap; }
-        .plan { border: 2px solid #30363d; padding: 25px; border-radius: 12px; text-align: center; width: 40%; background: #161b22; transition: transform 0.2s; }
+        .plan { border: 2px solid #30363d; padding: 25px; border-radius: 12px; text-align: center; width: 42%; background: #161b22; transition: transform 0.2s; }
         .plan:hover { transform: translateY(-5px); border-color: #00ff88; }
         .price { font-size: 1.5em; font-weight: bold; margin: 10px 0; color: #ffffff; }
         .discount { color: #00ff88; font-weight: bold; }
-        
-        .cta-button { display: inline-block; background-color: #00ff88; color: #0d1117 !important; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 15px; }
-        
+        .cta-button { display: inline-block; background-color: #00ff88; color: #0d1117 !important; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer; border: none; width: 100%; }
         .payment-methods { margin-top: 40px; text-align: center; background: #161b22; padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
         .payment-icons { display: flex; justify-content: center; gap: 25px; opacity: 0.8; margin-top: 15px; font-weight: bold; font-size: 0.9em; }
-        
         footer { margin-top: 40px; font-size: 0.85em; text-align: center; border-top: 1px solid #30363d; padding-top: 25px; line-height: 1.6; }
         footer a { color: #58a6ff; text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -34,58 +29,66 @@
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy7PN1C3UuHDpItAKldlr9QcCAR8CVp0gLZA&s" alt="Logo">
             <h1>Inquisitive IT</h1>
         </div>
-        <p>Ваш персональный доступ к защищенным сетевым узлам. Мы обеспечиваем стабильное зашифрованное соединение и безопасность ваших данных при работе в любых сетях.</p>
+        <p id="user-greeting">Загрузка профиля...</p>
     </header>
 
     <main>
         <section>
-            <h2>Преимущества сервиса:</h2>
-            <ul>
-                <li>🚀 Высокая скорость передачи данных до 1 Гбит/с</li>
-                <li>🌍 Стабильные узлы в ключевых точках обмена трафиком</li>
-                <li>📱 Полная совместимость с iOS, Android, Windows и Linux</li>
-                <li>🔑 Использование современных протоколов защиты (VLESS/Shadowsocks)</li>
-            </ul>
-        </section>
-
-        <section>
             <h2>Тарифные планы:</h2>
             <div class="pricing">
-                <div class="plan">
-                    <h3>Доступ на 1 Месяц</h3>
+                <div class="plan" data-price="149" data-id="month_1">
+                    <h3>1 Месяц</h3>
                     <div class="price">149 ₽</div>
-                    <p>Персональный сетевой шлюз<br>Без лимитов по трафику</p>
-                    <a href="https://t.me/vpntatar2026_bot" class="cta-button">Оформить подписку</a>
+                    <p>Доступ к узлу Нидерланды</p>
+                    <button class="cta-button">Оплатить</button>
                 </div>
-                <div class="plan">
-                    <h3>Доступ на 1 Год</h3>
+                <div class="plan" data-price="1250" data-id="year_1">
+                    <h3>1 Год</h3>
                     <div class="price">1250 ₽</div>
-                    <p>Приоритетное обслуживание<br><span class="discount">Выгода 30%</span></p>
-                    <a href="https://t.me/vpntatar2026_bot" class="cta-button">Оформить подписку</a>
+                    <p><span class="discount">Выгода 30%</span></p>
+                    <button class="cta-button">Оплатить</button>
                 </div>
             </div>
         </section>
 
         <section class="payment-methods">
-            <p>Доступные способы оплаты:</p>
+            <p>Безопасная оплата через 1PLAT (СБП/Карты):</p>
             <div class="payment-icons">
-                <span>МИР</span>
-                <span>VISA</span>
-                <span>MASTERCARD</span>
-                <span>СБП</span>
+                <span>МИР</span> <span>VISA</span> <span>СБП</span>
             </div>
-            <p style="font-size: 0.8em; margin-top: 10px; color: #8b949e;">Безопасные платежи через защищенный интернет-эквайринг</p>
         </section>
     </main>
 
-    <footer>
-        <p>
-            <a href="terms.html">Пользовательское соглашение</a> | 
-            <a href="privacy.html">Политика конфиденциальности</a>
-        </p>
-        <p>Техническая поддержка: <b>@RKGZFS</b> | Email: chester16@mail.ru</p>
-        <p>&copy; 2026 Inquisitive IT Solutions — Сетевые инструменты для бизнеса и частных лиц</p>
-    </footer>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем на все окно
+        
+        // Приветствие пользователя
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('user-greeting').innerText = `Привет, ${user.first_name}! Выберите тариф для подключения:`;
+        }
 
+        // Обработка нажатия на кнопки
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const plan = this.closest('.plan');
+                const planData = {
+                    action: "payment",
+                    method: "1plat",
+                    planId: plan.getAttribute('data-id'),
+                    amount: plan.getAttribute('data-price')
+                };
+
+                // Отправляем данные боту
+                tg.sendData(JSON.stringify(planData));
+                tg.close(); 
+            });
+        });
+
+        // Установка темы под настройки Telegram
+        document.body.style.backgroundColor = tg.themeParams.bg_color || "#0d1117";
+        document.body.style.color = tg.themeParams.text_color || "#c9d1d9";
+    </script>
 </body>
 </html>
