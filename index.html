@@ -3,206 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VPN TATAR</title>
+    <title>VPN TATAR Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --accent-color: #0088cc;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-blue: #007aff;
             --text-main: #ffffff;
-            --text-dim: #aaaaaa;
+            --text-dim: rgba(255, 255, 255, 0.5);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            background: #000;
+            background-image: radial-gradient(circle at 50% -20%, #1c1c1e, #000);
             color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            margin: 0; padding: 0;
+            height: 100vh; overflow: hidden;
         }
 
-        /* Контентные секции */
+        /* Общие контейнеры */
         .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            padding-bottom: 80px;
             display: none;
+            padding: 20px;
+            padding-bottom: 120px;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
         }
-
         .content.active { display: block; }
 
-        /* Шапка статуса */
-        .status-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            border: 1px solid #333;
-            margin-bottom: 20px;
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .status-dot {
-            height: 10px; width: 10px;
-            background-color: #ff4444; /* Красный если нет подписки */
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-        }
-
-        .status-dot.active { background-color: #00ff88; }
-
-        .key-box {
-            background: #252525;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 15px;
-            font-family: monospace;
-            word-break: break-all;
-            font-size: 13px;
-            color: var(--accent-color);
-            cursor: pointer;
-        }
-
-        /* Тарифы */
-        .plan-card {
-            background: var(--card-bg);
-            border-radius: 15px;
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 0.5px solid var(--glass-border);
+            border-radius: 24px;
             padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #333;
+            margin-bottom: 16px;
         }
 
-        .plan-info h3 { margin: 0; font-size: 18px; }
-        .plan-info p { margin: 5px 0 0; color: var(--text-dim); font-size: 14px; }
-
-        .buy-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Нижнее меню */
+        /* Нижнее меню (Liquid Glass Island) */
         .nav-bar {
             position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: #1a1a1a;
+            bottom: 25px;
+            left: 15px;
+            right: 15px;
+            height: 70px;
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 30px;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #333;
+            align-items: center;
+            border: 0.5px solid var(--glass-border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         .nav-item {
             color: var(--text-dim);
             text-align: center;
-            font-size: 12px;
             text-decoration: none;
             flex: 1;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .nav-item.active { color: var(--accent-color); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--accent-blue); }
+        .nav-item i { font-size: 22px; margin-bottom: 4px; }
+        .nav-item span { font-size: 10px; font-weight: 500; }
+
+        /* Кнопки и иконки */
+        .ios-btn {
+            background: var(--accent-blue);
+            color: #fff; border: none;
+            padding: 16px; border-radius: 16px;
+            width: 100%; font-weight: 600; font-size: 16px;
+        }
+        
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 20px; }
+        .status-tag { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; font-size: 12px; color: var(--accent-blue); }
     </style>
 </head>
 <body>
 
     <div id="home" class="content active">
-        <h2 style="margin-top: 0;">VPN TATAR</h2>
-        <div class="status-card">
-            <div id="status-text"><span class="status-dot"></span>Подписка: Не активна</div>
-            <div class="key-box" onclick="copyKey()">Нажмите, чтобы купить доступ</div>
-            <p style="font-size: 12px; color: var(--text-dim); margin-top: 10px;">Ключ появится здесь после оплаты</p>
-        </div>
-        <div class="status-card" style="padding: 15px;">
-            <i class="fas fa-info-circle"></i> Инструкция по установке
+        <h2>Главная</h2>
+        <div class="glass-card" style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">🛡️</div>
+            <div style="font-size: 20px; font-weight: 600;">VPN TATAR</div>
+            <p style="color: var(--text-dim);">Безопасное соединение</p>
+            <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; border: 0.5px dashed var(--glass-border); margin-top: 15px;">
+                <code style="color: var(--accent-blue);">Ключ не найден</code>
+            </div>
         </div>
     </div>
 
-    <div id="shop" class="content">
-        <h2>Выберите тариф</h2>
-        <div class="plan-card">
-            <div class="plan-info">
+    <div id="sub" class="content">
+        <h2>Подписка</h2>
+        <div class="glass-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h3>1 Месяц</h3>
-                <p>199 ₽ / мес</p>
+                <span class="status-tag">199 ₽</span>
             </div>
-            <button class="buy-btn" onclick="pay(199)">Купить</button>
+            <p style="color: var(--text-dim); font-size: 14px;">Безлимитный трафик на высокой скорости</p>
+            <button class="ios-btn" onclick="pay(199)">Выбрать</button>
         </div>
-        <div class="plan-card">
-            <div class="plan-info">
+        <div class="glass-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h3>3 Месяца</h3>
-                <p>499 ₽ <span style="color: #00ff88; font-size: 12px;">-15%</span></p>
+                <span class="status-tag" style="background: #30d158; color: #fff;">499 ₽ (Выгода)</span>
             </div>
-            <button class="buy-btn" onclick="pay(499)">Купить</button>
+            <p style="color: var(--text-dim); font-size: 14px;">Самый популярный тариф</p>
+            <button class="ios-btn" onclick="pay(499)">Выбрать</button>
         </div>
     </div>
 
-    <div id="help" class="content">
-        <h2>Поддержка</h2>
-        <p>Если возникли вопросы, наш менеджер поможет 24/7</p>
-        <button class="buy-btn" style="width: 100%;" onclick="window.location.href='https://t.me/твой_логин'">Написать в поддержку</button>
+    <div id="devices" class="content">
+        <h2>Устройства</h2>
+        <div class="glass-card">
+            <i class="fas fa-mobile-alt"></i> <b>iOS / Android</b>
+            <p style="color: var(--text-dim); font-size: 14px; margin-top: 10px;">Используйте приложение V2Ray или Shadowrocket.</p>
+        </div>
+        <div class="glass-card">
+            <i class="fas fa-laptop"></i> <b>Windows / MacOS</b>
+            <p style="color: var(--text-dim); font-size: 14px; margin-top: 10px;">Используйте Nekoray или V2RayN.</p>
+        </div>
     </div>
 
-    <nav class="nav-bar">
-        <a href="#" class="nav-item active" onclick="showTab('home', this)">
-            <i class="fas fa-home"></i>Главная
-        </a>
-        <a href="#" class="nav-item" onclick="showTab('shop', this)">
-            <i class="fas fa-shopping-cart"></i>Тарифы
-        </a>
-        <a href="#" class="nav-item" onclick="showTab('help', this)">
-            <i class="fas fa-headset"></i>Помощь
-        </a>
-    </nav>
-
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        function showTab(tabId, el) {
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            el.classList.add('active');
-        }
-
-        async function pay(amount) {
-            tg.showConfirm(`Оплатить доступ за ${amount}₽?`, async (ok) => {
-                if (ok) {
-                    try {
-                        // ТУТ МЫ ЗАМЕНИМ НА ТВОЮ ССЫЛКУ ИЗ NGROK
-                        const response = await fetch('https://твой-ngrok-адрес.ngrok-free.app/api/pay', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ amount: amount })
-                        });
-                        const data = await response.json();
-                        if (data.url) tg.openLink(data.url);
-                    } catch (e) {
-                        tg.showAlert("Сервер временно недоступен. Попробуйте позже.");
-                    }
-                }
-            });
-        }
-
-        function copyKey() {
-            // Функция для будущего копирования ключа
-            tg.showAlert("У вас пока нет активного ключа.");
-        }
-    </script>
-</body>
-</html>
+    <div id="profile" class="content">
+        <h2>Профиль</h2>
+        <div class="glass-card">
+            <p style="margin: 0; color: var(--text-dim);">ID Пользователя</p>
+            <div id="user_id" style="font-size: 18px; font-weight: 600; margin-top: 5px;">Загрузка...</div>
+        </div>
+        <div class="glass-card" onclick="window.location.href='
