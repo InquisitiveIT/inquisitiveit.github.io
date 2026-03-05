@@ -8,143 +8,125 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-color: #000000;
             --accent-blue: #007aff;
+            --glass: rgba(255, 255, 255, 0.07);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --text-main: #ffffff;
             --text-dim: rgba(255, 255, 255, 0.5);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            background: #000;
+            background: var(--bg-color);
+            /* Мягкое свечение на фоне */
             background-image: radial-gradient(circle at 50% -20%, #1c1c1e, #000);
             color: var(--text-main);
             margin: 0; padding: 0;
             height: 100vh; overflow: hidden;
+            -webkit-user-select: none;
         }
 
-        /* Общие контейнеры */
+        /* Контейнер для вкладок */
         .content {
             display: none;
             padding: 20px;
-            padding-bottom: 120px;
-            height: calc(100vh - 120px);
+            padding-bottom: 140px;
+            height: 100vh;
             overflow-y: auto;
-            animation: slideUp 0.3s ease-out;
+            box-sizing: border-box;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .content.active { display: block; }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
         }
 
+        /* КАРТОЧКА LIQUID GLASS */
         .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 0.5px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 16px;
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* Нижнее меню (Liquid Glass Island) */
-        .nav-bar {
-            position: fixed;
-            bottom: 25px;
-            left: 15px;
-            right: 15px;
-            height: 70px;
-            background: rgba(30, 30, 30, 0.7);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 30px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border: 0.5px solid var(--glass-border);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .nav-item {
-            color: var(--text-dim);
-            text-align: center;
-            text-decoration: none;
-            flex: 1;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .nav-item.active { color: var(--accent-blue); }
-        .nav-item i { font-size: 22px; margin-bottom: 4px; }
-        .nav-item span { font-size: 10px; font-weight: 500; }
-
-        /* Кнопки и иконки */
+        /* Кнопка в стиле iOS */
         .ios-btn {
             background: var(--accent-blue);
             color: #fff; border: none;
-            padding: 16px; border-radius: 16px;
-            width: 100%; font-weight: 600; font-size: 16px;
+            padding: 18px; border-radius: 18px;
+            width: 100%; font-weight: 600; font-size: 17px;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        
-        h2 { font-size: 26px; font-weight: 700; margin-bottom: 20px; }
-        .status-tag { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; font-size: 12px; color: var(--accent-blue); }
+        .ios-btn:active { transform: scale(0.96); opacity: 0.9; }
+
+        /* Вторичная кнопка (стеклянная) */
+        .ios-btn-secondary {
+            background: rgba(255,255,255,0.08);
+            color: #fff; border: 0.5px solid var(--glass-border);
+            padding: 14px; border-radius: 16px; width: 100%;
+            margin-top: 10px; font-weight: 500;
+        }
+
+        /* Плывущее меню (Tab Bar) */
+        .nav-bar {
+            position: fixed;
+            bottom: 30px; left: 20px; right: 20px;
+            height: 74px;
+            background: rgba(30, 30, 32, 0.6);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 35px;
+            display: flex; justify-content: space-around; align-items: center;
+            border: 0.5px solid var(--glass-border);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            color: var(--text-dim); text-align: center; text-decoration: none;
+            flex: 1; transition: all 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+        }
+        .nav-item.active { color: var(--accent-blue); transform: translateY(-2px); }
+        .nav-item i { font-size: 24px; }
+        .nav-item span { font-size: 11px; font-weight: 600; }
+
+        h2 { font-size: 32px; font-weight: 800; margin: 10px 0 25px 0; letter-spacing: -0.5px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff453a; display: inline-block; margin-right: 8px; box-shadow: 0 0 10px #ff453a; }
     </style>
 </head>
 <body>
 
     <div id="home" class="content active">
         <h2>Главная</h2>
-        <div class="glass-card" style="text-align: center;">
-            <div style="font-size: 48px; margin-bottom: 10px;">🛡️</div>
-            <div style="font-size: 20px; font-weight: 600;">VPN TATAR</div>
-            <p style="color: var(--text-dim);">Безопасное соединение</p>
-            <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; border: 0.5px dashed var(--glass-border); margin-top: 15px;">
-                <code style="color: var(--accent-blue);">Ключ не найден</code>
+        <div class="glass-card">
+            <div style="margin-bottom: 20px;">
+                <span class="status-dot"></span>
+                <span style="color: var(--text-dim); font-weight: 500;">Статус:</span> 
+                <span style="color: #ff453a; font-weight: 600;">Не оплачено</span>
             </div>
+            
+            <button class="ios-btn" onclick="connectVpn()">
+                <i class="fas fa-bolt"></i> Подключить v2RayTun
+            </button>
+            
+            <button class="ios-btn-secondary" onclick="copyKey()">
+                <i class="fas fa-copy"></i> Копировать ключ
+            </button>
         </div>
     </div>
 
     <div id="sub" class="content">
         <h2>Подписка</h2>
         <div class="glass-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3>1 Месяц</h3>
-                <span class="status-tag">199 ₽</span>
-            </div>
-            <p style="color: var(--text-dim); font-size: 14px;">Безлимитный трафик на высокой скорости</p>
-            <button class="ios-btn" onclick="pay(199)">Выбрать</button>
-        </div>
-        <div class="glass-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3>3 Месяца</h3>
-                <span class="status-tag" style="background: #30d158; color: #fff;">499 ₽ (Выгода)</span>
-            </div>
-            <p style="color: var(--text-dim); font-size: 14px;">Самый популярный тариф</p>
-            <button class="ios-btn" onclick="pay(499)">Выбрать</button>
-        </div>
-    </div>
-
-    <div id="devices" class="content">
-        <h2>Устройства</h2>
-        <div class="glass-card">
-            <i class="fas fa-mobile-alt"></i> <b>iOS / Android</b>
-            <p style="color: var(--text-dim); font-size: 14px; margin-top: 10px;">Используйте приложение V2Ray или Shadowrocket.</p>
-        </div>
-        <div class="glass-card">
-            <i class="fas fa-laptop"></i> <b>Windows / MacOS</b>
-            <p style="color: var(--text-dim); font-size: 14px; margin-top: 10px;">Используйте Nekoray или V2RayN.</p>
-        </div>
-    </div>
-
-    <div id="profile" class="content">
-        <h2>Профиль</h2>
-        <div class="glass-card">
-            <p style="margin: 0; color: var(--text-dim);">ID Пользователя</p>
-            <div id="user_id" style="font-size: 18px; font-weight: 600; margin-top: 5px;">Загрузка...</div>
-        </div>
-        <div class="glass-card" onclick="window.location.href='
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h3 style="margin:0; font-size: 20px
