@@ -2,131 +2,188 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VPN TATAR Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>VPN TATAR</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #000000;
-            --accent-blue: #007aff;
-            --glass: rgba(255, 255, 255, 0.07);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --text-main: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.5);
+            --bg-color: #0c0c0e;
+            --accent: #007aff;
+            --glass: rgba(28, 28, 30, 0.7);
+            --card-glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-color);
-            /* Мягкое свечение на фоне */
             background-image: radial-gradient(circle at 50% -20%, #1c1c1e, #000);
-            color: var(--text-main);
+            color: var(--text);
             margin: 0; padding: 0;
-            height: 100vh; overflow: hidden;
-            -webkit-user-select: none;
+            height: 100vh;
+            display: flex; flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Контейнер для вкладок */
-        .content {
-            display: none;
-            padding: 20px;
-            padding-bottom: 140px;
-            height: 100vh;
+        /* Контент с прокруткой */
+        .page-container {
+            flex: 1;
             overflow-y: auto;
-            box-sizing: border-box;
-            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+            padding-bottom: 110px; /* Запас под меню */
+            -webkit-overflow-scrolling: touch;
         }
-        .content.active { display: block; }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* КАРТОЧКА LIQUID GLASS */
+        /* КАРТОЧКА СТЕКЛО */
         .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 0.5px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 0.5px solid var(--border);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 15px;
         }
 
-        /* Кнопка в стиле iOS */
-        .ios-btn {
-            background: var(--accent-blue);
-            color: #fff; border: none;
-            padding: 18px; border-radius: 18px;
-            width: 100%; font-weight: 600; font-size: 17px;
-            transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .ios-btn:active { transform: scale(0.96); opacity: 0.9; }
-
-        /* Вторичная кнопка (стеклянная) */
-        .ios-btn-secondary {
-            background: rgba(255,255,255,0.08);
-            color: #fff; border: 0.5px solid var(--glass-border);
-            padding: 14px; border-radius: 16px; width: 100%;
-            margin-top: 10px; font-weight: 500;
-        }
-
-        /* Плывущее меню (Tab Bar) */
+        /* ПЛАВАЮЩЕЕ МЕНЮ (Fix) */
         .nav-bar {
             position: fixed;
-            bottom: 30px; left: 20px; right: 20px;
-            height: 74px;
-            background: rgba(30, 30, 32, 0.6);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border-radius: 35px;
-            display: flex; justify-content: space-around; align-items: center;
-            border: 0.5px solid var(--glass-border);
-            box-shadow: 0 15px 50px rgba(0,0,0,0.6);
-            z-index: 1000;
+            bottom: 20px;
+            left: 15px;
+            right: 15px;
+            height: 70px;
+            background: var(--glass);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border-radius: 25px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border: 0.5px solid var(--border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 9999; /* Чтобы всегда сверху */
         }
 
         .nav-item {
-            color: var(--text-dim); text-align: center; text-decoration: none;
-            flex: 1; transition: all 0.3s;
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            text-decoration: none;
+            flex: 1;
+            font-size: 10px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
-        .nav-item.active { color: var(--accent-blue); transform: translateY(-2px); }
-        .nav-item i { font-size: 24px; }
-        .nav-item span { font-size: 11px; font-weight: 600; }
 
-        h2 { font-size: 32px; font-weight: 800; margin: 10px 0 25px 0; letter-spacing: -0.5px; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff453a; display: inline-block; margin-right: 8px; box-shadow: 0 0 10px #ff453a; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item i { font-size: 22px; }
+
+        /* Кнопки */
+        .btn-main {
+            background: var(--accent);
+            color: white; border: none;
+            padding: 16px; border-radius: 16px;
+            width: 100%; font-weight: 600; font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+        }
+
+        h2 { font-size: 28px; margin: 10px 0 20px 0; }
     </style>
 </head>
 <body>
 
-    <div id="home" class="content active">
-        <h2>Главная</h2>
-        <div class="glass-card">
-            <div style="margin-bottom: 20px;">
-                <span class="status-dot"></span>
-                <span style="color: var(--text-dim); font-weight: 500;">Статус:</span> 
-                <span style="color: #ff453a; font-weight: 600;">Не оплачено</span>
+    <div class="page-container">
+        <div id="home" class="tab-content active">
+            <h2>Главная</h2>
+            <div class="glass-card" style="text-align:center;">
+                <div style="color: #ff453a; font-size: 14px; margin-bottom: 10px;">● Подписка не активна</div>
+                <button class="btn-main" onclick="connectVpn()">
+                    <i class="fas fa-bolt"></i> Подключить v2RayTun
+                </button>
             </div>
-            
-            <button class="ios-btn" onclick="connectVpn()">
-                <i class="fas fa-bolt"></i> Подключить v2RayTun
-            </button>
-            
-            <button class="ios-btn-secondary" onclick="copyKey()">
-                <i class="fas fa-copy"></i> Копировать ключ
-            </button>
+        </div>
+
+        <div id="sub" class="tab-content">
+            <h2>Подписка</h2>
+            <div class="glass-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span><b>1 Месяц</b></span>
+                    <span>199 ₽</span>
+                </div>
+                <button class="btn-main" style="margin-top:15px;" onclick="pay(199)">Купить</button>
+            </div>
+        </div>
+
+        <div id="devices" class="tab-content">
+            <h2>Устройства</h2>
+            <div class="glass-card">
+                <b>iOS / Android</b>
+                <p style="color:rgba(255,255,255,0.5); font-size: 14px;">Скачайте v2RayTun и нажмите кнопку на главной.</p>
+            </div>
+        </div>
+
+        <div id="profile" class="tab-content">
+            <h2>Профиль</h2>
+            <div class="glass-card">
+                <div id="username" style="font-weight:600;">Пользователь</div>
+                <div id="userid" style="opacity:0.5; font-size:12px;">ID: ---</div>
+            </div>
         </div>
     </div>
 
-    <div id="sub" class="content">
-        <h2>Подписка</h2>
-        <div class="glass-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div>
-                    <h3 style="margin:0; font-size: 20px
+    <nav class="nav-bar">
+        <a href="javascript:void(0)" class="nav-item active" onclick="showTab('home', this)">
+            <i class="fas fa-home"></i><span>Главная</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showTab('sub', this)">
+            <i class="fas fa-crown"></i><span>Подписка</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showTab('devices', this)">
+            <i class="fas fa-desktop"></i><span>Устройства</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showTab('profile', this)">
+            <i class="fas fa-user-circle"></i><span>Профиль</span>
+        </a>
+    </nav>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        
+        // Подгружаем ID
+        if(tg.initDataUnsafe.user) {
+            document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
+            document.getElementById('userid').innerText = "ID: " + tg.initDataUnsafe.user.id;
+        }
+
+        function showTab(tabId, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            el.classList.add('active');
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function connectVpn() {
+            tg.showAlert("Сначала купите подписку!");
+        }
+
+        function pay(amt) {
+            tg.showConfirm(`Оплатить ${amt}₽?`, (ok) => {
+                if(ok) tg.openLink('https://твой-ngrok.ngrok-free.app/api/pay?amount=' + amt);
+            });
+        }
+    </script>
+</body>
+</html>
