@@ -380,4 +380,65 @@
             document.getElementById('tariff').innerText = subscription.tariff || '—';
             document.getElementById('sub-start').innerText = subscription.start || '—';
             document.getElementById('sub-end').innerText = subscription.end || '—';
-            document.getElementById('days-left').innerText = subscription.daysLeft > 0 ? subscription.daysLeft + '
+            document.getElementById('days-left').innerText = subscription.daysLeft > 0 ? subscription.daysLeft + ' дней' : '—';
+        }
+
+        function connectVpn() {
+            document.getElementById('main-loader').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('main-loader').style.display = 'none';
+
+                document.getElementById('qr').innerHTML = '';
+                new QRCode(document.getElementById('qr'), {
+                    text: testConfig,
+                    width: 220,
+                    height: 220
+                });
+
+                document.getElementById('auto-connect-btn').style.display = 'block';
+                tg.showAlert("Тестовый конфиг загружен. Попробуй автоподключение!");
+            }, 1200);
+        }
+
+        function autoConnect() {
+            const encoded = encodeURIComponent(testConfig);
+            tg.openLink(`v2raytun://import?config=${encoded}`);
+
+            setTimeout(() => {
+                tg.setClipboardText(testConfig);
+                tg.showAlert("Если v2RayTun не открылся — конфиг скопирован в буфер.");
+            }, 1500);
+        }
+
+        function paySelected() {
+            if (!selectedTariff) return tg.showAlert("Выберите тариф!");
+            tg.showAlert(`Оплата ${selectedTariff} — в разработке (подключи 1plat)`);
+            // Здесь будет fetch к backend с выбранным тарифом
+        }
+
+        // Инициализация
+        window.addEventListener('load', () => {
+            document.querySelector('.slider').style.transform = 'translateX(0%)';
+
+            if (tg.initDataUnsafe?.user) {
+                user = tg.initDataUnsafe.user;
+                document.getElementById('username').innerText = user.first_name;
+                document.getElementById('userid').innerText = "ID: " + user.id;
+
+                // Симуляция загрузки подписки
+                setTimeout(() => {
+                    subscription = {
+                        active: false,
+                        tariff: null,
+                        start: null,
+                        end: null,
+                        daysLeft: 0
+                    };
+                    document.getElementById('sub-status').innerText = "● Подписка не активна";
+                }, 800);
+            }
+        });
+    </script>
+</body>
+</html>
