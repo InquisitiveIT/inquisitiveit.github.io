@@ -35,9 +35,11 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: var(--tg-bg-color);
             color: var(--tg-text-color);
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
             height: 100vh;
-            display: flex; flex-direction: column;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
             transition: background 0.3s ease, color 0.3s ease;
         }
@@ -65,35 +67,6 @@
             padding: 20px;
             margin-bottom: 16px;
             box-shadow: 0 4px 30px rgba(0,0,0,0.1);
-        }
-
-        .tariff-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        .tariff-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-            backdrop-filter: var(--blur);
-        }
-
-        .tariff-card .price {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 8px 0;
-            color: var(--tg-accent);
-        }
-
-        .tariff-card .old-price {
-            text-decoration: line-through;
-            color: var(--tg-hint-color);
-            font-size: 16px;
-            margin-left: 8px;
         }
 
         .nav-bar {
@@ -125,6 +98,7 @@
             align-items: center;
             justify-content: center;
             color: var(--tg-text-color);
+            text-decoration: none;
             font-size: 11px;
             font-weight: 500;
             transition: color 0.35s ease;
@@ -144,10 +118,11 @@
             border-radius: 16px;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 1;
+            pointer-events: none;
             box-shadow: 0 2px 12px rgba(0, 122, 255, 0.4);
         }
 
-        .btn-main, .btn-auto {
+        .btn-main {
             background: var(--tg-button-color);
             color: var(--tg-button-text-color);
             border: none;
@@ -156,11 +131,10 @@
             width: 100%;
             font-weight: 600;
             font-size: 17px;
-            margin: 8px 0;
-            transition: transform 0.12s;
+            transition: transform 0.1s;
         }
 
-        .btn-main:active, .btn-auto:active { transform: scale(0.97); }
+        .btn-main:active { transform: scale(0.97); }
 
         .loader {
             display: none;
@@ -178,63 +152,159 @@
         h2 { font-size: 28px; font-weight: 700; margin: 8px 0 20px; letter-spacing: -0.5px; }
 
         #qr { margin: 20px auto; text-align: center; }
+
+        /* Сегментированный контрол с ползунком */
+        .segmented-wrapper {
+            position: relative;
+            display: flex;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .segment-item {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            color: var(--tg-text-color);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .segment-item.active { color: var(--tg-button-text-color); }
+
+        .segment-slider {
+            position: absolute;
+            top: 0; bottom: 0; left: 0;
+            width: 50%;
+            background: var(--tg-button-color);
+            border-radius: 10px;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
+        }
+
+        .tariff-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .tariff-card {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tariff-card.selected {
+            border: 2px solid var(--tg-button-color);
+            box-shadow: 0 0 0 4px rgba(0,122,255,0.2);
+        }
+
+        .tariff-icon { font-size: 32px; margin-bottom: 8px; }
+
+        .tariff-title { font-size: 18px; font-weight: 600; }
+
+        .tariff-price { font-size: 24px; font-weight: 700; margin: 8px 0; color: var(--tg-accent); }
+
+        .benefits {
+            margin: 24px 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0;
+            font-size: 15px;
+        }
+
+        .benefit-check { color: var(--tg-accent); font-size: 18px; }
     </style>
 </head>
 <body>
 
     <div class="page-container">
+        <!-- Главная -->
         <div id="home" class="tab-content active">
             <h2>Главная</h2>
             <div class="glass-card" style="text-align:center;">
-                <div id="sub-status" style="font-size:15px; margin-bottom:12px;">● Подписка не активна</div>
+                <div id="sub-status" style="font-size: 15px; margin-bottom: 12px;">● Подписка не активна</div>
                 <button id="connect-btn" class="btn-main">
                     <i class="fas fa-bolt"></i> Подключить v2RayTun
                 </button>
                 <div class="loader" id="main-loader"></div>
                 <div id="qr"></div>
-                <button id="auto-connect-btn" class="btn-auto" style="display:none;">
+                <button id="auto-connect-btn" class="btn-main" style="display:none; margin-top:12px;">
                     <i class="fas fa-link"></i> Автоподключение v2RayTun
                 </button>
             </div>
         </div>
 
+        <!-- Подписка -->
         <div id="sub" class="tab-content">
             <h2>Подписка</h2>
-            <div class="tariff-grid">
-                <div class="tariff-card glass-card">
-                    <h3>1 месяц</h3>
-                    <div class="price">100 ₽</div>
-                    <button class="btn-main" onclick="pay(100, '1m')">Купить</button>
-                </div>
 
-                <div class="tariff-card glass-card">
-                    <h3>3 месяца</h3>
-                    <div class="price">250 ₽</div>
-                    <button class="btn-main" onclick="pay(250, '3m')">Купить</button>
+            <div class="glass-card">
+                <div id="current-status" style="font-size:17px; font-weight:600; margin-bottom:8px;">
+                    Сейчас у вас бесплатный доступ
                 </div>
-
-                <div class="tariff-card glass-card">
-                    <h3>1 год</h3>
-                    <div class="price">756 ₽ <span class="old-price">900 ₽</span></div>
-                    <div style="font-size:13px; color:var(--tg-hint-color); margin-bottom:8px;">-30% скидка</div>
-                    <button class="btn-main" onclick="pay(756, '12m')">Купить</button>
+                <div id="status-detail" style="color:var(--tg-hint-color); font-size:15px;">
+                    Бесплатно
                 </div>
             </div>
+
+            <h3>Выберите период</h3>
+            <div class="segmented-wrapper">
+                <div class="segment-item active" data-period="monthly" onclick="selectPeriod(this)">Помесячно</div>
+                <div class="segment-item" data-period="yearly" onclick="selectPeriod(this)">Ежегодно <span style="color:var(--tg-accent);">-30%</span></div>
+                <div class="segment-slider"></div>
+            </div>
+
+            <h3>Выберите тариф</h3>
+            <div class="tariff-grid">
+                <div class="tariff-card" data-tariff="plus" data-price-monthly="100" data-price-yearly="840" onclick="selectTariff(this)">
+                    <div class="tariff-icon">+</div>
+                    <div class="tariff-title">Плюс</div>
+                    <div class="tariff-price">100 ₽</div>
+                </div>
+
+                <div class="tariff-card" data-tariff="premium" data-price-monthly="250" data-price-yearly="2100" onclick="selectTariff(this)">
+                    <div class="tariff-icon">♦</div>
+                    <div class="tariff-title">Премиум</div>
+                    <div class="tariff-price">250 ₽</div>
+                </div>
+
+                <div class="tariff-card" data-tariff="family" data-price-monthly="756" data-price-yearly="6300" onclick="selectTariff(this)">
+                    <div class="tariff-icon">👥</div>
+                    <div class="tariff-title">Семья</div>
+                    <div class="tariff-price">756 ₽</div>
+                </div>
+            </div>
+
+            <div class="benefits glass-card">
+                <h3>Вы получаете</h3>
+                <div class="benefit-item"><i class="fas fa-check benefit-check"></i> Безлимитный трафик</div>
+                <div class="benefit-item"><i class="fas fa-check benefit-check"></i> Высокая скорость</div>
+                <div class="benefit-item"><i class="fas fa-check benefit-check"></i> Поддержка всех устройств</div>
+                <div class="benefit-item"><i class="fas fa-check benefit-check"></i> Автоподключение</div>
+            </div>
+
+            <button class="btn-main" onclick="paySelected()">Купить</button>
         </div>
 
+        <!-- Устройства и Профиль — как было -->
         <div id="devices" class="tab-content">
             <h2>Устройства</h2>
             <div class="glass-card">
                 <b>iOS / Android</b>
-                <p style="color:var(--tg-hint-color); font-size:15px; margin:12px 0;">
-                    Скачайте v2RayTun и импортируйте конфиг.
-                </p>
-                <button class="btn-main" onclick="tg.openLink('https://apps.apple.com/app/v2raytun/id6476628951')">
-                    Скачать для iOS
-                </button>
-                <button class="btn-main" onclick="tg.openLink('https://play.google.com/store/apps/details?id=com.v2raytun.android')">
-                    Скачать для Android
-                </button>
+                <p style="color:var(--tg-hint-color); font-size:15px; margin:12px 0;">Скачайте v2RayTun и импортируйте конфиг.</p>
             </div>
         </div>
 
@@ -249,16 +319,16 @@
 
     <nav class="nav-bar">
         <div class="nav-wrapper">
-            <a href="javascript:void(0)" class="nav-item active" data-tab="home" onclick="showTab('home', this)">
+            <a href="javascript:void(0)" class="nav-item active" onclick="showTab('home', this)">
                 <i class="fas fa-home"></i><span>Главная</span>
             </a>
-            <a href="javascript:void(0)" class="nav-item" data-tab="sub" onclick="showTab('sub', this)">
+            <a href="javascript:void(0)" class="nav-item" onclick="showTab('sub', this)">
                 <i class="fas fa-crown"></i><span>Подписка</span>
             </a>
-            <a href="javascript:void(0)" class="nav-item" data-tab="devices" onclick="showTab('devices', this)">
+            <a href="javascript:void(0)" class="nav-item" onclick="showTab('devices', this)">
                 <i class="fas fa-desktop"></i><span>Устройства</span>
             </a>
-            <a href="javascript:void(0)" class="nav-item" data-tab="profile" onclick="showTab('profile', this)">
+            <a href="javascript:void(0)" class="nav-item" onclick="showTab('profile', this)">
                 <i class="fas fa-user-circle"></i><span>Профиль</span>
             </a>
             <div class="slider"></div>
@@ -270,191 +340,25 @@
         tg.expand();
         tg.ready();
 
-        let subscriptionActive = false;
-        let user = null;
-        let currentConfig = null; // сохраним конфиг для автоподключения
+        // Тестовый конфиг для механики (можно заменить на реальный с бэкенда)
+        const testConfig = "vless://test1234567890abcdef@fake.server.com:443?type=tcp&security=reality&pbk=abcdef1234567890&headerType=none&fp=chrome&sni=www.google.com&sid=12345678#VPN+TATAR+Test";
 
         function applyTheme() {
             const params = tg.themeParams;
-            const scheme = tg.colorScheme;
-            document.documentElement.setAttribute('data-theme', scheme);
-
-            ['bg_color','text_color','hint_color','button_color','button_text_color','link_color']
-                .forEach(key => {
-                    if (params[key]) document.documentElement.style.setProperty(`--tg-${key.replace(/_/g,'-')}`, params[key]);
-                });
-
-            document.getElementById('sub-status').style.color = subscriptionActive 
-                ? (params.link_color || '#34c759') : (params.destructive_text_color || '#ff3b30');
+            document.documentElement.setAttribute('data-theme', tg.colorScheme);
+            Object.entries(params).forEach(([key, value]) => {
+                document.documentElement.style.setProperty(`--tg-${key.replace(/_/g, '-')}`, value);
+            });
         }
 
         tg.onEvent('themeChanged', applyTheme);
         applyTheme();
 
-        async function validateUser() {
-            const initData = tg.initData;
-            if (!initData) return tg.showAlert("Не удалось получить данные");
-
-            try {
-                const res = await fetch("https://твой-домен/api/auth", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({ initData })
-                });
-                const data = await res.json();
-                if (data.ok && data.user) {
-                    user = data.user;
-                    localStorage.setItem("user", JSON.stringify(user));
-                    document.getElementById('username').innerText = user.first_name || "Пользователь";
-                    document.getElementById('userid').innerText = "ID: " + user.id;
-                    await checkSubscription();
-                } else {
-                    tg.showAlert("Ошибка авторизации");
-                }
-            } catch {
-                tg.showAlert("Ошибка соединения");
-            }
-        }
-
-        async function checkSubscription() {
-            if (!user?.id) return;
-            document.getElementById('main-loader').style.display = 'block';
-
-            try {
-                const res = await fetch(`https://твой-домен/api/subscription?userId=${user.id}`);
-                const data = await res.json();
-                subscriptionActive = data.active;
-
-                document.getElementById('sub-status').innerHTML = subscriptionActive 
-                    ? `● Активна до ${data.expires}` : `● Подписка не активна`;
-                applyTheme();
-            } catch {
-                tg.showAlert("Ошибка проверки подписки");
-            } finally {
-                document.getElementById('main-loader').style.display = 'none';
-            }
-        }
-
-        async function getVpnConfig() {
-            document.getElementById('main-loader').style.display = 'block';
-            document.getElementById('auto-connect-btn').style.display = 'none';
-
-            try {
-                const res = await fetch(`https://твой-домен/api/get-config?userId=${user.id}`);
-                const data = await res.json();
-
-                if (data.config) {
-                    currentConfig = data.config;
-
-                    document.getElementById('qr').innerHTML = '';
-                    new QRCode(document.getElementById('qr'), {
-                        text: currentConfig,
-                        width: 220,
-                        height: 220,
-                        colorDark: tg.themeParams.text_color || "#ffffff",
-                        colorLight: tg.themeParams.bg_color || "#000000"
-                    });
-
-                    tg.showPopup({
-                        title: "Конфиг готов",
-                        message: "Отсканируйте QR или используйте автоподключение",
-                        buttons: [
-                            {type: "ok"},
-                            {type: "default", text: "Скопировать", id: "copy"}
-                        ]
-                    }, (btnId) => {
-                        if (btnId === "copy") {
-                            tg.setClipboardText(currentConfig);
-                            tg.showAlert("Скопировано");
-                        }
-                    });
-
-                    // Показываем кнопку автоподключения
-                    document.getElementById('auto-connect-btn').style.display = 'block';
-                } else {
-                    tg.showAlert("Не удалось получить конфиг");
-                }
-            } catch {
-                tg.showAlert("Ошибка сервера");
-            } finally {
-                document.getElementById('main-loader').style.display = 'none';
-            }
-        }
-
-        function autoConnect() {
-            if (!currentConfig) return tg.showAlert("Конфиг не загружен");
-
-            const encoded = encodeURIComponent(currentConfig);
-            const deepLink = `v2raytun://import?config=${encoded}`;
-
-            tg.openLink(deepLink);
-
-            // Запасной вариант через 1.5 секунды
-            setTimeout(() => {
-                tg.showAlert("Если v2RayTun не открылся:\n1. Скопируйте конфиг ниже\n2. Вставьте в приложение вручную");
-                tg.setClipboardText(currentConfig);
-            }, 1500);
-        }
-
-        function connectVpn() {
-            if (subscriptionActive) {
-                getVpnConfig();
-            } else {
-                tg.showAlert("Сначала оформите подписку");
-                showTab('sub', document.querySelector('[data-tab="sub"]'));
-            }
-        }
-
-        function pay(amount, period) {
-            tg.showConfirm(`Оплатить \( {amount} ₽ ( \){period})?`, async (ok) => {
-                if (ok) {
-                    if (!user?.id) return tg.showAlert("Авторизуйтесь");
-                    try {
-                        const res = await fetch('https://твой-домен/api/create-1plat-payment', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ userId: user.id, amount, period })
-                        });
-                        const data = await res.json();
-                        if (data.paymentUrl) {
-                            tg.openLink(data.paymentUrl);
-                        } else {
-                            tg.showAlert('Ошибка создания платежа');
-                        }
-                    } catch {
-                        tg.showAlert("Ошибка соединения");
-                    }
-                }
-            });
-        }
-
         function showTab(tabId, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
             document.getElementById(tabId).classList.add('active');
             el.classList.add('active');
 
             const index = Array.from(document.querySelectorAll('.nav-item')).indexOf(el);
-            document.querySelector('.slider').style.transform = `translateX(${index * 100}%)`;
-
-            tg.HapticFeedback.impactOccurred('light');
-        }
-
-        // Инициализация
-        validateUser();
-
-        // Начальное положение ползунка
-        window.addEventListener('load', () => {
-            const active = document.querySelector('.nav-item.active');
-            if (active) {
-                const index = Array.from(document.querySelectorAll('.nav-item')).indexOf(active);
-                document.querySelector('.slider').style.transform = `translateX(${index * 100}%)`;
-            }
-        });
-
-        // Привязываем автоподключение
-        document.getElementById('auto-connect-btn').addEventListener('click', autoConnect);
-    </script>
-</body>
-</html>
+            document.querySelector('.nav-bar .slider').style.transform = `translateX(${index * 100}%)
