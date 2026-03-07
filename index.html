@@ -15,9 +15,6 @@
             --tg-button-color: #3b82f6;
             --tg-button-text-color: #ffffff;
             --tg-accent: #ef4444;
-            --tg-red: #ef4444;
-            --tg-blue: #3b82f6;
-
             --glass-bg: rgba(30, 41, 59, 0.65);
             --glass-border: rgba(59, 130, 246, 0.25);
             --blur: blur(24px);
@@ -163,6 +160,13 @@
 
         #qr { margin: 24px auto; text-align: center; border-radius: 16px; overflow: hidden; box-shadow: var(--neon-glow); }
 
+        .download-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
         .profile-info p {
             margin: 10px 0;
             font-size: 15px;
@@ -220,6 +224,14 @@
                 <p style="color:var(--tg-hint-color); margin:16px 0;">
                     Скачайте v2RayTun и используйте автоподключение или QR-код.
                 </p>
+                <div class="download-btns">
+                    <button class="btn-main" onclick="tg.openLink('https://apps.apple.com/app/v2raytun/id6476628951')">
+                        <i class="fab fa-app-store-ios"></i> Скачать для iOS
+                    </button>
+                    <button class="btn-main" onclick="tg.openLink('https://play.google.com/store/apps/details?id=com.v2raytun.android')">
+                        <i class="fab fa-google-play"></i> Скачать для Android
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -354,7 +366,7 @@
         }
 
         function getFreeConfig() {
-            connectVpn(); // Пока тестовый, потом заменим на реальный
+            connectVpn();
         }
 
         window.addEventListener('load', () => {
