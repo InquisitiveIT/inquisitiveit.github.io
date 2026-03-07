@@ -6,95 +6,134 @@
     <title>VPN TATAR</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --bg-color: #0c0c0e;
-            --accent: #007aff;
-            --glass: rgba(28, 28, 30, 0.7);
-            --card-glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --text: #ffffff;
+            /* Базовые fallback-цвета в стиле iOS 18/19 (2026) */
+            --tg-bg-color: #f2f2f7;
+            --tg-text-color: #000000;
+            --tg-hint-color: #8e8e93;
+            --tg-button-color: #007aff;
+            --tg-button-text-color: #ffffff;
+            --tg-secondary-bg: #ffffff;
+            --tg-accent: #007aff;
+            --tg-destructive: #ff3b30;
+
+            /* Glass эффект для iOS-style */
+            --glass-bg: rgba(255, 255, 255, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --blur: blur(20px);
+
+            color-scheme: light;
+        }
+
+        [data-theme="dark"] {
+            --tg-bg-color: #000000;
+            --tg-text-color: #ffffff;
+            --tg-hint-color: #8e8e93;
+            --tg-secondary-bg: #1c1c1e;
+            --glass-bg: rgba(28, 28, 30, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            color-scheme: dark;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-color);
-            background-image: radial-gradient(circle at 50% -20%, #1c1c1e, #000);
-            color: var(--text);
-            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--tg-bg-color);
+            color: var(--tg-text-color);
+            margin: 0;
+            padding: 0;
             height: 100vh;
-            display: flex; flex-direction: column;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .page-container {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            padding-bottom: 110px;
+            padding-bottom: calc(110px + env(safe-area-inset-bottom));
+            padding-top: env(safe-area-inset-top);
             -webkit-overflow-scrolling: touch;
         }
 
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .glass-card {
-            background: var(--card-glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 0.5px solid var(--border);
-            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px; /* iOS 2026 стиль — мягче */
             padding: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
         }
 
         .nav-bar {
             position: fixed;
-            bottom: 20px;
-            left: 15px;
-            right: 15px;
-            height: 70px;
-            background: var(--glass);
+            bottom: env(safe-area-inset-bottom, 20px);
+            left: 16px;
+            right: 16px;
+            height: 72px;
+            background: var(--glass-bg);
             backdrop-filter: blur(35px);
             -webkit-backdrop-filter: blur(35px);
-            border-radius: 25px;
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border: 0.5px solid var(--border);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             z-index: 9999;
         }
 
         .nav-item {
-            color: rgba(255,255,255,0.4);
+            color: var(--tg-hint-color);
             text-align: center;
-            text-decoration: none;
             flex: 1;
             font-size: 10px;
             font-weight: 500;
             display: flex;
             flex-direction: column;
             gap: 4px;
+            transition: color 0.2s;
         }
 
-        .nav-item.active { color: var(--accent); }
-        .nav-item i { font-size: 22px; }
+        .nav-item.active { color: var(--tg-accent); }
+
+        .nav-item i { font-size: 24px; }
 
         .btn-main {
-            background: var(--accent);
-            color: white; border: none;
-            padding: 16px; border-radius: 16px;
-            width: 100%; font-weight: 600; font-size: 16px;
-            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+            background: var(--tg-button-color);
+            color: var(--tg-button-text-color);
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            width: 100%;
+            font-weight: 600;
+            font-size: 17px;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
         }
 
-        h2 { font-size: 28px; margin: 10px 0 20px 0; }
+        .btn-main:active { transform: scale(0.98); }
+
+        h2 { font-size: 28px; font-weight: 700; margin: 8px 0 20px; letter-spacing: -0.5px; }
+
+        #qr { margin: 20px auto; text-align: center; }
+        #loading { display: none; text-align: center; margin: 16px 0; color: var(--tg-hint-color); font-size: 15px; }
+
+        /* Адаптация под safe areas iOS */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .page-container { padding-top: calc(16px + env(safe-area-inset-top)); }
+        }
     </style>
 </head>
 <body>
@@ -103,21 +142,23 @@
         <div id="home" class="tab-content active">
             <h2>Главная</h2>
             <div class="glass-card" style="text-align:center;">
-                <div style="color: #ff453a; font-size: 14px; margin-bottom: 10px;">● Подписка не активна</div>
-                <button class="btn-main" onclick="connectVpn()">
+                <div id="sub-status" style="font-size: 15px; margin-bottom: 12px;">● Подписка не активна</div>
+                <button id="connect-btn" class="btn-main">
                     <i class="fas fa-bolt"></i> Подключить v2RayTun
                 </button>
+                <div id="loading">Загрузка конфигурации...</div>
+                <div id="qr"></div>
             </div>
         </div>
 
         <div id="sub" class="tab-content">
             <h2>Подписка</h2>
             <div class="glass-card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span><b>1 Месяц</b></span>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:17px; margin-bottom:12px;">
+                    <span><b>1 месяц</b></span>
                     <span>199 ₽</span>
                 </div>
-                <button class="btn-main" style="margin-top:15px;" onclick="pay(199)">Купить</button>
+                <button class="btn-main" onclick="pay(199)">Купить</button>
             </div>
         </div>
 
@@ -125,15 +166,17 @@
             <h2>Устройства</h2>
             <div class="glass-card">
                 <b>iOS / Android</b>
-                <p style="color:rgba(255,255,255,0.5); font-size: 14px;">Скачайте v2RayTun и нажмите кнопку на главной.</p>
+                <p style="color:var(--tg-hint-color); font-size:15px; margin:12px 0;">Скачайте v2RayTun и импортируйте конфиг через QR или ссылку.</p>
+                <button class="btn-main" style="margin:8px 0;" onclick="tg.openLink('https://apps.apple.com/app/v2raytun/id6476628951')">Скачать для iOS</button>
+                <button class="btn-main" style="margin:8px 0;" onclick="tg.openLink('https://play.google.com/store/apps/details?id=com.v2raytun.android')">Скачать для Android</button>
             </div>
         </div>
 
         <div id="profile" class="tab-content">
             <h2>Профиль</h2>
             <div class="glass-card">
-                <div id="username" style="font-weight:600;">Пользователь</div>
-                <div id="userid" style="opacity:0.5; font-size:12px;">ID: ---</div>
+                <div id="username" style="font-weight:600; font-size:19px;">Пользователь</div>
+                <div id="userid" style="color:var(--tg-hint-color); font-size:13px; margin-top:4px;">ID: ---</div>
             </div>
         </div>
     </div>
@@ -156,10 +199,167 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        
-        if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
-            document.getElementById('userid').innerText = "ID: " + tg.initDataUnsafe.user.id;
+        tg.ready();
+
+        let subscriptionActive = false;
+        let user = null;
+
+        // Функция применения темы из Telegram
+        function applyTheme() {
+            const params = tg.themeParams;
+            const scheme = tg.colorScheme; // "light" или "dark"
+
+            document.documentElement.setAttribute('data-theme', scheme);
+
+            // Применяем цвета из themeParams
+            document.documentElement.style.setProperty('--tg-bg-color', params.bg_color || (scheme === 'dark' ? '#000' : '#f2f2f7'));
+            document.documentElement.style.setProperty('--tg-text-color', params.text_color || (scheme === 'dark' ? '#fff' : '#000'));
+            document.documentElement.style.setProperty('--tg-hint-color', params.hint_color || '#8e8e93');
+            document.documentElement.style.setProperty('--tg-button-color', params.button_color || '#007aff');
+            document.documentElement.style.setProperty('--tg-button-text-color', params.button_text_color || '#fff');
+            document.documentElement.style.setProperty('--tg-accent', params.accent_text_color || params.link_color || '#007aff');
+
+            // Обновляем статус и кнопку (цвет текста статуса)
+            const statusElem = document.getElementById('sub-status');
+            if (statusElem) {
+                statusElem.style.color = subscriptionActive 
+                    ? (params.link_color || '#34c759') 
+                    : (params.destructive_text_color || '#ff3b30');
+            }
+        }
+
+        // Слушаем смену темы в Telegram
+        tg.onEvent('themeChanged', applyTheme);
+
+        // Применяем тему сразу
+        applyTheme();
+
+        async function validateUser() {
+            const initData = tg.initData;
+            if (!initData) {
+                tg.showAlert("Не удалось получить данные");
+                return;
+            }
+
+            try {
+                const res = await fetch("https://твой-домен/api/auth", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ initData })
+                });
+                const data = await res.json();
+
+                if (data.ok && data.user) {
+                    user = data.user;
+                    localStorage.setItem("user", JSON.stringify(user));
+                    document.getElementById('username').innerText = user.first_name || "Пользователь";
+                    document.getElementById('userid').innerText = "ID: " + user.id;
+                    await checkSubscription();
+                } else {
+                    tg.showAlert("Ошибка авторизации");
+                }
+            } catch (e) {
+                tg.showAlert("Ошибка соединения");
+            }
+        }
+
+        async function checkSubscription() {
+            if (!user?.id) return;
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                const res = await fetch(`https://твой-домен/api/subscription?userId=${user.id}`);
+                const data = await res.json();
+
+                subscriptionActive = data.active;
+
+                const statusElem = document.getElementById('sub-status');
+                const btn = document.getElementById('connect-btn');
+
+                statusElem.innerHTML = subscriptionActive 
+                    ? `● Активна до ${data.expires}` 
+                    : `● Подписка не активна`;
+
+                btn.innerHTML = `<i class="fas fa-bolt"></i> Подключить v2RayTun`;
+                btn.onclick = connectVpn;
+
+                applyTheme(); // Переприменяем цвета после обновления статуса
+            } catch (e) {
+                tg.showAlert("Ошибка проверки");
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        async function getVpnConfig() {
+            document.getElementById('loading').style.display = 'block';
+            try {
+                const res = await fetch(`https://твой-домен/api/get-config?userId=${user.id}`);
+                const data = await res.json();
+
+                if (data.config) {
+                    document.getElementById('qr').innerHTML = '';
+                    new QRCode(document.getElementById('qr'), {
+                        text: data.config,
+                        width: 220,
+                        height: 220,
+                        colorDark: tg.themeParams.text_color || "#ffffff",
+                        colorLight: tg.themeParams.bg_color || "#000000"
+                    });
+
+                    tg.showPopup({
+                        title: "Конфиг готов",
+                        message: "Отсканируйте QR в v2RayTun",
+                        buttons: [
+                            {type: "ok"},
+                            {type: "default", text: "Скопировать", id: "copy"}
+                        ]
+                    }, (btnId) => {
+                        if (btnId === "copy") {
+                            tg.setClipboardText(data.config);
+                            tg.showAlert("Скопировано в буфер");
+                        }
+                    });
+                } else {
+                    tg.showAlert("Конфиг недоступен");
+                }
+            } catch (e) {
+                tg.showAlert("Ошибка");
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function connectVpn() {
+            if (subscriptionActive) {
+                getVpnConfig();
+            } else {
+                tg.showAlert("Купите подписку");
+                showTab('sub', document.querySelector('[onclick*="sub"]'));
+            }
+        }
+
+        function pay(amt) {
+            tg.showConfirm(`Оплатить ${amt} ₽?`, async (ok) => {
+                if (ok) {
+                    if (!user?.id) return tg.showAlert("Авторизуйтесь");
+                    try {
+                        const res = await fetch('https://твой-домен/api/create-1plat-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId: user.id, amount: amt })
+                        });
+                        const data = await res.json();
+                        if (data.paymentUrl) {
+                            tg.openLink(data.paymentUrl);
+                        } else {
+                            tg.showAlert('Ошибка оплаты');
+                        }
+                    } catch {
+                        tg.showAlert("Ошибка соединения");
+                    }
+                }
+            });
         }
 
         function showTab(tabId, el) {
@@ -170,18 +370,8 @@
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        function connectVpn() {
-            tg.showAlert("Сначала купите подписку!");
-        }
-
-        function pay(amt) {
-            tg.showConfirm("Оплатить " + amt + "₽?", function(ok) {
-                if(ok) {
-                    // Используем tg.openLink для перехода на твой IP
-                    tg.openLink("http://77.221.154.23:3000/api/pay?amount=" + amt);
-                }
-            });
-        }
+        // Запуск
+        validateUser();
     </script>
 </body>
 </html>
