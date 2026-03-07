@@ -9,49 +9,53 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --tg-bg-color: #f2f2f7;
-            --tg-text-color: #000000;
-            --tg-hint-color: #8e8e93;
-            --tg-button-color: #007aff;
+            --tg-bg-color: #0a0e17;
+            --tg-text-color: #e0e7ff;
+            --tg-hint-color: #94a3b8;
+            --tg-button-color: #3b82f6;
             --tg-button-text-color: #ffffff;
-            --tg-accent: #007aff;
-            --glass-bg: rgba(255, 255, 255, 0.35);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --blur: blur(20px);
-        }
+            --tg-accent: #ef4444;
+            --tg-red: #ef4444;
+            --tg-blue: #3b82f6;
 
-        [data-theme="dark"] {
-            --tg-bg-color: #000000;
-            --tg-text-color: #ffffff;
-            --tg-hint-color: #8e8e93;
-            --glass-bg: rgba(28, 28, 30, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-bg: rgba(30, 41, 59, 0.65);
+            --glass-border: rgba(59, 130, 246, 0.25);
+            --blur: blur(24px);
+            --neon-glow: 0 0 15px rgba(59, 130, 246, 0.5);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--tg-bg-color);
+            background: linear-gradient(135deg, #0a0e17 0%, #111827 100%);
             color: var(--tg-text-color);
             margin: 0; padding: 0;
             height: 100vh;
             display: flex; flex-direction: column;
             overflow: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .logo-header {
+            text-align: center;
+            padding: 20px 0 10px;
+        }
+
+        .logo-header img {
+            max-width: 180px;
+            height: auto;
+            filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.6));
         }
 
         .page-container {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
-            padding-bottom: calc(90px + env(safe-area-inset-bottom));
-            padding-top: env(safe-area-inset-top);
+            padding: 0 16px 100px;
             -webkit-overflow-scrolling: touch;
         }
 
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .glass-card {
             background: var(--glass-bg);
@@ -60,8 +64,8 @@
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            margin: 16px 0;
+            box-shadow: var(--neon-glow), 0 4px 30px rgba(0,0,0,0.4);
         }
 
         .nav-bar {
@@ -69,15 +73,15 @@
             bottom: env(safe-area-inset-bottom, 16px);
             left: 16px;
             right: 16px;
-            height: 60px;
+            height: 64px;
             background: var(--glass-bg);
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
-            border-radius: 24px;
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 28px;
             border: 1px solid var(--glass-border);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             padding: 6px;
-            box-sizing: border-box;
+            z-index: 1000;
         }
 
         .nav-wrapper {
@@ -92,134 +96,97 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--tg-text-color);
+            color: var(--tg-hint-color);
             font-size: 11px;
             font-weight: 500;
-            transition: color 0.35s ease;
+            transition: all 0.35s;
             z-index: 2;
-            gap: 2px;
+            gap: 3px;
         }
 
-        .nav-item i { font-size: 22px; }
+        .nav-item.active {
+            color: var(--tg-button-text-color);
+            text-shadow: 0 0 10px var(--tg-button-color);
+        }
 
-        .nav-item.active { color: var(--tg-button-text-color); }
+        .nav-item i { font-size: 24px; }
 
         .slider {
             position: absolute;
             top: 0; bottom: 0; left: 0;
             width: 25%;
-            background: var(--tg-button-color);
-            border-radius: 16px;
+            background: linear-gradient(135deg, var(--tg-button-color), var(--tg-accent));
+            border-radius: 22px;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 1;
-            pointer-events: none;
-            box-shadow: 0 2px 12px rgba(0, 122, 255, 0.4);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
         }
 
         .btn-main {
-            background: var(--tg-button-color);
-            color: var(--tg-button-text-color);
+            background: linear-gradient(135deg, var(--tg-button-color), #2563eb);
+            color: white;
             border: none;
             padding: 16px;
             border-radius: 16px;
             width: 100%;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 17px;
-            transition: transform 0.1s;
-            margin: 8px 0;
+            box-shadow: var(--neon-glow);
+            transition: all 0.2s;
+            margin: 12px 0;
         }
 
-        .btn-main:active { transform: scale(0.97); }
+        .btn-main:active { transform: scale(0.96); box-shadow: 0 0 25px rgba(59, 130, 246, 0.8); }
 
         .loader {
             display: none;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top: 4px solid var(--tg-accent);
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top: 5px solid var(--tg-button-color);
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 24px auto;
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        h2 { font-size: 28px; font-weight: 700; margin: 8px 0 20px; letter-spacing: -0.5px; }
-
-        #qr { margin: 20px auto; text-align: center; }
-
-        /* Горизонтальный скролл тарифов с ползунком */
-        .tariff-container {
-            position: relative;
-            overflow-x: auto;
-            padding-bottom: 12px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .tariff-grid {
-            display: flex;
-            gap: 16px;
-            padding: 0 8px;
-        }
-
-        .tariff-card {
-            flex: 0 0 280px;
-            background: var(--glass-bg);
-            border-radius: 16px;
-            padding: 20px;
+        h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 16px 0 24px;
             text-align: center;
-            scroll-snap-align: center;
-            transition: all 0.2s;
-            cursor: pointer;
+            background: linear-gradient(90deg, var(--tg-button-color), var(--tg-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .tariff-card.selected {
-            border: 2px solid var(--tg-button-color);
-            box-shadow: 0 0 0 6px rgba(0,122,255,0.15);
-            transform: scale(1.05);
-        }
+        #qr { margin: 24px auto; text-align: center; border-radius: 16px; overflow: hidden; box-shadow: var(--neon-glow); }
 
-        .tariff-icon { font-size: 48px; margin-bottom: 12px; }
-
-        .tariff-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
-
-        .tariff-price { font-size: 32px; font-weight: 700; color: var(--tg-accent); }
-
-        .tariff-selected {
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--tg-button-color);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            display: none;
-            white-space: nowrap;
-        }
-
-        .tariff-card.selected .tariff-selected { display: block; }
-
-        .profile-info {
-            margin: 12px 0;
+        .profile-info p {
+            margin: 10px 0;
             font-size: 15px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .profile-info strong { color: var(--tg-accent); }
+        .profile-info strong {
+            color: var(--tg-button-color);
+        }
     </style>
 </head>
 <body>
 
     <div class="page-container">
+        <!-- Логотип в шапке -->
+        <div class="logo-header">
+            <img src="https://files.catbox.moe/9o4k5q.png" alt="VPN TATAR Logo">
+        </div>
+
         <!-- Главная -->
         <div id="home" class="tab-content active">
-            <h2>Главная</h2>
+            <h2>Добро пожаловать</h2>
             <div class="glass-card" style="text-align:center;">
-                <div id="sub-status" style="font-size: 15px; margin-bottom: 12px;">● Подписка не активна</div>
+                <div id="sub-status" style="font-size: 16px; margin-bottom: 16px; font-weight: 600;">● Подписка не активна</div>
                 <button id="connect-btn" class="btn-main" onclick="connectVpn()">
                     <i class="fas fa-bolt"></i> Подключить v2RayTun
                 </button>
@@ -234,44 +201,15 @@
         <!-- Подписка -->
         <div id="sub" class="tab-content">
             <h2>Подписка</h2>
-
             <div class="glass-card">
-                <h3>Выберите тариф</h3>
-                <div class="tariff-container">
-                    <div class="tariff-grid">
-                        <div class="tariff-card" data-tariff="plus" data-price="100" onclick="selectTariff(this)">
-                            <div class="tariff-icon">+</div>
-                            <div class="tariff-title">Плюс</div>
-                            <div class="tariff-price">100 ₽ / мес</div>
-                            <div class="tariff-selected">Выбрано</div>
-                        </div>
-
-                        <div class="tariff-card" data-tariff="premium" data-price="250" onclick="selectTariff(this)">
-                            <div class="tariff-icon">♦</div>
-                            <div class="tariff-title">Премиум</div>
-                            <div class="tariff-price">250 ₽ / 3 мес</div>
-                            <div class="tariff-selected">Выбрано</div>
-                        </div>
-
-                        <div class="tariff-card" data-tariff="family" data-price="756" onclick="selectTariff(this)">
-                            <div class="tariff-icon">👥</div>
-                            <div class="tariff-title">Семья</div>
-                            <div class="tariff-price">756 ₽ / год</div>
-                            <div class="tariff-selected">Выбрано</div>
-                        </div>
-                    </div>
-                </div>
+                <h3 style="text-align:center; margin-bottom:16px;">Бесплатный доступ</h3>
+                <p style="color: var(--tg-hint-color); text-align:center; margin-bottom:20px;">
+                    Пока оплата не запущена — все конфиги бесплатные
+                </p>
+                <button class="btn-main" onclick="getFreeConfig()">
+                    <i class="fas fa-gift"></i> Получить конфиг бесплатно
+                </button>
             </div>
-
-            <div class="glass-card benefits">
-                <h3>Вы получаете</h3>
-                <div class="benefit-item"><i class="fas fa-check benefit-check"></i> Безлимитный трафик</div>
-                <div class="benefit-item"><i class="fas fa-check benefit-check"></i> Высокая скорость VLESS + Reality</div>
-                <div class="benefit-item"><i class="fas fa-check benefit-check"></i> Автоподключение в v2RayTun</div>
-                <div class="benefit-item"><i class="fas fa-check benefit-check"></i> До 5 устройств (Семья)</div>
-            </div>
-
-            <button class="btn-main" onclick="paySelected()">Купить выбранный тариф</button>
         </div>
 
         <!-- Устройства -->
@@ -279,8 +217,8 @@
             <h2>Устройства</h2>
             <div class="glass-card">
                 <b>iOS / Android</b>
-                <p style="color:var(--tg-hint-color); font-size:15px; margin:12px 0;">
-                    Скачайте v2RayTun и импортируйте конфиг через QR или автоподключение.
+                <p style="color:var(--tg-hint-color); margin:16px 0;">
+                    Скачайте v2RayTun и используйте автоподключение или QR-код.
                 </p>
             </div>
         </div>
@@ -289,16 +227,21 @@
         <div id="profile" class="tab-content">
             <h2>Профиль</h2>
             <div class="glass-card">
-                <div style="font-size:19px; font-weight:600;" id="username">Пользователь</div>
-                <div style="color:var(--tg-hint-color); font-size:13px; margin:4px 0;" id="userid">ID: ---</div>
-                <div class="profile-info">
-                    <strong>Дата регистрации:</strong> <span id="reg-date">Неизвестно</span><br>
-                    <strong>Статус подписки:</strong> <span id="sub-status-profile">Не активна</span><br>
-                    <strong>Тариф:</strong> <span id="tariff">—</span><br>
-                    <strong>Начало:</strong> <span id="sub-start">—</span><br>
-                    <strong>Окончание:</strong> <span id="sub-end">—</span><br>
-                    <strong>Осталось дней:</strong> <span id="days-left">—</span>
+                <div style="text-align:center; margin-bottom:20px;">
+                    <img src="https://files.catbox.moe/9o4k5q.png" alt="VPN TATAR" style="max-width:140px; margin-bottom:12px;">
                 </div>
+                <div class="profile-info">
+                    <p><strong>Telegram ID:</strong> <span id="user-id">---</span></p>
+                    <p><strong>Дата регистрации:</strong> <span id="reg-date" class="reg-date">Неизвестно</span></p>
+                    <p><strong>Статус подписки:</strong> <span id="sub-status-profile">Не активна</span></p>
+                    <p><strong>Тариф:</strong> <span id="tariff">—</span></p>
+                    <p><strong>Начало:</strong> <span id="sub-start">—</span></p>
+                    <p><strong>Окончание:</strong> <span id="sub-end">—</span></p>
+                    <p><strong>Осталось дней:</strong> <span id="days-left">—</span></p>
+                </div>
+                <button class="btn-main" onclick="updateProfile()" style="margin-top:16px;">
+                    Обновить данные
+                </button>
             </div>
         </div>
     </div>
@@ -326,7 +269,8 @@
         tg.expand();
         tg.ready();
 
-        let user = null;
+        const testConfig = "vless://test1234567890abcdef@fake.server.com:443?type=tcp&security=reality&pbk=abcdef1234567890&headerType=none&fp=chrome&sni=www.google.com&sid=12345678#VPN+TATAR+Test";
+
         let subscription = {
             active: false,
             tariff: null,
@@ -334,10 +278,6 @@
             end: null,
             daysLeft: 0
         };
-        let selectedTariff = null;
-
-        // Тестовый конфиг
-        const testConfig = "vless://test1234567890abcdef@fake.server.com:443?type=tcp&security=reality&pbk=abcdef1234567890&headerType=none&fp=chrome&sni=www.google.com&sid=12345678#VPN+TATAR+Test";
 
         function applyTheme() {
             const params = tg.themeParams;
@@ -361,26 +301,28 @@
 
             tg.HapticFeedback.impactOccurred('light');
 
-            // Обновляем профиль при открытии
             if (tabId === 'profile') updateProfile();
         }
 
-        function selectTariff(card) {
-            document.querySelectorAll('.tariff-card').forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-            selectedTariff = card.querySelector('.tariff-title').innerText;
-        }
-
         function updateProfile() {
-            const regDate = localStorage.getItem('regDate') || new Date().toLocaleDateString('ru-RU');
-            localStorage.setItem('regDate', regDate);
+            const user = tg.initDataUnsafe?.user;
+            if (user) {
+                document.getElementById('username').innerText = user.first_name || "Пользователь";
+                document.getElementById('user-id').innerText = user.id;
 
-            document.getElementById('reg-date').innerText = regDate;
-            document.getElementById('sub-status-profile').innerText = subscription.active ? 'Активна' : 'Не активна';
-            document.getElementById('tariff').innerText = subscription.tariff || '—';
-            document.getElementById('sub-start').innerText = subscription.start || '—';
-            document.getElementById('sub-end').innerText = subscription.end || '—';
-            document.getElementById('days-left').innerText = subscription.daysLeft > 0 ? subscription.daysLeft + ' дней' : '—';
+                let regDate = localStorage.getItem('regDate');
+                if (!regDate) {
+                    regDate = new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    localStorage.setItem('regDate', regDate);
+                }
+                document.getElementById('reg-date').innerText = regDate;
+
+                document.getElementById('sub-status-profile').innerText = subscription.active ? 'Активна' : 'Не активна';
+                document.getElementById('tariff').innerText = subscription.tariff || '—';
+                document.getElementById('sub-start').innerText = subscription.start || '—';
+                document.getElementById('sub-end').innerText = subscription.end || '—';
+                document.getElementById('days-left').innerText = subscription.daysLeft > 0 ? `${subscription.daysLeft} дней` : '—';
+            }
         }
 
         function connectVpn() {
@@ -397,7 +339,7 @@
                 });
 
                 document.getElementById('auto-connect-btn').style.display = 'block';
-                tg.showAlert("Тестовый конфиг загружен. Попробуй автоподключение!");
+                tg.showAlert("Тестовый конфиг загружен! Используй автоподключение.");
             }, 1200);
         }
 
@@ -407,36 +349,19 @@
 
             setTimeout(() => {
                 tg.setClipboardText(testConfig);
-                tg.showAlert("Если v2RayTun не открылся — конфиг скопирован в буфер.");
+                tg.showAlert("Если v2RayTun не открылся — конфиг скопирован.");
             }, 1500);
         }
 
-        function paySelected() {
-            if (!selectedTariff) return tg.showAlert("Выберите тариф!");
-            tg.showAlert(`Оплата ${selectedTariff} — в разработке (подключи 1plat)`);
-            // Здесь будет fetch к backend с выбранным тарифом
+        function getFreeConfig() {
+            connectVpn(); // Пока тестовый, потом заменим на реальный
         }
 
-        // Инициализация
         window.addEventListener('load', () => {
             document.querySelector('.slider').style.transform = 'translateX(0%)';
 
             if (tg.initDataUnsafe?.user) {
-                user = tg.initDataUnsafe.user;
-                document.getElementById('username').innerText = user.first_name;
-                document.getElementById('userid').innerText = "ID: " + user.id;
-
-                // Симуляция загрузки подписки
-                setTimeout(() => {
-                    subscription = {
-                        active: false,
-                        tariff: null,
-                        start: null,
-                        end: null,
-                        daysLeft: 0
-                    };
-                    document.getElementById('sub-status').innerText = "● Подписка не активна";
-                }, 800);
+                updateProfile();
             }
         });
     </script>
