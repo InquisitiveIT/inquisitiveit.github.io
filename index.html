@@ -35,11 +35,9 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: var(--tg-bg-color);
             color: var(--tg-text-color);
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             overflow: hidden;
             transition: background 0.3s ease, color 0.3s ease;
         }
@@ -56,10 +54,7 @@
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .glass-card {
             background: var(--glass-bg);
@@ -72,7 +67,35 @@
             box-shadow: 0 4px 30px rgba(0,0,0,0.1);
         }
 
-        /* ─────────────── Нижнее меню с ползунком ─────────────── */
+        .tariff-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .tariff-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            backdrop-filter: var(--blur);
+        }
+
+        .tariff-card .price {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 8px 0;
+            color: var(--tg-accent);
+        }
+
+        .tariff-card .old-price {
+            text-decoration: line-through;
+            color: var(--tg-hint-color);
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
         .nav-bar {
             position: fixed;
             bottom: env(safe-area-inset-bottom, 16px);
@@ -93,9 +116,6 @@
             position: relative;
             display: flex;
             height: 100%;
-            background: transparent;
-            border-radius: 18px;
-            overflow: hidden;
         }
 
         .nav-item {
@@ -105,7 +125,6 @@
             align-items: center;
             justify-content: center;
             color: var(--tg-text-color);
-            text-decoration: none;
             font-size: 11px;
             font-weight: 500;
             transition: color 0.35s ease;
@@ -113,29 +132,22 @@
             gap: 2px;
         }
 
-        .nav-item i {
-            font-size: 22px;
-        }
+        .nav-item i { font-size: 22px; }
 
-        .nav-item.active {
-            color: var(--tg-button-text-color);
-        }
+        .nav-item.active { color: var(--tg-button-text-color); }
 
         .slider {
             position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: 25%; /* 4 вкладки → 100%/4 */
+            top: 0; bottom: 0; left: 0;
+            width: 25%;
             background: var(--tg-button-color);
             border-radius: 16px;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 1;
-            pointer-events: none;
             box-shadow: 0 2px 12px rgba(0, 122, 255, 0.4);
         }
 
-        .btn-main {
+        .btn-main, .btn-auto {
             background: var(--tg-button-color);
             color: var(--tg-button-text-color);
             border: none;
@@ -144,32 +156,28 @@
             width: 100%;
             font-weight: 600;
             font-size: 17px;
-            transition: transform 0.1s;
+            margin: 8px 0;
+            transition: transform 0.12s;
         }
 
-        .btn-main:active {
-            transform: scale(0.97);
-        }
+        .btn-main:active, .btn-auto:active { transform: scale(0.97); }
 
-        h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 8px 0 20px;
-            letter-spacing: -0.5px;
-        }
-
-        #qr {
-            margin: 20px auto;
-            text-align: center;
-        }
-
-        #loading {
+        .loader {
             display: none;
-            text-align: center;
-            margin: 16px 0;
-            color: var(--tg-hint-color);
-            font-size: 15px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--tg-accent);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
         }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        h2 { font-size: 28px; font-weight: 700; margin: 8px 0 20px; letter-spacing: -0.5px; }
+
+        #qr { margin: 20px auto; text-align: center; }
     </style>
 </head>
 <body>
@@ -178,23 +186,39 @@
         <div id="home" class="tab-content active">
             <h2>Главная</h2>
             <div class="glass-card" style="text-align:center;">
-                <div id="sub-status" style="font-size: 15px; margin-bottom: 12px;">● Подписка не активна</div>
+                <div id="sub-status" style="font-size:15px; margin-bottom:12px;">● Подписка не активна</div>
                 <button id="connect-btn" class="btn-main">
                     <i class="fas fa-bolt"></i> Подключить v2RayTun
                 </button>
-                <div id="loading">Загрузка конфигурации...</div>
+                <div class="loader" id="main-loader"></div>
                 <div id="qr"></div>
+                <button id="auto-connect-btn" class="btn-auto" style="display:none;">
+                    <i class="fas fa-link"></i> Автоподключение v2RayTun
+                </button>
             </div>
         </div>
 
         <div id="sub" class="tab-content">
             <h2>Подписка</h2>
-            <div class="glass-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:17px; margin-bottom:12px;">
-                    <span><b>1 месяц</b></span>
-                    <span>199 ₽</span>
+            <div class="tariff-grid">
+                <div class="tariff-card glass-card">
+                    <h3>1 месяц</h3>
+                    <div class="price">100 ₽</div>
+                    <button class="btn-main" onclick="pay(100, '1m')">Купить</button>
                 </div>
-                <button class="btn-main" onclick="pay(199)">Купить</button>
+
+                <div class="tariff-card glass-card">
+                    <h3>3 месяца</h3>
+                    <div class="price">250 ₽</div>
+                    <button class="btn-main" onclick="pay(250, '3m')">Купить</button>
+                </div>
+
+                <div class="tariff-card glass-card">
+                    <h3>1 год</h3>
+                    <div class="price">756 ₽ <span class="old-price">900 ₽</span></div>
+                    <div style="font-size:13px; color:var(--tg-hint-color); margin-bottom:8px;">-30% скидка</div>
+                    <button class="btn-main" onclick="pay(756, '12m')">Купить</button>
+                </div>
             </div>
         </div>
 
@@ -203,12 +227,12 @@
             <div class="glass-card">
                 <b>iOS / Android</b>
                 <p style="color:var(--tg-hint-color); font-size:15px; margin:12px 0;">
-                    Скачайте v2RayTun и импортируйте конфиг через QR или ссылку.
+                    Скачайте v2RayTun и импортируйте конфиг.
                 </p>
-                <button class="btn-main" style="margin:8px 0;" onclick="tg.openLink('https://apps.apple.com/app/v2raytun/id6476628951')">
+                <button class="btn-main" onclick="tg.openLink('https://apps.apple.com/app/v2raytun/id6476628951')">
                     Скачать для iOS
                 </button>
-                <button class="btn-main" style="margin:8px 0;" onclick="tg.openLink('https://play.google.com/store/apps/details?id=com.v2raytun.android')">
+                <button class="btn-main" onclick="tg.openLink('https://play.google.com/store/apps/details?id=com.v2raytun.android')">
                     Скачать для Android
                 </button>
             </div>
@@ -226,22 +250,17 @@
     <nav class="nav-bar">
         <div class="nav-wrapper">
             <a href="javascript:void(0)" class="nav-item active" data-tab="home" onclick="showTab('home', this)">
-                <i class="fas fa-home"></i>
-                <span>Главная</span>
+                <i class="fas fa-home"></i><span>Главная</span>
             </a>
             <a href="javascript:void(0)" class="nav-item" data-tab="sub" onclick="showTab('sub', this)">
-                <i class="fas fa-crown"></i>
-                <span>Подписка</span>
+                <i class="fas fa-crown"></i><span>Подписка</span>
             </a>
             <a href="javascript:void(0)" class="nav-item" data-tab="devices" onclick="showTab('devices', this)">
-                <i class="fas fa-desktop"></i>
-                <span>Устройства</span>
+                <i class="fas fa-desktop"></i><span>Устройства</span>
             </a>
             <a href="javascript:void(0)" class="nav-item" data-tab="profile" onclick="showTab('profile', this)">
-                <i class="fas fa-user-circle"></i>
-                <span>Профиль</span>
+                <i class="fas fa-user-circle"></i><span>Профиль</span>
             </a>
-
             <div class="slider"></div>
         </div>
     </nav>
@@ -253,26 +272,20 @@
 
         let subscriptionActive = false;
         let user = null;
+        let currentConfig = null; // сохраним конфиг для автоподключения
 
         function applyTheme() {
             const params = tg.themeParams;
             const scheme = tg.colorScheme;
-
             document.documentElement.setAttribute('data-theme', scheme);
 
-            document.documentElement.style.setProperty('--tg-bg-color', params.bg_color);
-            document.documentElement.style.setProperty('--tg-text-color', params.text_color);
-            document.documentElement.style.setProperty('--tg-hint-color', params.hint_color);
-            document.documentElement.style.setProperty('--tg-button-color', params.button_color);
-            document.documentElement.style.setProperty('--tg-button-text-color', params.button_text_color);
-            document.documentElement.style.setProperty('--tg-accent', params.link_color || params.accent_text_color || '#007aff');
+            ['bg_color','text_color','hint_color','button_color','button_text_color','link_color']
+                .forEach(key => {
+                    if (params[key]) document.documentElement.style.setProperty(`--tg-${key.replace(/_/g,'-')}`, params[key]);
+                });
 
-            const statusElem = document.getElementById('sub-status');
-            if (statusElem) {
-                statusElem.style.color = subscriptionActive 
-                    ? (params.link_color || '#34c759') 
-                    : (params.destructive_text_color || '#ff3b30');
-            }
+            document.getElementById('sub-status').style.color = subscriptionActive 
+                ? (params.link_color || '#34c759') : (params.destructive_text_color || '#ff3b30');
         }
 
         tg.onEvent('themeChanged', applyTheme);
@@ -285,11 +298,10 @@
             try {
                 const res = await fetch("https://твой-домен/api/auth", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({ initData })
                 });
                 const data = await res.json();
-
                 if (data.ok && data.user) {
                     user = data.user;
                     localStorage.setItem("user", JSON.stringify(user));
@@ -306,37 +318,37 @@
 
         async function checkSubscription() {
             if (!user?.id) return;
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('main-loader').style.display = 'block';
 
             try {
                 const res = await fetch(`https://твой-домен/api/subscription?userId=${user.id}`);
                 const data = await res.json();
-
                 subscriptionActive = data.active;
 
-                const statusElem = document.getElementById('sub-status');
-                statusElem.innerHTML = subscriptionActive 
-                    ? `● Активна до ${data.expires}` 
-                    : `● Подписка не активна`;
-
+                document.getElementById('sub-status').innerHTML = subscriptionActive 
+                    ? `● Активна до ${data.expires}` : `● Подписка не активна`;
                 applyTheme();
             } catch {
                 tg.showAlert("Ошибка проверки подписки");
             } finally {
-                document.getElementById('loading').style.display = 'none';
+                document.getElementById('main-loader').style.display = 'none';
             }
         }
 
         async function getVpnConfig() {
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('main-loader').style.display = 'block';
+            document.getElementById('auto-connect-btn').style.display = 'none';
+
             try {
                 const res = await fetch(`https://твой-домен/api/get-config?userId=${user.id}`);
                 const data = await res.json();
 
                 if (data.config) {
+                    currentConfig = data.config;
+
                     document.getElementById('qr').innerHTML = '';
                     new QRCode(document.getElementById('qr'), {
-                        text: data.config,
+                        text: currentConfig,
                         width: 220,
                         height: 220,
                         colorDark: tg.themeParams.text_color || "#ffffff",
@@ -345,51 +357,69 @@
 
                     tg.showPopup({
                         title: "Конфиг готов",
-                        message: "Отсканируйте QR в v2RayTun",
+                        message: "Отсканируйте QR или используйте автоподключение",
                         buttons: [
                             {type: "ok"},
                             {type: "default", text: "Скопировать", id: "copy"}
                         ]
                     }, (btnId) => {
                         if (btnId === "copy") {
-                            tg.setClipboardText(data.config);
+                            tg.setClipboardText(currentConfig);
                             tg.showAlert("Скопировано");
                         }
                     });
+
+                    // Показываем кнопку автоподключения
+                    document.getElementById('auto-connect-btn').style.display = 'block';
                 } else {
-                    tg.showAlert("Конфиг недоступен");
+                    tg.showAlert("Не удалось получить конфиг");
                 }
             } catch {
-                tg.showAlert("Ошибка");
+                tg.showAlert("Ошибка сервера");
             } finally {
-                document.getElementById('loading').style.display = 'none';
+                document.getElementById('main-loader').style.display = 'none';
             }
+        }
+
+        function autoConnect() {
+            if (!currentConfig) return tg.showAlert("Конфиг не загружен");
+
+            const encoded = encodeURIComponent(currentConfig);
+            const deepLink = `v2raytun://import?config=${encoded}`;
+
+            tg.openLink(deepLink);
+
+            // Запасной вариант через 1.5 секунды
+            setTimeout(() => {
+                tg.showAlert("Если v2RayTun не открылся:\n1. Скопируйте конфиг ниже\n2. Вставьте в приложение вручную");
+                tg.setClipboardText(currentConfig);
+            }, 1500);
         }
 
         function connectVpn() {
             if (subscriptionActive) {
                 getVpnConfig();
             } else {
-                tg.showAlert("Купите подписку");
+                tg.showAlert("Сначала оформите подписку");
                 showTab('sub', document.querySelector('[data-tab="sub"]'));
             }
         }
 
-        function pay(amt) {
-            tg.showConfirm(`Оплатить ${amt} ₽?`, async (ok) => {
+        function pay(amount, period) {
+            tg.showConfirm(`Оплатить \( {amount} ₽ ( \){period})?`, async (ok) => {
                 if (ok) {
                     if (!user?.id) return tg.showAlert("Авторизуйтесь");
                     try {
                         const res = await fetch('https://твой-домен/api/create-1plat-payment', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ userId: user.id, amount: amt })
+                            body: JSON.stringify({ userId: user.id, amount, period })
                         });
                         const data = await res.json();
                         if (data.paymentUrl) {
                             tg.openLink(data.paymentUrl);
                         } else {
-                            tg.showAlert('Ошибка создания ссылки');
+                            tg.showAlert('Ошибка создания платежа');
                         }
                     } catch {
                         tg.showAlert("Ошибка соединения");
@@ -405,7 +435,6 @@
             document.getElementById(tabId).classList.add('active');
             el.classList.add('active');
 
-            // Двигаем ползунок
             const index = Array.from(document.querySelectorAll('.nav-item')).indexOf(el);
             document.querySelector('.slider').style.transform = `translateX(${index * 100}%)`;
 
@@ -415,7 +444,7 @@
         // Инициализация
         validateUser();
 
-        // Устанавливаем начальное положение ползунка
+        // Начальное положение ползунка
         window.addEventListener('load', () => {
             const active = document.querySelector('.nav-item.active');
             if (active) {
@@ -423,6 +452,9 @@
                 document.querySelector('.slider').style.transform = `translateX(${index * 100}%)`;
             }
         });
+
+        // Привязываем автоподключение
+        document.getElementById('auto-connect-btn').addEventListener('click', autoConnect);
     </script>
 </body>
 </html>
