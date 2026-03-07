@@ -132,6 +132,7 @@
             font-weight: 600;
             font-size: 17px;
             transition: transform 0.1s;
+            margin: 8px 0;
         }
 
         .btn-main:active { transform: scale(0.97); }
@@ -236,12 +237,12 @@
             <h2>Главная</h2>
             <div class="glass-card" style="text-align:center;">
                 <div id="sub-status" style="font-size: 15px; margin-bottom: 12px;">● Подписка не активна</div>
-                <button id="connect-btn" class="btn-main">
+                <button id="connect-btn" class="btn-main" onclick="connectVpn()">
                     <i class="fas fa-bolt"></i> Подключить v2RayTun
                 </button>
                 <div class="loader" id="main-loader"></div>
                 <div id="qr"></div>
-                <button id="auto-connect-btn" class="btn-main" style="display:none; margin-top:12px;">
+                <button id="auto-connect-btn" class="btn-main" style="display:none;" onclick="autoConnect()">
                     <i class="fas fa-link"></i> Автоподключение v2RayTun
                 </button>
             </div>
@@ -262,26 +263,26 @@
 
             <h3>Выберите период</h3>
             <div class="segmented-wrapper">
-                <div class="segment-item active" data-period="monthly" onclick="selectPeriod(this)">Помесячно</div>
-                <div class="segment-item" data-period="yearly" onclick="selectPeriod(this)">Ежегодно <span style="color:var(--tg-accent);">-30%</span></div>
+                <div class="segment-item active" onclick="selectPeriod(this)">Помесячно</div>
+                <div class="segment-item" onclick="selectPeriod(this)">Ежегодно <span style="color:var(--tg-accent);">-30%</span></div>
                 <div class="segment-slider"></div>
             </div>
 
             <h3>Выберите тариф</h3>
             <div class="tariff-grid">
-                <div class="tariff-card" data-tariff="plus" data-price-monthly="100" data-price-yearly="840" onclick="selectTariff(this)">
+                <div class="tariff-card" onclick="selectTariff(this)">
                     <div class="tariff-icon">+</div>
                     <div class="tariff-title">Плюс</div>
                     <div class="tariff-price">100 ₽</div>
                 </div>
 
-                <div class="tariff-card" data-tariff="premium" data-price-monthly="250" data-price-yearly="2100" onclick="selectTariff(this)">
+                <div class="tariff-card" onclick="selectTariff(this)">
                     <div class="tariff-icon">♦</div>
                     <div class="tariff-title">Премиум</div>
                     <div class="tariff-price">250 ₽</div>
                 </div>
 
-                <div class="tariff-card" data-tariff="family" data-price-monthly="756" data-price-yearly="6300" onclick="selectTariff(this)">
+                <div class="tariff-card" onclick="selectTariff(this)">
                     <div class="tariff-icon">👥</div>
                     <div class="tariff-title">Семья</div>
                     <div class="tariff-price">756 ₽</div>
@@ -299,7 +300,7 @@
             <button class="btn-main" onclick="paySelected()">Купить</button>
         </div>
 
-        <!-- Устройства и Профиль — как было -->
+        <!-- Устройства -->
         <div id="devices" class="tab-content">
             <h2>Устройства</h2>
             <div class="glass-card">
@@ -308,6 +309,7 @@
             </div>
         </div>
 
+        <!-- Профиль -->
         <div id="profile" class="tab-content">
             <h2>Профиль</h2>
             <div class="glass-card">
@@ -340,14 +342,14 @@
         tg.expand();
         tg.ready();
 
-        // Тестовый конфиг для механики (можно заменить на реальный с бэкенда)
+        // Тестовый конфиг для проверки механики
         const testConfig = "vless://test1234567890abcdef@fake.server.com:443?type=tcp&security=reality&pbk=abcdef1234567890&headerType=none&fp=chrome&sni=www.google.com&sid=12345678#VPN+TATAR+Test";
 
         function applyTheme() {
             const params = tg.themeParams;
             document.documentElement.setAttribute('data-theme', tg.colorScheme);
             Object.entries(params).forEach(([key, value]) => {
-                document.documentElement.style.setProperty(`--tg-${key.replace(/_/g, '-')}`, value);
+                if (value) document.documentElement.style.setProperty(`--tg-${key.replace(/_/g, '-')}`, value);
             });
         }
 
@@ -357,8 +359,82 @@
         function showTab(tabId, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            const tab = document.getElementById(tabId);
+            if (tab) tab.classList.add('active');
+            if (el) el.classList.add('active');
+
+            const items = document.querySelectorAll('.nav-item');
+            const index = Array.from(items).indexOf(el);
+            const slider = document.querySelector('.nav-bar .slider');
+            if (slider && index >= 0) slider.style.transform = `translateX(${index * 100}%)`;
+
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function selectPeriod(el) {
+            if (!el) return;
+            document.querySelectorAll('.segment-item').forEach(item => item.classList.remove('active'));
             el.classList.add('active');
 
-            const index = Array.from(document.querySelectorAll('.nav-item')).indexOf(el);
-            document.querySelector('.nav-bar .slider').style.transform = `translateX(${index * 100}%)
+            const items = document.querySelectorAll('.segment-item');
+            const index = Array.from(items).indexOf(el);
+            const slider = document.querySelector('.segment-slider');
+            if (slider && index >= 0) slider.style.transform = `translateX(${index * 100}%)`;
+        }
+
+        function selectTariff(card) {
+            if (!card) return;
+            document.querySelectorAll('.tariff-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        }
+
+        function connectVpn() {
+            const loader = document.getElementById('main-loader');
+            const qrDiv = document.getElementById('qr');
+            const autoBtn = document.getElementById('auto-connect-btn');
+
+            if (loader) loader.style.display = 'block';
+
+            // Симуляция загрузки
+            setTimeout(() => {
+                if (loader) loader.style.display = 'none';
+
+                if (qrDiv) {
+                    qrDiv.innerHTML = '';
+                    new QRCode(qrDiv, {
+                        text: testConfig,
+                        width: 220,
+                        height: 220
+                    });
+                }
+
+                if (autoBtn) autoBtn.style.display = 'block';
+                tg.showAlert("Тестовый конфиг загружен! Попробуй автоподключение.");
+            }, 1200);
+        }
+
+        function autoConnect() {
+            const encoded = encodeURIComponent(testConfig);
+            tg.openLink(`v2raytun://import?config=${encoded}`);
+
+            setTimeout(() => {
+                tg.setClipboardText(testConfig);
+                tg.showAlert("Если v2RayTun не открылся — конфиг скопирован в буфер.\nВставь вручную.");
+            }, 1500);
+        }
+
+        function paySelected() {
+            tg.showAlert("Выберите тариф и период, затем нажмите «Купить».\n(Пока заглушка — подключи backend)");
+        }
+
+        // Инициализация ползунков
+        window.addEventListener('load', () => {
+            const navSlider = document.querySelector('.nav-bar .slider');
+            if (navSlider) navSlider.style.transform = 'translateX(0%)';
+
+            const segSlider = document.querySelector('.segment-slider');
+            if (segSlider) segSlider.style.transform = 'translateX(0%)';
+        });
+    </script>
+</body>
+</html>
