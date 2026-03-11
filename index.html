@@ -3,84 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VPN TATAR</title>
+    <title>VPN PORT Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --bg: #0a0e17;
-            --text: #e0e7ff;
-            --hint: #94a3b8;
-            --accent-blue: #3b82f6;
-            --accent-red: #ef4444;
-            --glass: rgba(30, 41, 59, 0.65);
-            --border: rgba(59, 130, 246, 0.25);
-            --blur: blur(24px);
-            --glow: 0 0 15px rgba(59, 130, 246, 0.5);
+            --bg-deep: #05080f;
+            --accent: #3b82f6;
+            --text-main: #ffffff;
+            --text-hint: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #0a0e17 0%, #111827 100%);
-            color: var(--text);
+            background: radial-gradient(circle at top right, #1a2333, #05080f);
+            color: var(--text-main);
             margin: 0; padding: 0;
             height: 100vh;
             display: flex; flex-direction: column;
             overflow: hidden;
         }
 
-        .logo-header {
+        /* Анимированный фон */
+        .bg-glow {
+            position: fixed;
+            width: 300px; height: 300px;
+            background: var(--accent);
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.12;
+            z-index: -1;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes float {
+            from { transform: translate(-20%, -20%); }
+            to { transform: translate(110%, 50%); }
+        }
+
+        /* Шапка */
+        .header {
             text-align: center;
-            padding: 20px 0 10px;
+            padding: 20px 0;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
+        .header span { color: var(--accent); }
 
-        .logo-header img {
-            max-width: 180px;
-            filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.6));
-        }
-
+        /* Контейнер страниц */
         .page-container {
             flex: 1;
             overflow-y: auto;
-            padding: 0 16px 100px;
-            -webkit-overflow-scrolling: touch;
+            padding: 0 16px 120px;
+            position: relative;
         }
 
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
-        .tab-content.active { display: block; }
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        /* Карточки */
         .glass-card {
             background: var(--glass);
-            backdrop-filter: var(--blur);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 16px 0;
-            box-shadow: var(--glow), 0 4px 30px rgba(0,0,0,0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 16px;
         }
 
+        /* Статус */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        /* Кнопки */
+        .btn-main {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #fff;
+            border: none;
+            padding: 18px;
+            border-radius: 18px;
+            width: 100%;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+            padding: 14px;
+            border-radius: 16px;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+
+        /* Сетка тарифов */
+        .tariff-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .tariff-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+        }
+        .tariff-item.popular {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        /* Навигация */
         .nav-bar {
             position: fixed;
-            bottom: env(safe-area-inset-bottom, 16px);
-            left: 16px;
-            right: 16px;
-            height: 64px;
-            background: var(--glass);
-            backdrop-filter: blur(40px);
-            border-radius: 28px;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            padding: 6px;
-            z-index: 1000;
-        }
-
-        .nav-wrapper {
-            position: relative;
+            bottom: 25px; left: 16px; right: 16px;
+            height: 70px;
+            background: rgba(10, 15, 25, 0.85);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
             display: flex;
-            height: 100%;
+            padding: 0 10px;
+            z-index: 1000;
         }
 
         .nav-item {
@@ -89,297 +169,213 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--hint);
-            font-size: 11px;
-            font-weight: 500;
-            transition: all 0.35s;
+            color: var(--text-hint);
+            font-size: 10px;
+            text-decoration: none;
             z-index: 2;
-            gap: 3px;
         }
-
-        .nav-item.active {
-            color: white;
-            text-shadow: 0 0 10px var(--accent-blue);
-        }
-
-        .nav-item i { font-size: 24px; }
+        .nav-item.active { color: #fff; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
 
         .slider {
             position: absolute;
-            top: 0; bottom: 0; left: 0;
-            width: 25%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-red));
-            border-radius: 22px;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            top: 10px;
+            width: calc(25% - 15px); height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
         }
 
-        .btn-main {
-            background: linear-gradient(135deg, var(--accent-blue), #2563eb);
-            color: white;
-            border: none;
-            padding: 16px;
+        #qr canvas {
+            margin: 0 auto;
+            border: 10px solid white;
             border-radius: 16px;
-            width: 100%;
-            font-weight: 700;
-            font-size: 17px;
-            box-shadow: var(--glow);
-            transition: all 0.2s;
-            margin: 12px 0;
         }
 
-        .btn-main:active { transform: scale(0.96); box-shadow: 0 0 25px rgba(59, 130, 246, 0.8); }
-
-        .loader {
-            display: none;
-            border: 5px solid rgba(255,255,255,0.1);
-            border-top: 5px solid var(--accent-blue);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 24px auto;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        h2 {
-            font-size: 28px;
-            font-weight: 800;
-            margin: 16px 0 24px;
-            text-align: center;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        #qr {
-            margin: 24px auto;
-            text-align: center;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--glow);
-        }
-
-        .profile-info p {
-            margin: 10px 0;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .profile-info strong {
-            color: var(--accent-blue);
-        }
-
-        .download-btns {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
+        .lang-toggle {
+            position: absolute; top: 20px; right: 16px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
+    <div class="bg-glow"></div>
+    <button class="lang-toggle" onclick="toggleLang()">RU/EN</button>
+    <div class="header">VPN <span>PORT</span></div>
+
     <div class="page-container">
-        <!-- Логотип -->
-        <div class="logo-header">
-            <img src="https://i.imgur.com/9o4k5q.png" alt="VPN TATAR Logo"> <!-- Новый надёжный хостинг -->
-        </div>
-
-        <!-- Главная -->
+        
         <div id="home" class="tab-content active">
-            <h2>Добро пожаловать</h2>
             <div class="glass-card" style="text-align:center;">
-                <div id="sub-status" style="font-size:16px; margin-bottom:16px; font-weight:600;">
-                    ● Подписка не активна
-                </div>
-                <button id="connect-btn" class="btn-main" onclick="connectVpn()">
-                    <i class="fas fa-bolt"></i> Подключить v2RayTun
+                <div class="status-badge" id="status-text" data-key="status_inactive">● Подписка не активна</div>
+                
+                <button class="btn-main" onclick="activateKeys()">
+                    <i class="fas fa-bolt"></i> <span data-key="btn_get_key">Получить ключ PORT</span>
                 </button>
-                <div class="loader" id="main-loader"></div>
-                <div id="qr"></div>
-                <button id="auto-connect-btn" class="btn-main" style="display:none;" onclick="autoConnect()">
-                    <i class="fas fa-link"></i> Автоподключение v2RayTun
-                </button>
-            </div>
-        </div>
 
-        <!-- Подписка -->
-        <div id="sub" class="tab-content">
-            <h2>Подписка</h2>
-            <div class="glass-card">
-                <h3 style="text-align:center; margin-bottom:16px;">Бесплатный доступ</h3>
-                <p style="color:var(--tg-hint-color); text-align:center; margin-bottom:20px;">
-                    Пока оплата не запущена — все конфиги бесплатные
-                </p>
-                <button class="btn-main" onclick="getFreeConfig()">
-                    <i class="fas fa-gift"></i> Получить конфиг бесплатно
-                </button>
-            </div>
-        </div>
+                <div id="qr" style="margin: 25px 0;"></div>
 
-        <!-- Устройства -->
-        <div id="devices" class="tab-content">
-            <h2>Устройства</h2>
-            <div class="glass-card">
-                <b>iOS / Android</b>
-                <p style="color:var(--tg-hint-color); margin:16px 0;">
-                    Скачайте v2RayTun и используйте автоподключение или QR-код.
-                </p>
-                <div class="download-btns">
-                    <button class="btn-main" onclick="tg.openLink('https://apps.apple.com/app/v2raytun/id6476628951')">
-                        <i class="fab fa-app-store-ios"></i> Скачать для iOS
+                <div id="action-area" style="display:none;">
+                    <button class="btn-main" style="background: #10b981;" onclick="autoConnect()">
+                        <i class="fas fa-link"></i> <span data-key="btn_autoconnect">Автоподключение</span>
                     </button>
-                    <button class="btn-main" onclick="tg.openLink('https://play.google.com/store/apps/details?id=com.v2raytun.android')">
-                        <i class="fab fa-google-play"></i> Скачать для Android
+                    <button class="btn-secondary" onclick="copyKey()">
+                        <i class="fas fa-copy"></i> <span data-key="btn_copy">Копировать ключ</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Профиль -->
+        <div id="plans" class="tab-content">
+            <h3 data-key="title_plans">Тарифные планы</h3>
+            <div class="tariff-grid">
+                <div class="tariff-item">
+                    <div><b data-key="plan_1_title">1 Месяц</b><br><small data-key="plan_1_desc">Базовый доступ</small></div>
+                    <b>199 ₽</b>
+                </div>
+                <div class="tariff-item popular">
+                    <div><b data-key="plan_3_title">3 Месяца</b><br><small data-key="plan_3_desc">Оптимальный выбор</small></div>
+                    <b>499 ₽</b>
+                </div>
+                <div class="tariff-item">
+                    <div><b data-key="plan_12_title">1 Год</b><br><small data-key="plan_12_desc">Максимальная выгода</small></div>
+                    <b>1490 ₽</b>
+                </div>
+            </div>
+        </div>
+
+        <div id="info" class="tab-content">
+            <h3 data-key="title_setup">Настройка устройств</h3>
+            <div class="glass-card">
+                <p><i class="fab fa-apple"></i> <b>iOS:</b> v2RayTun / Streisand</p>
+                <p><i class="fab fa-android"></i> <b>Android:</b> v2RayTun / v2rayNG</p>
+                <hr style="border:0; border-top:1px solid var(--glass-border); margin:15px 0;">
+                <p style="font-size:13px; color:var(--text-hint)" data-key="setup_guide">
+                    1. Скачайте приложение<br>2. Скопируйте ключ PORT<br>3. Нажмите "Import" в приложении.
+                </p>
+            </div>
+        </div>
+
         <div id="profile" class="tab-content">
-            <h2>Профиль</h2>
+            <h3 data-key="title_profile">Личный кабинет</h3>
             <div class="glass-card">
-                <div style="text-align:center; margin-bottom:20px;">
-                    <img src="https://i.imgur.com/9o4k5q.png" alt="VPN TATAR" style="max-width:140px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                    <span data-key="label_id">Ваш ID:</span>
+                    <b id="user-id">---</b>
                 </div>
-                <div class="profile-info">
-                    <p><strong>Telegram ID:</strong> <span id="user-id">---</span></p>
-                    <p><strong>Дата регистрации:</strong> <span id="reg-date">Неизвестно</span></p>
-                    <p><strong>Статус подписки:</strong> <span id="sub-status-profile">Не активна</span></p>
-                    <p><strong>Тариф:</strong> <span id="tariff">—</span></p>
-                    <p><strong>Начало:</strong> <span id="sub-start">—</span></p>
-                    <p><strong>Окончание:</strong> <span id="sub-end">—</span></p>
-                    <p><strong>Осталось дней:</strong> <span id="days-left">—</span></p>
+                <div style="display:flex; justify-content:space-between;">
+                    <span data-key="label_support">Поддержка:</span>
+                    <a href="#" onclick="tg.openTelegramLink('https://t.me/your_support')" style="color:var(--accent); text-decoration:none;">@port_support</a>
                 </div>
-                <button class="btn-main" onclick="updateProfile()" style="margin-top:16px;">
-                    Обновить данные
-                </button>
             </div>
         </div>
+
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-wrapper">
-            <a href="javascript:void(0)" class="nav-item active" onclick="showTab('home', this)">
-                <i class="fas fa-home"></i><span>Главная</span>
-            </a>
-            <a href="javascript:void(0)" class="nav-item" onclick="showTab('sub', this)">
-                <i class="fas fa-crown"></i><span>Подписка</span>
-            </a>
-            <a href="javascript:void(0)" class="nav-item" onclick="showTab('devices', this)">
-                <i class="fas fa-desktop"></i><span>Устройства</span>
-            </a>
-            <a href="javascript:void(0)" class="nav-item" onclick="showTab('profile', this)">
-                <i class="fas fa-user-circle"></i><span>Профиль</span>
-            </a>
-            <div class="slider"></div>
-        </div>
+        <a href="javascript:void(0)" class="nav-item active" onclick="switchTab('home', 0)">
+            <i class="fas fa-rocket"></i><span data-key="nav_home">PORT</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="switchTab('plans', 1)">
+            <i class="fas fa-crown"></i><span data-key="nav_plans">Планы</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="switchTab('info', 2)">
+            <i class="fas fa-info-circle"></i><span data-key="nav_info">Инфо</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="switchTab('profile', 3)">
+            <i class="fas fa-user-circle"></i><span data-key="nav_profile">Кабинет</span>
+        </a>
+        <div class="slider" id="nav-slider"></div>
     </nav>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.ready();
 
-        const testConfig = "vless://test1234567890abcdef@fake.server.com:443?type=tcp&security=reality&pbk=abcdef1234567890&headerType=none&fp=chrome&sni=www.google.com&sid=12345678#VPN+TATAR+Test";
+        let currentLang = 'ru';
+        const config = "vless://uuid@server:443?security=reality#VPN_PORT";
 
-        let subscription = {
-            active: false,
-            tariff: null,
-            start: null,
-            end: null,
-            daysLeft: 0
+        const langData = {
+            ru: {
+                status_inactive: "● Подписка не активна",
+                btn_get_key: "Получить ключ PORT",
+                btn_autoconnect: "Автоподключение",
+                btn_copy: "Копировать ключ",
+                title_plans: "Тарифные планы",
+                title_setup: "Настройка устройств",
+                title_profile: "Личный кабинет",
+                nav_home: "PORT", nav_plans: "Планы", nav_info: "Инфо", nav_profile: "Профиль",
+                label_id: "Ваш ID:", label_support: "Поддержка:",
+                setup_guide: "1. Скачайте приложение<br>2. Скопируйте ключ PORT<br>3. Нажмите 'Import' в приложении.",
+                plan_1_title: "1 Месяц", plan_3_title: "3 Месяца", plan_12_title: "1 Год",
+                plan_1_desc: "Базовый доступ", plan_3_desc: "Оптимальный выбор", plan_12_desc: "Максимальная выгода"
+            },
+            en: {
+                status_inactive: "● Subscription inactive",
+                btn_get_key: "Get PORT Key",
+                btn_autoconnect: "Auto-connect",
+                btn_copy: "Copy Key",
+                title_plans: "Tariff Plans",
+                title_setup: "Setup Guide",
+                title_profile: "Profile",
+                nav_home: "PORT", nav_plans: "Plans", nav_info: "Info", nav_profile: "Profile",
+                label_id: "Your ID:", label_support: "Support:",
+                setup_guide: "1. Download app<br>2. Copy PORT key<br>3. Press 'Import' in the app.",
+                plan_1_title: "1 Month", plan_3_title: "3 Months", plan_12_title: "1 Year",
+                plan_1_desc: "Basic access", plan_3_desc: "Optimal choice", plan_12_desc: "Best value"
+            }
         };
 
-        function applyTheme() {
-            const params = tg.themeParams;
-            document.documentElement.setAttribute('data-theme', tg.colorScheme);
-            Object.entries(params).forEach(([key, value]) => {
-                if (value) document.documentElement.style.setProperty(`--tg-${key.replace(/_/g, '-')}`, value);
+        function switchTab(id, idx) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelectorAll('.nav-item')[idx].classList.add('active');
+            
+            const slider = document.getElementById('nav-slider');
+            slider.style.transform = `translateX(calc(${idx * 100}% + ${idx * 6.5}px))`;
+            
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'ru' ? 'en' : 'ru';
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                el.innerHTML = langData[currentLang][key];
             });
         }
 
-        tg.onEvent('themeChanged', applyTheme);
-        applyTheme();
-
-        function showTab(tabId, el) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            el.classList.add('active');
-
-            const index = Array.from(document.querySelectorAll('.nav-item')).indexOf(el);
-            document.querySelector('.slider').style.transform = `translateX(${index * 100}%)`;
-
-            tg.HapticFeedback.impactOccurred('light');
-
-            if (tabId === 'profile') updateProfile();
+        function activateKeys() {
+            document.getElementById('qr').innerHTML = '';
+            new QRCode(document.getElementById('qr'), { text: config, width: 180, height: 180 });
+            document.getElementById('action-area').style.display = 'block';
+            tg.HapticFeedback.notificationOccurred('success');
         }
 
-        function updateProfile() {
-            const user = tg.initDataUnsafe?.user;
-            if (user) {
-                document.getElementById('username').innerText = user.first_name || "Пользователь";
-                document.getElementById('user-id').innerText = user.id;
-
-                let regDate = localStorage.getItem('regDate');
-                if (!regDate) {
-                    regDate = new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    localStorage.setItem('regDate', regDate);
-                }
-                document.getElementById('reg-date').innerText = regDate;
-
-                document.getElementById('sub-status-profile').innerText = subscription.active ? 'Активна' : 'Не активна';
-                document.getElementById('tariff').innerText = subscription.tariff || '—';
-                document.getElementById('sub-start').innerText = subscription.start || '—';
-                document.getElementById('sub-end').innerText = subscription.end || '—';
-                document.getElementById('days-left').innerText = subscription.daysLeft > 0 ? `${subscription.daysLeft} дней` : '—';
-            }
-        }
-
-        function connectVpn() {
-            document.getElementById('main-loader').style.display = 'block';
-
-            setTimeout(() => {
-                document.getElementById('main-loader').style.display = 'none';
-
-                document.getElementById('qr').innerHTML = '';
-                new QRCode(document.getElementById('qr'), {
-                    text: testConfig,
-                    width: 220,
-                    height: 220
-                });
-
-                document.getElementById('auto-connect-btn').style.display = 'block';
-                tg.showAlert("Тестовый конфиг загружен! Используй автоподключение.");
-            }, 1200);
+        function copyKey() {
+            tg.setClipboardText(config);
+            tg.showAlert(currentLang === 'ru' ? "Скопировано!" : "Copied!");
         }
 
         function autoConnect() {
-            const encoded = encodeURIComponent(testConfig);
-            tg.openLink(`v2raytun://import?config=${encoded}`);
-
-            setTimeout(() => {
-                tg.setClipboardText(testConfig);
-                tg.showAlert("Если v2RayTun не открылся — конфиг скопирован.");
-            }, 1500);
+            tg.setClipboardText(config);
+            tg.openLink(`v2raytun://import?config=${encodeURIComponent(config)}`);
         }
 
-        function getFreeConfig() {
-            connectVpn();
-        }
-
-        window.addEventListener('load', () => {
-            document.querySelector('.slider').style.transform = 'translateX(0%)';
-
-            if (tg.initDataUnsafe?.user) {
-                updateProfile();
+        window.onload = () => {
+            if(tg.initDataUnsafe?.user) {
+                document.getElementById('user-id').innerText = tg.initDataUnsafe.user.id;
             }
-        });
+        };
     </script>
 </body>
 </html>
