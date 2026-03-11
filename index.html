@@ -8,167 +8,168 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-            --bg-deep: #05080f;
+            --bg-dark: #0a0f1a;
+            --card-bg: #161b26;
             --accent: #3b82f6;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --tg-viewport-height: 100vh;
+            --text-main: #ffffff;
+            --text-hint: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.08);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #0a0f1a;
-            color: #fff;
-            margin: 0; padding: 0;
-            height: var(--tg-viewport-height);
-            overflow: hidden;
-            display: flex; flex-direction: column;
+            font-family: -apple-system, sans-serif;
+            background: var(--bg-dark); color: var(--text-main);
+            margin: 0; padding: 0; overflow-x: hidden;
         }
 
-        /* Визуальный блок сверху */
-        .hero-section {
-            width: 100%;
-            height: 40%; /* Занимает 40% экрана */
+        /* --- ГЛАВНЫЙ ЭКРАН --- */
+        .hero {
+            width: 100%; height: 42vh;
+            background: url('https://img.freepik.com/free-photo/cute-animal-wearing-hat_23-2150932220.jpg') center/cover;
             position: relative;
-            background: url('https://img.freepik.com/free-photo/cute-animal-wearing-hat_23-2150932220.jpg') center/cover; /* Сюда поставишь свою картинку */
-            flex-shrink: 0;
         }
-
-        .hero-overlay {
+        .hero-fade {
             position: absolute; inset: 0;
-            background: linear-gradient(to bottom, transparent, #0a0f1a);
+            background: linear-gradient(to bottom, transparent, var(--bg-dark));
         }
 
-        /* Контейнер меню */
-        .menu-container {
-            flex: 1;
-            padding: 20px 16px;
-            overflow-y: auto;
-            display: flex; flex-direction: column; gap: 12px;
+        .dashboard { padding: 0 16px 30px; margin-top: -20px; position: relative; }
+
+        .btn-tile {
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            border-radius: 18px; padding: 20px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 15px; font-weight: 600;
+        }
+        .btn-tile.main {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none;
+            justify-content: center; font-size: 18px;
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+        /* --- ПОД-СТРАНИЦЫ --- */
+        .page {
+            position: fixed; inset: 0; background: var(--bg-dark);
+            z-index: 100; display: none; flex-direction: column;
+            padding: 20px 16px; overflow-y: auto;
+        }
+        .page.active { display: flex; }
+
+        .status-card {
+            background: var(--card-bg); border-radius: 20px; padding: 20px;
+            text-align: center; border: 1px solid var(--glass-border);
+        }
+        .status-tag {
+            color: #10b981; font-size: 12px; font-weight: 700;
+            background: rgba(16, 185, 129, 0.1); padding: 4px 12px; border-radius: 20px;
         }
 
-        /* Кнопки меню */
-        .menu-btn {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 18px;
-            display: flex; align-items: center; gap: 15px;
-            color: #fff; text-decoration: none;
-            font-weight: 600; font-size: 16px;
-            transition: 0.2s;
-            cursor: pointer;
+        .key-box {
+            background: #000; padding: 15px; border-radius: 12px;
+            font-family: monospace; font-size: 12px; margin: 15px 0;
+            word-break: break-all; display: flex; justify-content: space-between;
         }
 
-        .menu-btn:active { transform: scale(0.98); background: rgba(255,255,255,0.1); }
-
-        .menu-btn.primary {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border: none;
-            justify-content: center;
-            font-size: 18px; padding: 22px;
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .icon-box {
-            width: 24px; text-align: center;
-            color: var(--accent); font-size: 18px;
-        }
-        .primary .icon-box { color: #fff; }
-
-        /* Слой для контента (Планы, Рефералка и т.д.) */
-        .sub-page {
-            position: fixed; inset: 0;
-            background: #0a0f1a;
-            z-index: 2000;
-            display: none;
-            flex-direction: column;
-            padding: 20px 16px;
-        }
-        .sub-page.active { display: flex; }
-
-        .back-btn {
-            margin-bottom: 20px; color: var(--accent);
-            display: flex; align-items: center; gap: 8px; font-weight: 600;
+        .list-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px; border-bottom: 1px solid var(--glass-border);
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-section">
-        <div class="hero-overlay"></div>
-    </div>
-
-    <div class="menu-container" id="main-menu">
-        <div class="menu-btn primary" onclick="showSubPage('plans')">
-            <div class="icon-box"><i class="fas fa-key"></i></div>
-            Купить подписку
-        </div>
-
-        <div class="menu-grid">
-            <div class="menu-btn" onclick="showSubPage('setup')">
-                <div class="icon-box"><i class="fas fa-shield-alt"></i></div>
-                Установить
+    <div id="home">
+        <div class="hero"><div class="hero-fade"></div></div>
+        <div class="dashboard">
+            <div class="btn-tile main" onclick="openPage('p-plans')">
+                <i class="fas fa-shopping-cart"></i> Купить подписку
             </div>
-            <div class="menu-btn" onclick="showSubPage('profile')">
-                <div class="icon-box"><i class="fas fa-user"></i></div>
-                Кабинет
+            <div class="grid-2">
+                <div class="btn-tile" onclick="openPage('p-setup')"><i class="fas fa-tools"></i> Установить</div>
+                <div class="btn-tile" onclick="openPage('p-profile')"><i class="fas fa-user"></i> Кабинет</div>
             </div>
-        </div>
-
-        <div class="menu-btn" onclick="tg.openTelegramLink('https://t.me/port_support')">
-            <div class="icon-box"><i class="fas fa-comment-dots"></i></div>
-            Поддержка
-        </div>
-
-        <div class="menu-btn" onclick="showSubPage('referral')">
-            <div class="icon-box"><i class="fas fa-users"></i></div>
-            Партнерская программа
+            <div class="btn-tile" onclick="tg.openTelegramLink('https://t.me/port_support')">
+                <i class="fas fa-comment-dots"></i> Поддержка
+            </div>
+            <div class="btn-tile" onclick="openPage('p-ref')">
+                <i class="fas fa-users"></i> Партнерская программа
+            </div>
         </div>
     </div>
 
-    <div id="page-referral" class="sub-page">
-        <div class="back-btn" onclick="closeSubPage()">
-            <i class="fas fa-arrow-left"></i> Назад
+    <div id="p-profile" class="page">
+        <h2>Личный кабинет</h2>
+        <div class="status-card">
+            <div style="margin-bottom: 10px; color: var(--text-hint);">Статус подписки</div>
+            <span class="status-tag">Действует</span>
+            <div style="margin-top:15px; font-weight: 800;">до 26 февраля 2026</div>
         </div>
+
+        <div style="margin-top: 25px;">
+            <b style="font-size: 14px;">Ваш ключ:</b>
+            <div class="key-box">
+                <span id="key-text">https://sub.port.net/GCbc...</span>
+                <i class="fas fa-copy" onclick="copyKey()" style="color:var(--accent)"></i>
+            </div>
+            <small style="color:var(--text-hint)">*Скопируйте и вставьте в приложение</small>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <div class="list-item" onclick="openPage('p-devices')">
+                <span>Список устройств <small style="color:var(--text-hint)">(1/5)</small></span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="list-item"><span>Сменить язык</span><i class="fas fa-chevron-right"></i></div>
+            <div class="list-item"><span>Публичная оферта</span><i class="fas fa-chevron-right"></i></div>
+        </div>
+    </div>
+
+    <div id="p-ref" class="page">
         <h2>Реферальная программа</h2>
+        <div class="grid-2">
+            <div class="status-card" style="text-align: left; padding: 15px;">
+                <b style="color: var(--accent); font-size: 18px;">+3 дня</b><br>
+                <small>за регистрацию</small>
+            </div>
+            <div class="status-card" style="text-align: left; padding: 15px;">
+                <b style="color: #10b981; font-size: 18px;">+14 дней</b><br>
+                <small>за покупку</small>
+            </div>
         </div>
+        
+        <div class="status-card" style="margin-top: 15px; text-align: left;">
+            <div style="font-size: 14px; margin-bottom: 10px;"><i class="fas fa-user-plus"></i> Ваша ссылка:</div>
+            <div class="key-box" style="background: rgba(0,0,0,0.3);">
+                <span id="ref-url">port.t.me?start=id</span>
+            </div>
+            <button class="btn-tile main" style="width:100%; margin:0;" onclick="shareRef()">Поделиться</button>
+        </div>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function showSubPage(id) {
-            // В реальном коде мы будем открывать разные блоки
+        function openPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            tg.BackButton.show();
             tg.HapticFeedback.impactOccurred('medium');
-            if (id === 'referral') {
-                document.getElementById('page-referral').classList.add('active');
-                tg.BackButton.show();
-            } else {
-                tg.showAlert("Этот раздел в разработке");
-            }
         }
 
-        function closeSubPage() {
-            document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+        tg.onEvent('backButtonClicked', () => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             tg.BackButton.hide();
+        });
+
+        function copyKey() {
+            tg.setClipboardText("ВАШ_КЛЮЧ_ИЗ_API");
+            tg.showAlert("Ключ скопирован!");
         }
 
-        tg.onEvent('backButtonClicked', closeSubPage);
-
-        // Обновление высоты
-        function updateHeight() {
-            document.documentElement.style.setProperty('--tg-viewport-height', tg.viewportHeight + 'px');
+        function shareRef() {
+            const uid = tg.initDataUnsafe?.user?.id || "---";
+            tg.openTelegramLink(`https://t.me/share/url?url=t.me/bot?start=${uid}&text=Пользуюсь этим VPN!`);
         }
-        tg.onEvent('viewportChanged', updateHeight);
-        updateHeight();
     </script>
 </body>
 </html>
-
