@@ -15,7 +15,7 @@
             --text-hint: #94a3b8;
             --glass: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --tg-viewport-height: 100vh; /* Динамическая высота */
+            --tg-viewport-height: 100vh;
         }
 
         body {
@@ -30,11 +30,7 @@
             user-select: none;
         }
 
-        /* Адаптивный отступ сверху для iPhone с вырезом */
-        .safe-area-top {
-            height: env(safe-area-inset-top);
-            min-height: 0px;
-        }
+        .safe-area-top { height: env(safe-area-inset-top); min-height: 0px; }
 
         .bg-glow {
             position: fixed;
@@ -67,7 +63,7 @@
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 0 16px 120px; /* Запас под навигацию */
+            padding: 0 16px 120px;
             position: relative;
         }
 
@@ -89,7 +85,7 @@
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            padding: 24px;
+            padding: 20px;
             margin-bottom: 16px;
         }
 
@@ -97,7 +93,7 @@
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: #fff;
             border: none;
-            padding: 18px;
+            padding: 16px;
             border-radius: 18px;
             width: 100%;
             font-weight: 700;
@@ -115,11 +111,11 @@
             border-radius: 16px;
             width: 100%;
             font-weight: 600;
-            margin-top: 12px;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
 
+        /* Навигация на 5 элементов */
         .nav-bar {
             position: fixed;
             bottom: 20px; left: 16px; right: 16px;
@@ -142,9 +138,8 @@
             align-items: center;
             justify-content: center;
             color: var(--text-hint);
-            font-size: 10px;
+            font-size: 9px;
             text-decoration: none;
-            position: relative;
             z-index: 2;
             height: 100%;
         }
@@ -154,7 +149,7 @@
 
         .slider {
             position: absolute;
-            width: calc(25% - 12px); /* 4 таба */
+            width: calc(20% - 10px); /* 100% / 5 табов */
             height: 50px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 18px;
@@ -176,7 +171,6 @@
 
     <div class="bg-glow"></div>
     <div class="safe-area-top"></div>
-    
     <button class="lang-toggle" onclick="toggleLang()">RU/EN</button>
     <div class="header">VPN <span>PORT</span></div>
 
@@ -185,15 +179,12 @@
         <div id="home" class="tab-content active">
             <div class="glass-card" style="text-align:center;">
                 <div id="status-badge" style="color:#ef4444; font-size:12px; font-weight:700; margin-bottom:15px;" data-key="status_inactive">● Подписка не активна</div>
-                
                 <button class="btn-main" onclick="activateKeys()">
                     <i class="fas fa-bolt"></i> <span data-key="btn_get_key">Получить ключ PORT</span>
                 </button>
-
                 <div id="qr" style="margin: 20px 0;"></div>
-
                 <div id="action-area" style="display:none;">
-                    <button class="btn-main" style="background: #10b981;" onclick="autoConnect()">
+                    <button class="btn-main" style="background: #10b981; margin-bottom: 12px;" onclick="autoConnect()">
                         <i class="fas fa-link"></i> <span data-key="btn_autoconnect">Автоподключение</span>
                     </button>
                     <button class="btn-secondary" onclick="copyKey()">
@@ -207,10 +198,47 @@
             <h3 data-key="title_plans">Тарифные планы</h3>
             <div class="glass-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <div><b data-key="plan_3_title">3 Месяца</b><br><small data-key="plan_3_desc">Оптимальный выбор</small></div>
-                    <b>499 ₽</b>
+                    <div><b data-key="plan_3_title">3 Месяца</b><br><small data-key="plan_3_desc" style="color:var(--text-hint);">Оптимальный выбор</small></div>
+                    <b style="font-size: 18px;">499 ₽</b>
                 </div>
                 <button class="btn-main" onclick="tg.showAlert('Оплата скоро появится')">Выбрать</button>
+            </div>
+        </div>
+
+        <div id="referral" class="tab-content">
+            <h3 data-key="title_ref">Реферальная программа</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div class="glass-card" style="padding: 16px; margin-bottom: 0;">
+                    <div style="font-size: 18px; font-weight: 800; color: var(--accent);">+ 3 дня</div>
+                    <div style="font-size: 10px; color: var(--text-hint); margin-top: 4px;" data-key="ref_reg">за регистрацию друга</div>
+                </div>
+                <div class="glass-card" style="padding: 16px; margin-bottom: 0;">
+                    <div style="font-size: 18px; font-weight: 800; color: #10b981;">+ 14 дней</div>
+                    <div style="font-size: 10px; color: var(--text-hint); margin-top: 4px;" data-key="ref_buy">за покупку подписки</div>
+                </div>
+            </div>
+            <div class="glass-card">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 14px;">
+                    <i class="fas fa-user-plus" style="color: var(--accent);"></i>
+                    <b data-key="ref_link_label">Ваша ссылка:</b>
+                </div>
+                <div style="background: rgba(0,0,0,0.3); padding: 14px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid var(--glass-border);">
+                    <span id="ref-link-text" style="font-size: 11px; color: var(--text-hint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">t.me/bot?start=id</span>
+                    <i class="fas fa-copy" onclick="copyRef()" style="color: var(--accent); padding-left: 10px;"></i>
+                </div>
+                <button class="btn-main" onclick="shareRef()" data-key="btn_share">Поделиться с другом</button>
+            </div>
+            <div class="glass-card">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <div style="font-size: 10px; color: var(--text-hint); margin-bottom: 5px;" data-key="stat_earned">Заработано дней:</div>
+                        <div style="font-size: 22px; font-weight: 700;" id="ref-earned">0</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 10px; color: var(--text-hint); margin-bottom: 5px;" data-key="stat_friends">Друзей:</div>
+                        <div style="font-size: 22px; font-weight: 700;" id="ref-count">0</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -218,19 +246,15 @@
             <h3 data-key="title_setup">Приложения</h3>
             <div class="glass-card">
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
-                    <i class="fab fa-apple" style="font-size:22px;"></i> <b>iOS (iPhone)</b>
+                    <i class="fab fa-apple" style="font-size:22px;"></i> <b>iOS</b>
                 </div>
-                <button class="btn-secondary" onclick="tg.openLink('https://apps.apple.com/app/v2raytun/id6476628951')">
-                    <i class="fas fa-download"></i> Скачать v2RayTun
-                </button>
+                <button class="btn-secondary" onclick="tg.openLink('https://apps.apple.com/app/v2raytun/id6476628951')">Скачать v2RayTun</button>
             </div>
             <div class="glass-card">
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
                     <i class="fab fa-android" style="font-size:22px; color:#3ddc84;"></i> <b>Android</b>
                 </div>
-                <button class="btn-secondary" onclick="tg.openLink('https://play.google.com/store/apps/details?id=com.v2raytun.android')">
-                    <i class="fas fa-download"></i> Скачать v2RayTun
-                </button>
+                <button class="btn-secondary" onclick="tg.openLink('https://play.google.com/store/apps/details?id=com.v2raytun.android')">Скачать v2RayTun</button>
             </div>
         </div>
 
@@ -238,7 +262,7 @@
             <h3 data-key="title_profile">Кабинет</h3>
             <div class="glass-card">
                 <p>ID: <span id="user-id">---</span></p>
-                <p data-key="label_support">Поддержка: <a href="https://t.me/your_support" style="color:var(--accent); text-decoration:none;">@port_support</a></p>
+                <p data-key="label_support">Поддержка: <a href="https://t.me/port_support" style="color:var(--accent); text-decoration:none;">@port_support</a></p>
             </div>
         </div>
 
@@ -253,9 +277,12 @@
             <i class="fas fa-crown"></i><span data-key="nav_plans">Планы</span>
         </a>
         <a href="javascript:void(0)" class="nav-item" onclick="switchTab(2)">
-            <i class="fas fa-mobile-alt"></i><span data-key="nav_info">Инфо</span>
+            <i class="fas fa-users"></i><span data-key="nav_ref">Друзья</span>
         </a>
         <a href="javascript:void(0)" class="nav-item" onclick="switchTab(3)">
+            <i class="fas fa-mobile-alt"></i><span data-key="nav_info">Инфо</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="switchTab(4)">
             <i class="fas fa-user-circle"></i><span data-key="nav_profile">Профиль</span>
         </a>
     </nav>
@@ -263,9 +290,7 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.enableClosingConfirmation();
-
-        // 1. Управление высотой
+        
         function updateHeight() {
             const vh = tg.viewportHeight ? `${tg.viewportHeight}px` : '100vh';
             document.documentElement.style.setProperty('--tg-viewport-height', vh);
@@ -280,65 +305,72 @@
             ru: {
                 status_inactive: "● Подписка не активна", btn_get_key: "Получить ключ PORT", btn_autoconnect: "Автоподключение",
                 btn_copy: "Копировать ключ", title_plans: "Тарифные планы", title_setup: "Приложения", title_profile: "Кабинет",
-                nav_home: "PORT", nav_plans: "Планы", nav_info: "Инфо", nav_profile: "Профиль", label_support: "Поддержка:",
-                plan_3_title: "3 Месяца", plan_3_desc: "Оптимальный выбор"
+                nav_home: "PORT", nav_plans: "Планы", nav_ref: "Друзья", nav_info: "Инфо", nav_profile: "Профиль", 
+                label_support: "Поддержка:", title_ref: "Рефералы", ref_reg: "за регистрацию друга", ref_buy: "за покупку подписки",
+                ref_link_label: "Ваша ссылка:", btn_share: "Поделиться", stat_earned: "Заработано дней:", stat_friends: "Друзей:"
             },
             en: {
-                status_inactive: "● Subscription inactive", btn_get_key: "Get PORT Key", btn_autoconnect: "Auto-connect",
-                btn_copy: "Copy Key", title_plans: "Tariff Plans", title_setup: "Apps", title_profile: "Profile",
-                nav_home: "PORT", nav_plans: "Plans", nav_info: "Info", nav_profile: "Profile", label_support: "Support:",
-                plan_3_title: "3 Months", plan_3_desc: "Best choice"
+                status_inactive: "● Inactive", btn_get_key: "Get Key", btn_autoconnect: "Auto-connect",
+                btn_copy: "Copy Key", title_plans: "Plans", title_setup: "Apps", title_profile: "Profile",
+                nav_home: "PORT", nav_plans: "Plans", nav_ref: "Friends", nav_info: "Info", nav_profile: "Profile",
+                label_support: "Support:", title_ref: "Referrals", ref_reg: "for friend reg", ref_buy: "for friend purchase",
+                ref_link_label: "Your link:", btn_share: "Share", stat_earned: "Days earned:", stat_friends: "Friends:"
             }
         };
 
-        // 2. Логика табов
         function switchTab(idx) {
             const tabs = document.querySelectorAll('.tab-content');
             const items = document.querySelectorAll('.nav-item');
             const slider = document.getElementById('nav-slider');
-            
             tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
             items.forEach((n, i) => n.classList.toggle('active', i === idx));
-            
-            // Смещение слайдера: шаг 100% от его ширины
             slider.style.transform = `translateX(${idx * 100}%)`;
-            
             tg.HapticFeedback.impactOccurred('light');
-            document.getElementById('scroll-node').scrollTop = 0;
         }
 
-        // 3. Функции приложения
         function toggleLang() {
             currentLang = currentLang === 'ru' ? 'en' : 'ru';
             document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                el.innerText = langData[currentLang][key];
+                el.innerText = langData[currentLang][el.getAttribute('data-key')];
             });
         }
 
         function activateKeys() {
-            const qrContainer = document.getElementById('qr');
-            qrContainer.innerHTML = '';
-            new QRCode(qrContainer, { text: config, width: 180, height: 180 });
+            document.getElementById('qr').innerHTML = '';
+            new QRCode(document.getElementById('qr'), { text: config, width: 180, height: 180 });
             document.getElementById('action-area').style.display = 'block';
             tg.HapticFeedback.notificationOccurred('success');
         }
 
         function copyKey() {
             tg.setClipboardText(config);
-            tg.showAlert(currentLang === 'ru' ? "Ключ скопирован!" : "Key copied!");
+            tg.showAlert("Ключ скопирован!");
         }
 
         function autoConnect() {
             tg.openLink(`v2raytun://import?config=${encodeURIComponent(config)}`);
         }
 
-        // Инициализация данных пользователя
+        function copyRef() {
+            const uid = tg.initDataUnsafe?.user?.id || "000";
+            tg.setClipboardText(`https://t.me/your_bot?start=${uid}`);
+            tg.showAlert("Ссылка скопирована!");
+        }
+
+        function shareRef() {
+            const uid = tg.initDataUnsafe?.user?.id || "000";
+            const link = `https://t.me/your_bot?start=${uid}`;
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Забирай быстрый VPN!`);
+        }
+
         window.onload = () => {
             if(tg.initDataUnsafe?.user) {
-                document.getElementById('user-id').innerText = tg.initDataUnsafe.user.id;
+                const uid = tg.initDataUnsafe.user.id;
+                document.getElementById('user-id').innerText = uid;
+                document.getElementById('ref-link-text').innerText = `t.me/your_bot?start=${uid}`;
             }
         };
     </script>
 </body>
 </html>
+
