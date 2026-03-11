@@ -13,18 +13,21 @@
             --accent: #3b82f6;
             --text-main: #ffffff;
             --text-hint: #94a3b8;
+            --success: #10b981;
             --glass-border: rgba(255, 255, 255, 0.08);
         }
 
         body {
-            font-family: -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-dark); color: var(--text-main);
-            margin: 0; padding: 0; overflow-x: hidden;
+            margin: 0; padding: 0; overflow: hidden;
         }
 
-        /* --- ГЛАВНЫЙ ЭКРАН --- */
+        /* --- ГЛАВНАЯ СТРАНИЦА (DASHBOARD) --- */
+        #main-view { display: flex; flex-direction: column; height: 100vh; }
+        
         .hero {
-            width: 100%; height: 42vh;
+            width: 100%; height: 40vh; flex-shrink: 0;
             background: url('https://img.freepik.com/free-photo/cute-animal-wearing-hat_23-2150932220.jpg') center/cover;
             position: relative;
         }
@@ -33,115 +36,159 @@
             background: linear-gradient(to bottom, transparent, var(--bg-dark));
         }
 
-        .dashboard { padding: 0 16px 30px; margin-top: -20px; position: relative; }
+        .menu-grid { padding: 0 16px 20px; margin-top: -30px; position: relative; z-index: 2; }
 
         .btn-tile {
             background: var(--card-bg); border: 1px solid var(--glass-border);
-            border-radius: 18px; padding: 20px; margin-bottom: 10px;
+            border-radius: 20px; padding: 18px; margin-bottom: 12px;
             display: flex; align-items: center; gap: 15px; font-weight: 600;
         }
-        .btn-tile.main {
+        .btn-tile.primary {
             background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none;
-            justify-content: center; font-size: 18px;
+            justify-content: center; font-size: 18px; padding: 22px;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
         }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .two-cols .btn-tile { margin-bottom: 0; flex-direction: column; text-align: center; padding: 20px 10px; }
 
-        /* --- ПОД-СТРАНИЦЫ --- */
+        /* --- ПОД-СТРАНИЦЫ (SUB-PAGES) --- */
         .page {
             position: fixed; inset: 0; background: var(--bg-dark);
-            z-index: 100; display: none; flex-direction: column;
+            z-index: 1000; display: none; flex-direction: column;
             padding: 20px 16px; overflow-y: auto;
         }
         .page.active { display: flex; }
 
-        .status-card {
-            background: var(--card-bg); border-radius: 20px; padding: 20px;
-            text-align: center; border: 1px solid var(--glass-border);
+        /* --- ТАРИФЫ (из PDF "Купить подписку") --- */
+        .plans-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .plan-card {
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 15px; position: relative; transition: 0.2s;
         }
-        .status-tag {
-            color: #10b981; font-size: 12px; font-weight: 700;
-            background: rgba(16, 185, 129, 0.1); padding: 4px 12px; border-radius: 20px;
+        .plan-card.selected { border-color: var(--accent); background: rgba(59, 130, 246, 0.1); }
+        .hit-badge {
+            position: absolute; top: -10px; left: 12px; background: #fff; color: #000;
+            font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 8px;
         }
+        .price-big { font-size: 24px; font-weight: 800; margin: 8px 0 4px; }
+        .price-day { font-size: 11px; color: var(--text-hint); }
 
-        .key-box {
-            background: #000; padding: 15px; border-radius: 12px;
-            font-family: monospace; font-size: 12px; margin: 15px 0;
-            word-break: break-all; display: flex; justify-content: space-between;
+        /* --- ЛИЧНЫЙ КАБИНЕТ (из PDF "Личный кабинет") --- */
+        .status-box {
+            background: var(--card-bg); border-radius: 24px; padding: 24px;
+            text-align: center; border: 1px solid var(--glass-border); margin-bottom: 20px;
         }
-
-        .list-item {
+        .status-badge {
+            background: rgba(16, 185, 129, 0.15); color: var(--success);
+            padding: 6px 16px; border-radius: 30px; font-size: 13px; font-weight: 700;
+        }
+        .copy-field {
+            background: #000; border-radius: 14px; padding: 16px;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px; border-bottom: 1px solid var(--glass-border);
+            font-family: monospace; font-size: 12px; margin: 15px 0;
+        }
+
+        /* --- УСТАНОВКА (из PDF "Установить VPN") --- */
+        .step-content { text-align: center; padding: 30px 10px; }
+        .step-img { 
+            width: 100px; height: 100px; background: var(--card-bg); 
+            border-radius: 25px; margin: 0 auto 30px;
+            display: flex; align-items: center; justify-content: center; font-size: 40px;
+        }
+
+        .btn-action {
+            background: var(--accent); color: #fff; border: none;
+            padding: 18px; border-radius: 18px; width: 100%;
+            font-weight: 700; font-size: 16px; margin-top: auto;
         }
     </style>
 </head>
 <body>
 
-    <div id="home">
+    <div id="main-view">
         <div class="hero"><div class="hero-fade"></div></div>
-        <div class="dashboard">
-            <div class="btn-tile main" onclick="openPage('p-plans')">
-                <i class="fas fa-shopping-cart"></i> Купить подписку
+        <div class="menu-grid">
+            <div class="btn-tile primary" onclick="nav('page-plans')">
+                <i class="fas fa-key"></i> Купить подписку
             </div>
-            <div class="grid-2">
-                <div class="btn-tile" onclick="openPage('p-setup')"><i class="fas fa-tools"></i> Установить</div>
-                <div class="btn-tile" onclick="openPage('p-profile')"><i class="fas fa-user"></i> Кабинет</div>
+            <div class="two-cols">
+                <div class="btn-tile" onclick="nav('page-setup')">
+                    <i class="fas fa-shield-alt" style="color:var(--accent); font-size:22px; margin-bottom:8px;"></i>
+                    Установить VPN
+                </div>
+                <div class="btn-tile" onclick="nav('page-profile')">
+                    <i class="fas fa-user" style="color:var(--accent); font-size:22px; margin-bottom:8px;"></i>
+                    Личный кабинет
+                </div>
             </div>
             <div class="btn-tile" onclick="tg.openTelegramLink('https://t.me/port_support')">
-                <i class="fas fa-comment-dots"></i> Поддержка
+                <i class="fas fa-comment-dots" style="color:var(--accent)"></i> Поддержка
             </div>
-            <div class="btn-tile" onclick="openPage('p-ref')">
-                <i class="fas fa-users"></i> Партнерская программа
+            <div class="btn-tile" onclick="nav('page-ref')">
+                <i class="fas fa-users" style="color:var(--accent)"></i> Партнерская программа
             </div>
         </div>
     </div>
 
-    <div id="p-profile" class="page">
-        <h2>Личный кабинет</h2>
-        <div class="status-card">
-            <div style="margin-bottom: 10px; color: var(--text-hint);">Статус подписки</div>
-            <span class="status-tag">Действует</span>
-            <div style="margin-top:15px; font-weight: 800;">до 26 февраля 2026</div>
-        </div>
-
-        <div style="margin-top: 25px;">
-            <b style="font-size: 14px;">Ваш ключ:</b>
-            <div class="key-box">
-                <span id="key-text">https://sub.port.net/GCbc...</span>
-                <i class="fas fa-copy" onclick="copyKey()" style="color:var(--accent)"></i>
+    <div id="page-plans" class="page">
+        [span_0](start_span)<h2 style="margin-bottom:20px;">Выберите тариф[span_0](end_span)</h2>
+        <div class="plans-container">
+            <div class="plan-card selected" onclick="selectPlan(this, '790')">
+                [span_1](start_span)<div class="hit-badge">🔥 ХИТ ПРОДАЖ[span_1](end_span)</div>
+                <b>3 месяца</b>
+                [span_2](start_span)<div style="color:var(--accent); font-size:10px;">Экономия 12%[span_2](end_span)</div>
+                [span_3](start_span)<div class="price-big">790 ₽[span_3](end_span)</div>
+                [span_4](start_span)<div class="price-day">~8.68 ₽ в день[span_4](end_span)</div>
             </div>
-            <small style="color:var(--text-hint)">*Скопируйте и вставьте в приложение</small>
-        </div>
-
-        <div style="margin-top: 30px;">
-            <div class="list-item" onclick="openPage('p-devices')">
-                <span>Список устройств <small style="color:var(--text-hint)">(1/5)</small></span>
-                <i class="fas fa-chevron-right"></i>
+            <div class="plan-card" onclick="selectPlan(this, '299')">
+                [span_5](start_span)<b>1 месяц[span_5](end_span)</b>
+                [span_6](start_span)<div style="color:var(--text-hint); font-size:10px;">Экономия 0%[span_6](end_span)</div>
+                [span_7](start_span)<div class="price-big">299 ₽[span_7](end_span)</div>
+                [span_8](start_span)<div class="price-day">~9.97 ₽ в день[span_8](end_span)</div>
             </div>
-            <div class="list-item"><span>Сменить язык</span><i class="fas fa-chevron-right"></i></div>
-            <div class="list-item"><span>Публичная оферта</span><i class="fas fa-chevron-right"></i></div>
         </div>
+        [span_9](start_span)[span_10](start_span)<button class="btn-action" onclick="tg.showAlert('Оплата через СБП/Карты...')">Перейти к оплате[span_9](end_span)[span_10](end_span)</button>
     </div>
 
-    <div id="p-ref" class="page">
-        <h2>Реферальная программа</h2>
-        <div class="grid-2">
-            <div class="status-card" style="text-align: left; padding: 15px;">
-                <b style="color: var(--accent); font-size: 18px;">+3 дня</b><br>
-                <small>за регистрацию</small>
-            </div>
-            <div class="status-card" style="text-align: left; padding: 15px;">
-                <b style="color: #10b981; font-size: 18px;">+14 дней</b><br>
-                <small>за покупку</small>
-            </div>
+    <div id="page-profile" class="page">
+        [span_11](start_span)<h2 style="margin-bottom:20px;">Личный кабинет[span_11](end_span)</h2>
+        <div class="status-box">
+            [span_12](start_span)<div style="color:var(--text-hint); margin-bottom:12px; font-size:13px;">Статус подписки[span_12](end_span)</div>
+            [span_13](start_span)<span class="status-badge">● Действует[span_13](end_span)</span>
+            [span_14](start_span)<div style="margin-top:15px; font-weight:700;">до 26 февраля 2026[span_14](end_span)</div>
         </div>
         
-        <div class="status-card" style="margin-top: 15px; text-align: left;">
-            <div style="font-size: 14px; margin-bottom: 10px;"><i class="fas fa-user-plus"></i> Ваша ссылка:</div>
-            <div class="key-box" style="background: rgba(0,0,0,0.3);">
-                <span id="ref-url">port.t.me?start=id</span>
+        [span_15](start_span)<b style="font-size:14px;">Ваш ключ:[span_15](end_span)</b>
+        <div class="copy-field">
+            [span_16](start_span)<span id="vpn-key" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">https://sub.port.net/GCbc...[span_16](end_span)</span>
+            <i class="fas fa-copy" style="color:var(--accent); padding-left:10px;" onclick="copyKey()"></i>
+        </div>
+        [span_17](start_span)<small style="color:var(--text-hint);">*Скопируйте и вставьте в приложение[span_17](end_span)</small>
+
+        <div style="margin-top:25px;">
+            <div class="btn-tile" style="justify-content:space-between; padding:16px;">
+                [span_18](start_span)<span>Список устройств <small style="color:var(--text-hint)">(1/5)</small>[span_18](end_span)</span>
+                <i class="fas fa-chevron-right"></i>
             </div>
-            <button class="btn-tile main" style="width:100%; margin:0;" onclick="shareRef()">Поделиться</button>
+            <div class="btn-tile" style="justify-content:space-between; padding:16px;">
+                [span_19](start_span)<span>Сменить язык[span_19](end_span)</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-setup" class="page">
+        <div id="step-1" class="step-content">
+            <div class="step-img"><i class="fas fa-download"></i></div>
+            [span_20](start_span)<h2>Шаг 1: Приложение[span_20](end_span)</h2>
+            [span_21](start_span)<p style="color:var(--text-hint);">Установите v2RayTun и вернитесь сюда[span_21](end_span)</p>
+            [span_22](start_span)<button class="btn-action" onclick="nextStep(2)">Далее[span_22](end_span)</button>
+        </div>
+        <div id="step-2" class="step-content" style="display:none;">
+            <div class="step-img"><i class="fas fa-plus"></i></div>
+            [span_23](start_span)<h2>Шаг 2: Подписка[span_23](end_span)</h2>
+            [span_24](start_span)<p style="color:var(--text-hint);">Добавьте ключ в приложение кнопкой ниже[span_24](end_span)</p>
+            [span_25](start_span)<button class="btn-action" onclick="nextStep(3)">Добавить ключ[span_25](end_span)</button>
         </div>
     </div>
 
@@ -149,9 +196,9 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function openPage(id) {
+        function nav(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            document.getElementById(pageId).classList.add('active');
             tg.BackButton.show();
             tg.HapticFeedback.impactOccurred('medium');
         }
@@ -161,15 +208,24 @@
             tg.BackButton.hide();
         });
 
-        function copyKey() {
-            tg.setClipboardText("ВАШ_КЛЮЧ_ИЗ_API");
-            tg.showAlert("Ключ скопирован!");
+        function selectPlan(el, price) {
+            document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            tg.HapticFeedback.selectionChanged();
         }
 
-        function shareRef() {
-            const uid = tg.initDataUnsafe?.user?.id || "---";
-            tg.openTelegramLink(`https://t.me/share/url?url=t.me/bot?start=${uid}&text=Пользуюсь этим VPN!`);
+        function nextStep(n) {
+            document.querySelectorAll('.step-content').forEach(s => s.style.display = 'none');
+            document.getElementById('step-' + n).style.display = 'block';
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function copyKey() {
+            const key = document.getElementById('vpn-key').innerText;
+            tg.setClipboardText(key);
+            [span_26](start_span)tg.showAlert("Ключ скопирован[span_26](end_span)!");
         }
     </script>
 </body>
 </html>
+
