@@ -2,230 +2,172 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VPN PORT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Port Services</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --bg-dark: #0a0f1a;
-            --card-bg: #161b26;
+            --bg: #0f172a;
             --accent: #3b82f6;
-            --text-main: #ffffff;
-            --text-hint: #94a3b8;
-            --success: #10b981;
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
         }
-
         body {
             font-family: -apple-system, system-ui, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-main);
-            margin: 0; padding: 0;
-            height: 100vh;
-            overflow: hidden; /* Чтобы не было лишнего скролла */
+            background: radial-gradient(circle at top, #1e293b, var(--bg));
+            color: var(--text); margin: 0; padding: 0; overflow: hidden;
+        }
+        .container { padding: 20px 16px 100px; height: 100vh; overflow-y: auto; box-sizing: border-box; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header img { width: 120px; filter: drop-shadow(0 0 10px var(--accent)); }
+        
+        .status-badge {
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3);
+            padding: 6px 12px; border-radius: 20px; font-size: 13px; display: inline-block;
+        }
+        
+        .card {
+            background: var(--card-bg); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+            padding: 24px; margin-bottom: 20px; text-align: center;
+        }
+        
+        .btn-pay {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white; border: none; padding: 18px; border-radius: 18px;
+            width: 100%; font-weight: 700; font-size: 17px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); margin-bottom: 15px;
         }
 
-        /* --- ГЛАВНАЯ СТРАНИЦА --- */
-        #main-view {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            position: relative;
+        .btn-secondary {
+            background: rgba(255,255,255,0.05); color: var(--text);
+            border: 1px solid rgba(255,255,255,0.1); padding: 14px;
+            border-radius: 16px; width: 100%; font-weight: 600;
         }
 
-        .hero {
-            width: 100%;
-            height: 40vh;
-            background: url('https://img.freepik.com/free-photo/cute-animal-wearing-hat_23-2150932220.jpg') center/cover;
-            position: relative;
-            flex-shrink: 0;
+        .nav {
+            position: fixed; bottom: 20px; left: 16px; right: 16px;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px);
+            border-radius: 30px; display: flex; padding: 6px; border: 1px solid rgba(255,255,255,0.1);
         }
+        .nav-item { flex: 1; text-align: center; padding: 12px; color: #64748b; text-decoration: none; font-size: 12px; }
+        .nav-item.active { color: white; }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; }
 
-        .hero-fade {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, transparent, var(--bg-dark));
-            pointer-events: none; /* ВАЖНО: чтобы не блокировало нажатия */
-        }
-
-        .menu-grid {
-            padding: 0 16px 20px;
-            margin-top: -30px;
-            position: relative;
-            z-index: 10; /* Поднимаем выше всех */
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .btn-tile {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn-tile:active { transform: scale(0.98); background: rgba(255,255,255,0.05); }
-
-        .btn-tile.primary {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border: none;
-            justify-content: center;
-            font-size: 18px;
-            padding: 22px;
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-        }
-
-        .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .two-cols .btn-tile { margin-bottom: 0; flex-direction: column; text-align: center; padding: 20px 10px; }
-
-        /* --- ПОД-СТРАНИЦЫ --- */
-        .page {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-dark);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            padding: 20px 16px;
-            overflow-y: auto;
-        }
-        .page.active { display: flex; }
-
-        .status-box {
-            background: var(--card-bg);
-            border-radius: 24px;
-            padding: 24px;
-            text-align: center;
-            border: 1px solid var(--glass-border);
-            margin-bottom: 20px;
-        }
-
-        .copy-field {
-            background: #000;
-            border-radius: 14px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 15px 0;
-        }
-
-        .btn-action {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 18px;
-            border-radius: 18px;
-            width: 100%;
-            font-weight: 700;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        h2 { margin-top: 0; }
+        #qr { background: white; padding: 10px; border-radius: 12px; display: inline-block; margin: 15px 0; }
+        .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: none; margin: 10px auto; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div id="main-view">
-        <div class="hero"><div class="hero-fade"></div></div>
-        <div class="menu-grid">
-            <div class="btn-tile primary" onclick="nav('page-plans')">
-                <i class="fas fa-key"></i> Купить подписку
-            </div>
-            <div class="two-cols">
-                <div class="btn-tile" onclick="nav('page-setup')">
-                    <i class="fas fa-shield-alt" style="color:var(--accent); font-size:22px; margin-bottom:8px;"></i>
-                    Установить
-                </div>
-                <div class="btn-tile" onclick="nav('page-profile')">
-                    <i class="fas fa-user" style="color:var(--accent); font-size:22px; margin-bottom:8px;"></i>
-                    Кабинет
-                </div>
-            </div>
-            <div class="btn-tile" onclick="tg.openTelegramLink('https://t.me/port_support')">
-                <i class="fas fa-comment-dots" style="color:var(--accent)"></i> Поддержка
-            </div>
-            <div class="btn-tile" onclick="nav('page-ref')">
-                <i class="fas fa-users" style="color:var(--accent)"></i> Партнерская программа
+<div class="container">
+    <div class="header">
+        <img src="https://files.catbox.moe/9o4k5q.png" alt="Port Logo">
+        <h3>Узлы доступа: <span style="color:var(--accent)">AMS-01</span></h3>
+    </div>
+
+    <div id="home" class="tab-content active">
+        <div class="card">
+            <div class="status-badge">● Система активна</div>
+            <h2 style="margin: 15px 0 5px;">Port Services</h2>
+            <p style="color:#94a3b8; font-size: 14px; margin-bottom: 25px;">Зашифрованный туннель для работы с удаленным оборудованием</p>
+            
+            <button class="btn-pay" onclick="handlePayment()">
+                <i class="fas fa-wallet" style="margin-right: 8px;"></i> Оплата через СБП
+            </button>
+            
+            <button class="btn-secondary" onclick="getAccess()">
+                <i class="fas fa-key" style="margin-right: 8px;"></i> Получить токен доступа
+            </button>
+            
+            <div class="loader" id="loader"></div>
+            <div id="access-block" style="display:none; margin-top: 20px;">
+                <div id="qr"></div>
+                <button class="btn-secondary" onclick="syncApp()">⚡ Синхронизировать шлюз</button>
             </div>
         </div>
     </div>
 
-    <div id="page-plans" class="page">
-        <h2>Тарифы</h2>
-        <div class="status-box">Выберите план оплаты</div>
-        <button class="btn-action" onclick="tg.showAlert('Оплата скоро появится')">Оплатить</button>
-    </div>
-
-    <div id="page-profile" class="page">
-        <h2>Личный кабинет</h2>
-        <div class="status-box">
-            <div style="color:var(--text-hint); margin-bottom:10px;">Статус подписки</div>
-            <span style="color:var(--success); font-weight:700;">● Действует</span>
-            <div style="margin-top:10px;">до 26.02.2026</div>
-        </div>
-        <div class="copy-field">
-            <span style="font-size:12px; opacity:0.7">https://sub.port.net/...</span>
-            <i class="fas fa-copy" style="color:var(--accent)" onclick="tg.showAlert('Ключ скопирован')"></i>
+    <div id="profile" class="tab-content" style="display:none;">
+        <div class="card">
+            <h3 style="margin-top:0;">Управление лицензией</h3>
+            <div style="text-align:left; font-size: 15px;">
+                <p><strong>Пользователь:</strong> <span id="user-name">---</span></p>
+                <p><strong>Лицензия:</strong> <span>Стандартная (30 дн.)</span></p>
+                <p><strong>Осталось:</strong> <span style="color:var(--accent)">30 дней</span></p>
+            </div>
         </div>
     </div>
+</div>
 
-    <div id="page-setup" class="page">
-        <h2>Настройка VPN</h2>
-        <div class="status-box">Инструкция по установке в 3 шага</div>
-        <button class="btn-action" onclick="closePages()">Понятно</button>
-    </div>
+<nav class="nav">
+    <a href="javascript:void(0)" class="nav-item active" onclick="switchTab('home', this)"><i class="fas fa-server"></i>Серверы</a>
+    <a href="javascript:void(0)" class="nav-item" onclick="switchTab('profile', this)"><i class="fas fa-user-shield"></i>Лицензия</a>
+</nav>
 
-    <div id="page-ref" class="page">
-        <h2>Рефералы</h2>
-        <div class="status-box">Приглашай друзей и получай дни</div>
-        <button class="btn-action" onclick="tg.showAlert('Ссылка скопирована')">Копировать ссылку</button>
-    </div>
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
 
-    <script>
-        const tg = window.Telegram.WebApp;
+    const API_URL = "https://77.221.154.23:3000"; // Тут потом будет твой HTTPS домен
+    let lastToken = "";
+
+    function switchTab(id, el) {
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById(id).style.display = 'block';
+        el.classList.add('active');
+        tg.HapticFeedback.impactOccurred('light');
+    }
+
+    // ЛОГИКА ОПЛАТЫ
+    async function handlePayment() {
+        tg.HapticFeedback.impactOccurred('medium');
+        // Здесь мы будем вызывать твой сервер для получения ссылки на СБП
+        tg.showAlert("Переадресация на шлюз СБП...");
+        // Пример: tg.openLink('https://payform.ru/link-to-your-tinkoff-payment');
+    }
+
+    // ЛОГИКА ДОСТУПА
+    async function getAccess() {
+        const loader = document.getElementById('loader');
+        const block = document.getElementById('access-block');
+        loader.style.display = 'block';
         
-        // 1. Сигнализируем Telegram, что мы готовы
-        tg.ready();
-        tg.expand();
-
-        // 2. Универсальная навигация
-        function nav(pageId) {
-            console.log("Navigating to:", pageId); // Для отладки
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const target = document.getElementById(pageId);
-            if (target) {
-                target.classList.add('active');
-                tg.BackButton.show();
-                tg.HapticFeedback.impactOccurred('medium');
+        try {
+            const user = tg.initDataUnsafe?.user || { id: 0 };
+            const res = await fetch(`${API_URL}/api/get-key`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ userId: user.id })
+            });
+            const data = await res.json();
+            if(data.key) {
+                lastToken = data.key;
+                document.getElementById('qr').innerHTML = "";
+                new QRCode(document.getElementById('qr'), { text: data.key, width: 160, height: 160 });
+                block.style.display = 'block';
+                tg.HapticFeedback.notificationOccurred('success');
             }
+        } catch(e) {
+            tg.showAlert("Ошибка узла доступа. Попробуйте позже.");
         }
+        loader.style.display = 'none';
+    }
 
-        // 3. Закрытие всех страниц
-        function closePages() {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            tg.BackButton.hide();
-        }
+    function syncApp() {
+        if(!lastToken) return;
+        tg.setClipboardText(lastToken);
+        tg.openLink(`v2raytun://import/${lastToken}`);
+        tg.showConfirm("Данные синхронизированы! Если шлюз не открылся, вставьте токен из буфера обмена вручную.");
+    }
 
-        // 4. Слушаем кнопку "Назад" в самом Telegram
-        tg.onEvent('backButtonClicked', closePages);
-
-        // Фикс для корректной высоты на мобильных
-        function setHeight() {
-            document.body.style.height = window.innerHeight + 'px';
-        }
-        window.addEventListener('resize', setHeight);
-        setHeight();
-    </script>
+    document.getElementById('user-name').innerText = tg.initDataUnsafe?.user?.first_name || "Guest";
+</script>
 </body>
 </html>
-
