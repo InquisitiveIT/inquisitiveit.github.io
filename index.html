@@ -7,205 +7,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f5f7fe 0%, #e9eef5 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             padding: 2rem 1.5rem;
         }
-
         .landing-card {
-            max-width: 580px;
-            width: 100%;
+            max-width: 620px; width: 100%;
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(2px);
             border-radius: 2.5rem;
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2);
             padding: 2.5rem 2rem;
             transition: transform 0.2s ease;
             border: 1px solid rgba(255,255,255,0.5);
         }
-
-        .landing-card:hover {
-            transform: scale(1.01);
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
+        .hero { text-align: center; margin-bottom: 2rem; }
         .hero h1 {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2rem; font-weight: 700;
             background: linear-gradient(120deg, #1A2A4F, #2C3E66);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.02em;
+            -webkit-background-clip: text; color: transparent;
             margin-bottom: 0.75rem;
         }
-
-        .hero p {
-            color: #4a5568;
-            font-size: 1rem;
-            line-height: 1.5;
-            max-width: 380px;
-            margin: 0 auto;
-        }
-
-        .divider {
-            width: 70px;
-            height: 3px;
-            background: linear-gradient(90deg, #2b7a4b, #34a7c1);
-            margin: 1rem auto 0;
-            border-radius: 3px;
-        }
-
-        .buttons-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            margin-top: 1rem;
-        }
-
+        .divider { width: 70px; height: 3px; background: linear-gradient(90deg, #2b7a4b, #34a7c1); margin: 1rem auto 0; border-radius: 3px; }
+        
+        .buttons-grid { display: flex; flex-direction: column; gap: 1.1rem; margin-top: 1rem; }
         .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            padding: 1rem 1.2rem;
-            border-radius: 2rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.25s ease-in-out;
-            border: none;
-            cursor: pointer;
-            background: #ffffff;
+            display: flex; align-items: center; justify-content: center; gap: 1rem;
+            padding: 0.9rem 1.2rem; border-radius: 2rem;
+            font-size: 1rem; font-weight: 600; text-decoration: none;
+            transition: all 0.25s; border: none; cursor: pointer;
+            background: #fff; color: #1f2937; width: 100%;
             box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
-            color: #1f2937;
             border: 1px solid rgba(0, 0, 0, 0.05);
-            width: 100%;
         }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 18px 28px -12px rgba(0,0,0,0.2); }
+        .btn i { font-size: 1.4rem; width: 1.8rem; text-align: center; }
+        .btn span { flex: 1; text-align: left; }
 
-        .btn i {
-            font-size: 1.5rem;
-            width: 1.8rem;
-            text-align: center;
-            transition: transform 0.2s;
-        }
+        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-telegram { background: #26A5E4; color: white; }
+        .btn-max { background: #4B6F8C; color: white; }
+        .btn-price, .btn-catalog { background: #F0F4F9; color: #1E2F47; }
+        .btn-callback { background: #FF8C42; color: white; border: none; }
 
-        .btn span {
-            flex: 1;
-            text-align: left;
-        }
+        /* Состояние таймера */
+        .timer-active { background: #e67e2e !important; cursor: wait; transform: none !important; }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 18px 28px -12px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn:hover i {
-            transform: scale(1.05);
-        }
-
-        .btn-whatsapp {
-            background: #25D366;
-            border-color: #20b859;
-            color: white;
-        }
-        .btn-whatsapp i {
-            color: white;
-        }
-        .btn-whatsapp:hover {
-            background: #20b859;
-            box-shadow: 0 12px 20px -10px #25D36680;
-        }
-
-        .btn-telegram {
-            background: #26A5E4;
-            border-color: #1f94cf;
-            color: white;
-        }
-        .btn-telegram:hover {
-            background: #1f94cf;
-            box-shadow: 0 12px 20px -10px #26A5E480;
-        }
-
-        .btn-max {
-            background: #4B6F8C;
-            border-color: #3d5b74;
-            color: white;
-        }
-        .btn-max:hover {
-            background: #3d5b74;
-            box-shadow: 0 12px 20px -10px #2c4a6380;
-        }
-
-        .btn-price, .btn-catalog {
-            background: #F0F4F9;
-            border: 1px solid #cfdfed;
-            color: #1E2F47;
-        }
-        .btn-price i, .btn-catalog i {
-            color: #2C7DA0;
-        }
-        .btn-price:hover, .btn-catalog:hover {
-            background: #e6edf5;
-            border-color: #bdd4e2;
-            transform: translateY(-3px);
-        }
-
-        .footnote {
-            text-align: center;
-            margin-top: 2.2rem;
-            font-size: 0.8rem;
-            color: #6c757d;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 1.5rem;
-        }
-
-        .footnote a {
-            color: #2b7a4b;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .footnote a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 500px) {
-            .landing-card {
-                padding: 1.8rem 1.5rem;
-            }
-            .btn {
-                padding: 0.85rem 1rem;
-                font-size: 1rem;
-            }
-            .btn i {
-                font-size: 1.3rem;
-                width: 1.5rem;
-            }
-            .hero h1 {
-                font-size: 1.7rem;
-            }
-        }
-
-        .btn:active {
-            transform: translateY(1px);
-            transition: 0.05s;
-        }
+        .footnote { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #6c757d; border-top: 1px solid #e2e8f0; padding-top: 1.2rem; }
+        @media (max-width: 500px) { .landing-card { padding: 1.5rem 1.2rem; } .hero h1 { font-size: 1.6rem; } }
     </style>
 </head>
 <body>
@@ -218,127 +71,113 @@
     </div>
 
     <div class="buttons-grid">
-        <!-- WhatsApp -->
-        <a href="https://wa.me/79060650654?text=Здравствуйте!%20Хочу%20получить%20консультацию" 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="btn btn-whatsapp">
+        <a href="https://wa.me/79060650654?text=Здравствуйте!%20Хочу%20консультацию" target="_blank" class="btn btn-whatsapp">
             <i class="fab fa-whatsapp"></i>
             <span>Написать в WhatsApp</span>
-            <i class="fas fa-chevron-right" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+            <i class="fas fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
         </a>
 
-        <!-- Telegram -->
         <button id="telegramBtn" class="btn btn-telegram">
             <i class="fab fa-telegram"></i>
             <span>Связаться в Telegram</span>
-            <i class="fas fa-chevron-right" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+            <i class="fas fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
         </button>
 
-        <!-- Мессенджер Max (российский аналог) - переход на web.max.ru + копирование номера -->
         <button id="maxBtn" class="btn btn-max">
             <i class="fas fa-comment-dots"></i>
             <span>Мессенджер Max</span>
-            <i class="fas fa-external-link-alt" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+            <i class="fas fa-external-link-alt" style="font-size: 0.8rem; opacity: 0.7;"></i>
         </button>
 
-        <!-- Скачать прайс -->
         <button id="downloadPriceBtn" class="btn btn-price">
             <i class="fas fa-file-invoice-dollar"></i>
             <span>Скачать прайс-лист</span>
-            <i class="fas fa-download" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+            <i class="fas fa-download" style="font-size: 0.8rem; opacity: 0.7;"></i>
         </button>
 
-        <!-- Скачать каталог -->
-        <button id="downloadCatalogBtn" class="btn btn-catalog">
-            <i class="fas fa-folder-open"></i>
-            <span>Скачать каталог</span>
-            <i class="fas fa-download" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+        <button id="callbackBtn" class="btn btn-callback">
+            <i class="fas fa-phone-alt"></i>
+            <span id="callbackText">Перезвонить за 30 секунд</span>
+            <i class="fas fa-bolt" style="font-size: 0.8rem; opacity: 0.7;"></i>
         </button>
     </div>
 
     <div class="footnote">
-        <i class="fas fa-shield-alt" style="margin-right: 6px;"></i> Нажмите, чтобы связаться или получить документы<br>
-        *Прайс и каталог отправляются после запроса.
+        <i class="fas fa-shield-alt" style="margin-right: 6px;"></i> Нажмите для связи или получения документов
     </div>
 </div>
+
+<script type="text/javascript" src="https://perezvoni.com/view/widget/3596" charset="UTF-8"></script>
 
 <script>
     const PHONE_NUMBER = '+79060650654';
     const FORMATTED_PHONE = '+7 906 065-06-54';
 
-    // Telegram: копирование номера и предложение открыть приложение
-    const telegramBtn = document.getElementById('telegramBtn');
-    if (telegramBtn) {
-        telegramBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            navigator.clipboard.writeText(PHONE_NUMBER).then(() => {
-                const userChoice = confirm(
-                    `📱 Номер ${FORMATTED_PHONE} скопирован.\n\n` +
-                    `1. Откройте Telegram\n` +
-                    `2. Найдите контакт по номеру\n` +
-                    `3. Напишите нам\n\n` +
-                    `Открыть Telegram?`
-                );
-                if (userChoice) {
-                    window.location.href = 'tg://resolve?domain=';
-                    setTimeout(() => {
-                        window.open('https://web.telegram.org/k/', '_blank');
-                    }, 200);
-                }
-            }).catch(() => {
-                alert(`Наш Telegram: ${FORMATTED_PHONE}\nПожалуйста, добавьте этот номер в контакты и напишите нам.`);
-            });
-        });
-    }
-
-    // Мессенджер Max: копирование номера + переход на официальный веб-сайт
-    const maxBtn = document.getElementById('maxBtn');
-    if (maxBtn) {
-        maxBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            navigator.clipboard.writeText(PHONE_NUMBER).then(() => {
-                alert(`Номер ${FORMATTED_PHONE} скопирован.\nОткроется сайт Max — найдите контакт по номеру и напишите нам.`);
-                window.open('https://web.max.ru/', '_blank');
-            }).catch(() => {
-                alert(`Наш номер для Max: ${FORMATTED_PHONE}\nДобавьте его в приложение Max и напишите нам.\nСейчас откроется сайт Max.`);
-                window.open('https://web.max.ru/', '_blank');
-            });
-        });
-    }
-
-    // Скачивание прайса/каталога
-    function showDownloadInfo(fileType) {
-        const userConfirmed = confirm(
-            `📄 ${fileType} временно в стадии обновления.\n\n` +
-            `Вы можете получить актуальную версию, связавшись с нами:\n` +
-            `• WhatsApp (${FORMATTED_PHONE})\n` +
-            `• Telegram (${FORMATTED_PHONE})\n` +
-            `• Мессенджер Max (${FORMATTED_PHONE})\n\n` +
-            `Хотите перейти в WhatsApp для запроса файлов?`
-        );
-        if (userConfirmed) {
-            window.open(`https://wa.me/${PHONE_NUMBER}?text=Здравствуйте! Пришлите, пожалуйста, актуальный ${fileType}`, '_blank');
-        } else {
-            alert(`Свяжитесь с нами любым способом, и мы отправим свежий ${fileType}. Спасибо!`);
+    // Telegram
+    document.getElementById('telegramBtn').onclick = () => {
+        navigator.clipboard.writeText(PHONE_NUMBER);
+        if(confirm(`Номер ${FORMATTED_PHONE} скопирован. Открыть Telegram?`)) {
+            window.open('https://t.me/+79060650654', '_blank');
         }
+    };
+
+    // Max Messenger
+    document.getElementById('maxBtn').onclick = () => {
+        navigator.clipboard.writeText(PHONE_NUMBER);
+        alert(`Номер ${FORMATTED_PHONE} скопирован для Max.`);
+        window.open('https://web.max.ru/', '_blank');
+    };
+
+    // Заглушка для прайса
+    document.getElementById('downloadPriceBtn').onclick = () => {
+        if(confirm("Файл обновляется. Перейти в WhatsApp для получения?")) {
+            window.open(`https://wa.me/${PHONE_NUMBER.replace('+','')}`, '_blank');
+        }
+    };
+
+    // --- ЛОГИКА PEREZVONI.COM ---
+
+    const callbackBtn = document.getElementById('callbackBtn');
+    const callbackText = document.getElementById('callbackText');
+
+    // Клик по вашей кнопке вызывает виджет
+    callbackBtn.onclick = (e) => {
+        e.preventDefault();
+        if (typeof perezvoni_open === 'function') {
+            perezvoni_open(); // Официальная функция вызова окна
+        } else {
+            // Если скрипт еще не загрузился, ищем кнопку-трубку самого сервиса и кликаем по ней
+            const defaultBtn = document.querySelector('.pz-fab, .perezvoni-button');
+            if(defaultBtn) defaultBtn.click();
+            else alert("Сервис звонков загружается, пожалуйста, подождите...");
+        }
+    };
+
+    // Функция таймера
+    function startTimer() {
+        let seconds = 30;
+        callbackBtn.classList.add('timer-active');
+        callbackBtn.disabled = true;
+
+        const interval = setInterval(() => {
+            seconds--;
+            if (seconds >= 0) {
+                callbackText.innerText = `Соединяем... ${seconds} сек`;
+            } else {
+                clearInterval(interval);
+                callbackBtn.classList.remove('timer-active');
+                callbackBtn.disabled = false;
+                callbackText.innerText = "Перезвонить за 30 секунд";
+            }
+        }, 1000);
     }
 
-    const priceBtn = document.getElementById('downloadPriceBtn');
-    if (priceBtn) {
-        priceBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showDownloadInfo('прайс-лист');
-        });
-    }
+    // ПОДПИСКА НА СОБЫТИЕ СЕРВИСА
+    // Когда пользователь ввел номер и нажал кнопку в виджете, perezvoni.com генерирует событие
+    window.addEventListener('pz_callback_done', function(e) {
+        startTimer();
+    });
 
-    const catalogBtn = document.getElementById('downloadCatalogBtn');
-    if (catalogBtn) {
-        catalogBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showDownloadInfo('каталог продукции');
-        });
-    }
 </script>
 </body>
 </html>
