@@ -218,7 +218,7 @@
     </div>
 
     <div class="buttons-grid">
-        <!-- WhatsApp по номеру +79060650654 -->
+        <!-- WhatsApp -->
         <a href="https://wa.me/79060650654?text=Здравствуйте!%20Хочу%20получить%20консультацию" 
            target="_blank" 
            rel="noopener noreferrer" 
@@ -228,19 +228,19 @@
             <i class="fas fa-chevron-right" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
         </a>
 
-        <!-- Telegram: показываем номер и предлагаем написать (т.к. прямого старта чата по номеру без username нет) -->
+        <!-- Telegram -->
         <button id="telegramBtn" class="btn btn-telegram">
             <i class="fab fa-telegram"></i>
             <span>Связаться в Telegram</span>
             <i class="fas fa-chevron-right" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
         </button>
 
-        <!-- Макс — звонок по тому же номеру (мессенджер / телефон) -->
-        <a href="tel:+79060650654" class="btn btn-max">
-            <i class="fas fa-user-headset"></i>
-            <span>Макс — менеджер</span>
-            <i class="fas fa-phone-alt" style="font-size: 0.9rem; opacity: 0.8; width: auto;"></i>
-        </a>
+        <!-- Мессенджер Max (российский аналог) - переход на web.max.ru + копирование номера -->
+        <button id="maxBtn" class="btn btn-max">
+            <i class="fas fa-comment-dots"></i>
+            <span>Мессенджер Max</span>
+            <i class="fas fa-external-link-alt" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+        </button>
 
         <!-- Скачать прайс -->
         <button id="downloadPriceBtn" class="btn btn-price">
@@ -264,16 +264,14 @@
 </div>
 
 <script>
-    // Номер телефона для привязки
     const PHONE_NUMBER = '+79060650654';
     const FORMATTED_PHONE = '+7 906 065-06-54';
 
-    // Обработка кнопки Telegram: копирование номера и предложение открыть Telegram
+    // Telegram: копирование номера и предложение открыть приложение
     const telegramBtn = document.getElementById('telegramBtn');
     if (telegramBtn) {
         telegramBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            // Копируем номер в буфер
             navigator.clipboard.writeText(PHONE_NUMBER).then(() => {
                 const userChoice = confirm(
                     `📱 Номер ${FORMATTED_PHONE} скопирован.\n\n` +
@@ -283,9 +281,7 @@
                     `Открыть Telegram?`
                 );
                 if (userChoice) {
-                    // Пытаемся открыть Telegram (если установлен)
                     window.location.href = 'tg://resolve?domain=';
-                    // Если не открывается, даём ссылку на веб-версию
                     setTimeout(() => {
                         window.open('https://web.telegram.org/k/', '_blank');
                     }, 200);
@@ -296,14 +292,29 @@
         });
     }
 
-    // Функция для скачивания с предложением связаться
+    // Мессенджер Max: копирование номера + переход на официальный веб-сайт
+    const maxBtn = document.getElementById('maxBtn');
+    if (maxBtn) {
+        maxBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            navigator.clipboard.writeText(PHONE_NUMBER).then(() => {
+                alert(`Номер ${FORMATTED_PHONE} скопирован.\nОткроется сайт Max — найдите контакт по номеру и напишите нам.`);
+                window.open('https://web.max.ru/', '_blank');
+            }).catch(() => {
+                alert(`Наш номер для Max: ${FORMATTED_PHONE}\nДобавьте его в приложение Max и напишите нам.\nСейчас откроется сайт Max.`);
+                window.open('https://web.max.ru/', '_blank');
+            });
+        });
+    }
+
+    // Скачивание прайса/каталога
     function showDownloadInfo(fileType) {
         const userConfirmed = confirm(
             `📄 ${fileType} временно в стадии обновления.\n\n` +
             `Вы можете получить актуальную версию, связавшись с нами:\n` +
             `• WhatsApp (${FORMATTED_PHONE})\n` +
             `• Telegram (${FORMATTED_PHONE})\n` +
-            `• Позвонить Максу\n\n` +
+            `• Мессенджер Max (${FORMATTED_PHONE})\n\n` +
             `Хотите перейти в WhatsApp для запроса файлов?`
         );
         if (userConfirmed) {
@@ -313,7 +324,6 @@
         }
     }
 
-    // Кнопка прайс
     const priceBtn = document.getElementById('downloadPriceBtn');
     if (priceBtn) {
         priceBtn.addEventListener('click', function(e) {
@@ -322,7 +332,6 @@
         });
     }
 
-    // Кнопка каталог
     const catalogBtn = document.getElementById('downloadCatalogBtn');
     if (catalogBtn) {
         catalogBtn.addEventListener('click', function(e) {
