@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Лендинг | Связь и материалы</title>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (free CDN) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -25,7 +23,6 @@
             padding: 2rem 1.5rem;
         }
 
-        /* основной контейнер с карточкой */
         .landing-card {
             max-width: 580px;
             width: 100%;
@@ -42,7 +39,6 @@
             transform: scale(1.01);
         }
 
-        /* текстовая часть */
         .hero {
             text-align: center;
             margin-bottom: 2.5rem;
@@ -75,7 +71,6 @@
             border-radius: 3px;
         }
 
-        /* сетка кнопок */
         .buttons-grid {
             display: flex;
             flex-direction: column;
@@ -83,7 +78,6 @@
             margin-top: 1rem;
         }
 
-        /* общий стиль кнопки */
         .btn {
             display: flex;
             align-items: center;
@@ -116,7 +110,6 @@
             text-align: left;
         }
 
-        /* эффекты при наведении */
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 18px 28px -12px rgba(0, 0, 0, 0.2);
@@ -126,7 +119,6 @@
             transform: scale(1.05);
         }
 
-        /* индивидуальные цвета кнопок (акцентные) */
         .btn-whatsapp {
             background: #25D366;
             border-color: #20b859;
@@ -174,7 +166,6 @@
             transform: translateY(-3px);
         }
 
-        /* дополнительная подпись */
         .footnote {
             text-align: center;
             margin-top: 2.2rem;
@@ -194,7 +185,6 @@
             text-decoration: underline;
         }
 
-        /* адаптивность для маленьких экранов */
         @media (max-width: 500px) {
             .landing-card {
                 padding: 1.8rem 1.5rem;
@@ -212,7 +202,6 @@
             }
         }
 
-        /* эффект нажатия */
         .btn:active {
             transform: translateY(1px);
             transition: 0.05s;
@@ -229,8 +218,8 @@
     </div>
 
     <div class="buttons-grid">
-        <!-- 1. WhatsApp -->
-        <a href="https://wa.me/79123456789?text=Здравствуйте!%20Хочу%20получить%20консультацию" 
+        <!-- WhatsApp по номеру +79060650654 -->
+        <a href="https://wa.me/79060650654?text=Здравствуйте!%20Хочу%20получить%20консультацию" 
            target="_blank" 
            rel="noopener noreferrer" 
            class="btn btn-whatsapp">
@@ -239,31 +228,28 @@
             <i class="fas fa-chevron-right" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
         </a>
 
-        <!-- 2. Telegram -->
-        <a href="https://t.me/YourManagerBot" 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="btn btn-telegram">
+        <!-- Telegram: показываем номер и предлагаем написать (т.к. прямого старта чата по номеру без username нет) -->
+        <button id="telegramBtn" class="btn btn-telegram">
             <i class="fab fa-telegram"></i>
             <span>Связаться в Telegram</span>
             <i class="fas fa-chevron-right" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
-        </a>
+        </button>
 
-        <!-- 3. Макс (звонок или прямой контакт) -->
-        <a href="tel:+79123456789" class="btn btn-max">
+        <!-- Макс — звонок по тому же номеру (мессенджер / телефон) -->
+        <a href="tel:+79060650654" class="btn btn-max">
             <i class="fas fa-user-headset"></i>
             <span>Макс — менеджер</span>
             <i class="fas fa-phone-alt" style="font-size: 0.9rem; opacity: 0.8; width: auto;"></i>
         </a>
 
-        <!-- 4. Скачать прайс (alert с демо-уведомлением, но красиво) -->
+        <!-- Скачать прайс -->
         <button id="downloadPriceBtn" class="btn btn-price">
             <i class="fas fa-file-invoice-dollar"></i>
             <span>Скачать прайс-лист</span>
             <i class="fas fa-download" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
         </button>
 
-        <!-- 5. Скачать каталог (alert с демо) -->
+        <!-- Скачать каталог -->
         <button id="downloadCatalogBtn" class="btn btn-catalog">
             <i class="fas fa-folder-open"></i>
             <span>Скачать каталог</span>
@@ -273,31 +259,61 @@
 
     <div class="footnote">
         <i class="fas fa-shield-alt" style="margin-right: 6px;"></i> Нажмите, чтобы связаться или получить документы<br>
-        *Прайс и каталог отправляются после запроса, либо скачаются демо-версией.
+        *Прайс и каталог отправляются после запроса.
     </div>
 </div>
 
 <script>
-    // Элегантная обработка скачивания с информационным сообщением и предложением связаться
+    // Номер телефона для привязки
+    const PHONE_NUMBER = '+79060650654';
+    const FORMATTED_PHONE = '+7 906 065-06-54';
+
+    // Обработка кнопки Telegram: копирование номера и предложение открыть Telegram
+    const telegramBtn = document.getElementById('telegramBtn');
+    if (telegramBtn) {
+        telegramBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Копируем номер в буфер
+            navigator.clipboard.writeText(PHONE_NUMBER).then(() => {
+                const userChoice = confirm(
+                    `📱 Номер ${FORMATTED_PHONE} скопирован.\n\n` +
+                    `1. Откройте Telegram\n` +
+                    `2. Найдите контакт по номеру\n` +
+                    `3. Напишите нам\n\n` +
+                    `Открыть Telegram?`
+                );
+                if (userChoice) {
+                    // Пытаемся открыть Telegram (если установлен)
+                    window.location.href = 'tg://resolve?domain=';
+                    // Если не открывается, даём ссылку на веб-версию
+                    setTimeout(() => {
+                        window.open('https://web.telegram.org/k/', '_blank');
+                    }, 200);
+                }
+            }).catch(() => {
+                alert(`Наш Telegram: ${FORMATTED_PHONE}\nПожалуйста, добавьте этот номер в контакты и напишите нам.`);
+            });
+        });
+    }
+
+    // Функция для скачивания с предложением связаться
     function showDownloadInfo(fileType) {
-        // Создаем кастомное уведомление (не навязчивый alert, а красивый попап через модалку или confirm)
-        // Используем confirm с пояснением, но чтобы не раздражать, сделаем информативный диалог.
         const userConfirmed = confirm(
-            `📄 ${fileType} временно находится в стадии обновления.\n\n` +
+            `📄 ${fileType} временно в стадии обновления.\n\n` +
             `Вы можете получить актуальную версию, связавшись с нами:\n` +
-            `• WhatsApp или Telegram\n• Позвонить Максу\n\n` +
+            `• WhatsApp (${FORMATTED_PHONE})\n` +
+            `• Telegram (${FORMATTED_PHONE})\n` +
+            `• Позвонить Максу\n\n` +
             `Хотите перейти в WhatsApp для запроса файлов?`
         );
         if (userConfirmed) {
-            // Перенаправляем на WhatsApp (удобный переход)
-            window.open('https://wa.me/79123456789?text=Здравствуйте!%20Пришлите,%20пожалуйста,%20актуальный%20прайс%20и%20каталог', '_blank');
+            window.open(`https://wa.me/${PHONE_NUMBER}?text=Здравствуйте! Пришлите, пожалуйста, актуальный ${fileType}`, '_blank');
         } else {
-            // Если пользователь отменил, просто показываем вежливую подсказку
             alert(`Свяжитесь с нами любым способом, и мы отправим свежий ${fileType}. Спасибо!`);
         }
     }
 
-    // Обработка кнопки "Скачать прайс"
+    // Кнопка прайс
     const priceBtn = document.getElementById('downloadPriceBtn');
     if (priceBtn) {
         priceBtn.addEventListener('click', function(e) {
@@ -306,7 +322,7 @@
         });
     }
 
-    // Обработка кнопки "Скачать каталог"
+    // Кнопка каталог
     const catalogBtn = document.getElementById('downloadCatalogBtn');
     if (catalogBtn) {
         catalogBtn.addEventListener('click', function(e) {
@@ -314,19 +330,6 @@
             showDownloadInfo('каталог продукции');
         });
     }
-
-    // Дополнительно: предотвращаем случайный переход для кнопок (уже не требуется, так как они button)
-    // Также можно добавить легкую анимацию для активного состояния (уже есть в CSS)
-    console.log('Лендинг готов | 5 кнопок: WhatsApp, Telegram, Макс, скачать прайс, скачать каталог');
 </script>
-
-<!-- 
-    🔹 Пояснение к функционалу:
-    - WhatsApp, Telegram, Макс → активные ссылки (для примера использованы номера/username, замените на свои).
-    - Кнопки скачивания вызывают умный диалог: предлагают связаться для получения файлов, либо ведут в WhatsApp.
-      Это улучшает конверсию и сохраняет user-friendly подход.
-    - В реальном проекте замените ссылки WhatsApp/Telegram/телефон на актуальные данные.
-    - При необходимости добавьте реальные ссылки на PDF, изменив обработчик download на прямую ссылку.
--->
 </body>
 </html>
