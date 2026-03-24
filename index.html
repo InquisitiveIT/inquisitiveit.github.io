@@ -2,172 +2,331 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Port Services</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Лендинг | Связь и материалы</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            --bg: #0f172a;
-            --accent: #3b82f6;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text: #f8fafc;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+
         body {
-            font-family: -apple-system, system-ui, sans-serif;
-            background: radial-gradient(circle at top, #1e293b, var(--bg));
-            color: var(--text); margin: 0; padding: 0; overflow: hidden;
-        }
-        .container { padding: 20px 16px 100px; height: 100vh; overflow-y: auto; box-sizing: border-box; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header img { width: 120px; filter: drop-shadow(0 0 10px var(--accent)); }
-        
-        .status-badge {
-            background: rgba(74, 222, 128, 0.1);
-            color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3);
-            padding: 6px 12px; border-radius: 20px; font-size: 13px; display: inline-block;
-        }
-        
-        .card {
-            background: var(--card-bg); backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
-            padding: 24px; margin-bottom: 20px; text-align: center;
-        }
-        
-        .btn-pay {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white; border: none; padding: 18px; border-radius: 18px;
-            width: 100%; font-weight: 700; font-size: 17px; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fe 0%, #e9eef5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
         }
 
-        .btn-secondary {
-            background: rgba(255,255,255,0.05); color: var(--text);
-            border: 1px solid rgba(255,255,255,0.1); padding: 14px;
-            border-radius: 16px; width: 100%; font-weight: 600;
+        /* основной контейнер с карточкой */
+        .landing-card {
+            max-width: 580px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem 2rem;
+            transition: transform 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
-        .nav {
-            position: fixed; bottom: 20px; left: 16px; right: 16px;
-            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px);
-            border-radius: 30px; display: flex; padding: 6px; border: 1px solid rgba(255,255,255,0.1);
+        .landing-card:hover {
+            transform: scale(1.01);
         }
-        .nav-item { flex: 1; text-align: center; padding: 12px; color: #64748b; text-decoration: none; font-size: 12px; }
-        .nav-item.active { color: white; }
-        .nav-item i { display: block; font-size: 20px; margin-bottom: 4px; }
 
-        #qr { background: white; padding: 10px; border-radius: 12px; display: inline-block; margin: 15px 0; }
-        .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: none; margin: 10px auto; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* текстовая часть */
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #1A2A4F, #2C3E66);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero p {
+            color: #4a5568;
+            font-size: 1rem;
+            line-height: 1.5;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .divider {
+            width: 70px;
+            height: 3px;
+            background: linear-gradient(90deg, #2b7a4b, #34a7c1);
+            margin: 1rem auto 0;
+            border-radius: 3px;
+        }
+
+        /* сетка кнопок */
+        .buttons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        /* общий стиль кнопки */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s ease-in-out;
+            border: none;
+            cursor: pointer;
+            background: #ffffff;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
+            color: #1f2937;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        .btn i {
+            font-size: 1.5rem;
+            width: 1.8rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .btn span {
+            flex: 1;
+            text-align: left;
+        }
+
+        /* эффекты при наведении */
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 28px -12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover i {
+            transform: scale(1.05);
+        }
+
+        /* индивидуальные цвета кнопок (акцентные) */
+        .btn-whatsapp {
+            background: #25D366;
+            border-color: #20b859;
+            color: white;
+        }
+        .btn-whatsapp i {
+            color: white;
+        }
+        .btn-whatsapp:hover {
+            background: #20b859;
+            box-shadow: 0 12px 20px -10px #25D36680;
+        }
+
+        .btn-telegram {
+            background: #26A5E4;
+            border-color: #1f94cf;
+            color: white;
+        }
+        .btn-telegram:hover {
+            background: #1f94cf;
+            box-shadow: 0 12px 20px -10px #26A5E480;
+        }
+
+        .btn-max {
+            background: #4B6F8C;
+            border-color: #3d5b74;
+            color: white;
+        }
+        .btn-max:hover {
+            background: #3d5b74;
+            box-shadow: 0 12px 20px -10px #2c4a6380;
+        }
+
+        .btn-price, .btn-catalog {
+            background: #F0F4F9;
+            border: 1px solid #cfdfed;
+            color: #1E2F47;
+        }
+        .btn-price i, .btn-catalog i {
+            color: #2C7DA0;
+        }
+        .btn-price:hover, .btn-catalog:hover {
+            background: #e6edf5;
+            border-color: #bdd4e2;
+            transform: translateY(-3px);
+        }
+
+        /* дополнительная подпись */
+        .footnote {
+            text-align: center;
+            margin-top: 2.2rem;
+            font-size: 0.8rem;
+            color: #6c757d;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+
+        .footnote a {
+            color: #2b7a4b;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footnote a:hover {
+            text-decoration: underline;
+        }
+
+        /* адаптивность для маленьких экранов */
+        @media (max-width: 500px) {
+            .landing-card {
+                padding: 1.8rem 1.5rem;
+            }
+            .btn {
+                padding: 0.85rem 1rem;
+                font-size: 1rem;
+            }
+            .btn i {
+                font-size: 1.3rem;
+                width: 1.5rem;
+            }
+            .hero h1 {
+                font-size: 1.7rem;
+            }
+        }
+
+        /* эффект нажатия */
+        .btn:active {
+            transform: translateY(1px);
+            transition: 0.05s;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <img src="https://files.catbox.moe/9o4k5q.png" alt="Port Logo">
-        <h3>Узлы доступа: <span style="color:var(--accent)">AMS-01</span></h3>
+<div class="landing-card">
+    <div class="hero">
+        <h1>Будь на связи</h1>
+        <p>Удобный формат общения и полезные материалы</p>
+        <div class="divider"></div>
     </div>
 
-    <div id="home" class="tab-content active">
-        <div class="card">
-            <div class="status-badge">● Система активна</div>
-            <h2 style="margin: 15px 0 5px;">Port Services</h2>
-            <p style="color:#94a3b8; font-size: 14px; margin-bottom: 25px;">Зашифрованный туннель для работы с удаленным оборудованием</p>
-            
-            <button class="btn-pay" onclick="handlePayment()">
-                <i class="fas fa-wallet" style="margin-right: 8px;"></i> Оплата через СБП
-            </button>
-            
-            <button class="btn-secondary" onclick="getAccess()">
-                <i class="fas fa-key" style="margin-right: 8px;"></i> Получить токен доступа
-            </button>
-            
-            <div class="loader" id="loader"></div>
-            <div id="access-block" style="display:none; margin-top: 20px;">
-                <div id="qr"></div>
-                <button class="btn-secondary" onclick="syncApp()">⚡ Синхронизировать шлюз</button>
-            </div>
-        </div>
+    <div class="buttons-grid">
+        <!-- 1. WhatsApp -->
+        <a href="https://wa.me/79123456789?text=Здравствуйте!%20Хочу%20получить%20консультацию" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="btn btn-whatsapp">
+            <i class="fab fa-whatsapp"></i>
+            <span>Написать в WhatsApp</span>
+            <i class="fas fa-chevron-right" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+        </a>
+
+        <!-- 2. Telegram -->
+        <a href="https://t.me/YourManagerBot" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="btn btn-telegram">
+            <i class="fab fa-telegram"></i>
+            <span>Связаться в Telegram</span>
+            <i class="fas fa-chevron-right" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+        </a>
+
+        <!-- 3. Макс (звонок или прямой контакт) -->
+        <a href="tel:+79123456789" class="btn btn-max">
+            <i class="fas fa-user-headset"></i>
+            <span>Макс — менеджер</span>
+            <i class="fas fa-phone-alt" style="font-size: 0.9rem; opacity: 0.8; width: auto;"></i>
+        </a>
+
+        <!-- 4. Скачать прайс (alert с демо-уведомлением, но красиво) -->
+        <button id="downloadPriceBtn" class="btn btn-price">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Скачать прайс-лист</span>
+            <i class="fas fa-download" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+        </button>
+
+        <!-- 5. Скачать каталог (alert с демо) -->
+        <button id="downloadCatalogBtn" class="btn btn-catalog">
+            <i class="fas fa-folder-open"></i>
+            <span>Скачать каталог</span>
+            <i class="fas fa-download" style="font-size: 0.9rem; opacity: 0.7; width: auto;"></i>
+        </button>
     </div>
 
-    <div id="profile" class="tab-content" style="display:none;">
-        <div class="card">
-            <h3 style="margin-top:0;">Управление лицензией</h3>
-            <div style="text-align:left; font-size: 15px;">
-                <p><strong>Пользователь:</strong> <span id="user-name">---</span></p>
-                <p><strong>Лицензия:</strong> <span>Стандартная (30 дн.)</span></p>
-                <p><strong>Осталось:</strong> <span style="color:var(--accent)">30 дней</span></p>
-            </div>
-        </div>
+    <div class="footnote">
+        <i class="fas fa-shield-alt" style="margin-right: 6px;"></i> Нажмите, чтобы связаться или получить документы<br>
+        *Прайс и каталог отправляются после запроса, либо скачаются демо-версией.
     </div>
 </div>
 
-<nav class="nav">
-    <a href="javascript:void(0)" class="nav-item active" onclick="switchTab('home', this)"><i class="fas fa-server"></i>Серверы</a>
-    <a href="javascript:void(0)" class="nav-item" onclick="switchTab('profile', this)"><i class="fas fa-user-shield"></i>Лицензия</a>
-</nav>
-
 <script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-
-    const API_URL = "https://77.221.154.23:3000"; // Тут потом будет твой HTTPS домен
-    let lastToken = "";
-
-    function switchTab(id, el) {
-        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        document.getElementById(id).style.display = 'block';
-        el.classList.add('active');
-        tg.HapticFeedback.impactOccurred('light');
-    }
-
-    // ЛОГИКА ОПЛАТЫ
-    async function handlePayment() {
-        tg.HapticFeedback.impactOccurred('medium');
-        // Здесь мы будем вызывать твой сервер для получения ссылки на СБП
-        tg.showAlert("Переадресация на шлюз СБП...");
-        // Пример: tg.openLink('https://payform.ru/link-to-your-tinkoff-payment');
-    }
-
-    // ЛОГИКА ДОСТУПА
-    async function getAccess() {
-        const loader = document.getElementById('loader');
-        const block = document.getElementById('access-block');
-        loader.style.display = 'block';
-        
-        try {
-            const user = tg.initDataUnsafe?.user || { id: 0 };
-            const res = await fetch(`${API_URL}/api/get-key`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ userId: user.id })
-            });
-            const data = await res.json();
-            if(data.key) {
-                lastToken = data.key;
-                document.getElementById('qr').innerHTML = "";
-                new QRCode(document.getElementById('qr'), { text: data.key, width: 160, height: 160 });
-                block.style.display = 'block';
-                tg.HapticFeedback.notificationOccurred('success');
-            }
-        } catch(e) {
-            tg.showAlert("Ошибка узла доступа. Попробуйте позже.");
+    // Элегантная обработка скачивания с информационным сообщением и предложением связаться
+    function showDownloadInfo(fileType) {
+        // Создаем кастомное уведомление (не навязчивый alert, а красивый попап через модалку или confirm)
+        // Используем confirm с пояснением, но чтобы не раздражать, сделаем информативный диалог.
+        const userConfirmed = confirm(
+            `📄 ${fileType} временно находится в стадии обновления.\n\n` +
+            `Вы можете получить актуальную версию, связавшись с нами:\n` +
+            `• WhatsApp или Telegram\n• Позвонить Максу\n\n` +
+            `Хотите перейти в WhatsApp для запроса файлов?`
+        );
+        if (userConfirmed) {
+            // Перенаправляем на WhatsApp (удобный переход)
+            window.open('https://wa.me/79123456789?text=Здравствуйте!%20Пришлите,%20пожалуйста,%20актуальный%20прайс%20и%20каталог', '_blank');
+        } else {
+            // Если пользователь отменил, просто показываем вежливую подсказку
+            alert(`Свяжитесь с нами любым способом, и мы отправим свежий ${fileType}. Спасибо!`);
         }
-        loader.style.display = 'none';
     }
 
-    function syncApp() {
-        if(!lastToken) return;
-        tg.setClipboardText(lastToken);
-        tg.openLink(`v2raytun://import/${lastToken}`);
-        tg.showConfirm("Данные синхронизированы! Если шлюз не открылся, вставьте токен из буфера обмена вручную.");
+    // Обработка кнопки "Скачать прайс"
+    const priceBtn = document.getElementById('downloadPriceBtn');
+    if (priceBtn) {
+        priceBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showDownloadInfo('прайс-лист');
+        });
     }
 
-    document.getElementById('user-name').innerText = tg.initDataUnsafe?.user?.first_name || "Guest";
+    // Обработка кнопки "Скачать каталог"
+    const catalogBtn = document.getElementById('downloadCatalogBtn');
+    if (catalogBtn) {
+        catalogBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showDownloadInfo('каталог продукции');
+        });
+    }
+
+    // Дополнительно: предотвращаем случайный переход для кнопок (уже не требуется, так как они button)
+    // Также можно добавить легкую анимацию для активного состояния (уже есть в CSS)
+    console.log('Лендинг готов | 5 кнопок: WhatsApp, Telegram, Макс, скачать прайс, скачать каталог');
 </script>
+
+<!-- 
+    🔹 Пояснение к функционалу:
+    - WhatsApp, Telegram, Макс → активные ссылки (для примера использованы номера/username, замените на свои).
+    - Кнопки скачивания вызывают умный диалог: предлагают связаться для получения файлов, либо ведут в WhatsApp.
+      Это улучшает конверсию и сохраняет user-friendly подход.
+    - В реальном проекте замените ссылки WhatsApp/Telegram/телефон на актуальные данные.
+    - При необходимости добавьте реальные ссылки на PDF, изменив обработчик download на прямую ссылку.
+-->
 </body>
 </html>
