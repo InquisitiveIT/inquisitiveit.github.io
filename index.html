@@ -2,182 +2,212 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Лендинг | Связь и материалы</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>VPN PORT</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0f1a;
+            --card: #161b26;
+            --accent: #3b82f6;
+            --text: #ffffff;
+            --hint: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fe 0%, #e9eef5 100%);
-            min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            padding: 2rem 1.5rem;
+            font-family: -apple-system, system-ui, sans-serif;
+            background: var(--bg); color: var(--text);
+            margin: 0; padding: 0; height: 100vh; overflow: hidden;
         }
-        .landing-card {
-            max-width: 620px; width: 100%;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(2px);
-            border-radius: 2.5rem;
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2);
-            padding: 2.5rem 2rem;
-            transition: transform 0.2s ease;
-            border: 1px solid rgba(255,255,255,0.5);
-        }
-        .hero { text-align: center; margin-bottom: 2rem; }
-        .hero h1 {
-            font-size: 2rem; font-weight: 700;
-            background: linear-gradient(120deg, #1A2A4F, #2C3E66);
-            -webkit-background-clip: text; color: transparent;
-            margin-bottom: 0.75rem;
-        }
-        .divider { width: 70px; height: 3px; background: linear-gradient(90deg, #2b7a4b, #34a7c1); margin: 1rem auto 0; border-radius: 3px; }
-        
-        .buttons-grid { display: flex; flex-direction: column; gap: 1.1rem; margin-top: 1rem; }
-        .btn {
-            display: flex; align-items: center; justify-content: center; gap: 1rem;
-            padding: 0.9rem 1.2rem; border-radius: 2rem;
-            font-size: 1rem; font-weight: 600; text-decoration: none;
-            transition: all 0.25s; border: none; cursor: pointer;
-            background: #fff; color: #1f2937; width: 100%;
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 18px 28px -12px rgba(0,0,0,0.2); }
-        .btn i { font-size: 1.4rem; width: 1.8rem; text-align: center; }
-        .btn span { flex: 1; text-align: left; }
 
-        .btn-whatsapp { background: #25D366; color: white; }
-        .btn-telegram { background: #26A5E4; color: white; }
-        .btn-max { background: #4B6F8C; color: white; }
-        .btn-price, .btn-catalog { background: #F0F4F9; color: #1E2F47; }
-        .btn-callback { background: #FF8C42; color: white; border: none; }
+        /* ГЛАВНЫЙ ЭКРАН */
+        .hero {
+            width: 100%; height: 38vh;
+            background: url('https://img.freepik.com/free-photo/cute-animal-wearing-hat_23-2150932220.jpg') center/cover;
+            position: relative;
+        }
+        .hero-fade {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, transparent, var(--bg));
+            pointer-events: none;
+        }
 
-        /* Состояние таймера */
-        .timer-active { background: #e67e2e !important; cursor: wait; transform: none !important; }
+        .menu-grid { padding: 0 16px; margin-top: -40px; position: relative; z-index: 10; overflow-y: auto; max-height: 60vh; }
 
-        .footnote { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #6c757d; border-top: 1px solid #e2e8f0; padding-top: 1.2rem; }
-        @media (max-width: 500px) { .landing-card { padding: 1.5rem 1.2rem; } .hero h1 { font-size: 1.6rem; } }
+        .btn-tile {
+            background: var(--card); border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 18px; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 15px; font-weight: 600; cursor: pointer;
+        }
+        .btn-tile.primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none;
+            justify-content: center; font-size: 18px; padding: 22px;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+        .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .two-cols .btn-tile { margin-bottom: 0; flex-direction: column; text-align: center; padding: 20px 10px; }
+
+        /* ПОД-СТРАНИЦЫ */
+        .page {
+            position: fixed; inset: 0; background: var(--bg);
+            z-index: 1000; display: none; flex-direction: column;
+            padding: 20px 16px; overflow-y: auto;
+        }
+        .page.active { display: flex; }
+
+        /* КАРТОЧКА ТАРИФА (PDF "Купить подписку") */
+        .plan-card {
+            background: var(--card); border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 20px; position: relative; margin-bottom: 12px;
+        }
+        .plan-card.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.1); }
+        .badge {
+            position: absolute; top: -10px; left: 15px; background: #fff; color: #000;
+            font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 8px;
+        }
+
+        /* ЛИЧНЫЙ КАБИНЕТ (PDF "Личный кабинет") */
+        .status-box {
+            background: var(--card); border-radius: 24px; padding: 24px;
+            text-align: center; border: 1px solid var(--glass-border); margin-bottom: 20px;
+        }
+        .copy-field {
+            background: #000; border-radius: 14px; padding: 16px;
+            display: flex; justify-content: space-between; align-items: center; margin: 10px 0;
+        }
+
+        /* ШАГИ (PDF "Установить VPN") */
+        .step-box { text-align: center; padding: 40px 10px; display: none; }
+        .step-box.active { display: block; }
+
+        .btn-action {
+            background: var(--accent); color: #fff; border: none;
+            padding: 18px; border-radius: 18px; width: 100%;
+            font-weight: 700; font-size: 16px; margin-top: auto; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-<div class="landing-card">
-    <div class="hero">
-        <h1>Будь на связи</h1>
-        <p>Удобный формат общения и полезные материалы</p>
-        <div class="divider"></div>
+    <div id="main-view">
+        <div class="hero"><div class="hero-fade"></div></div>
+        <div class="menu-grid">
+            <div class="btn-tile primary" onclick="nav('p-plans')">
+                <i class="fas fa-shopping-cart"></i> Купить подписку
+            </div>
+            <div class="two-cols">
+                <div class="btn-tile" onclick="nav('p-setup')">
+                    <i class="fas fa-tools" style="color:var(--accent); font-size:22px; margin-bottom:8px;"></i>
+                    Установить VPN
+                </div>
+                <div class="btn-tile" onclick="nav('p-profile')">
+                    <i class="fas fa-user" style="color:var(--accent); font-size:22px; margin-bottom:8px;"></i>
+                    Личный кабинет
+                </div>
+            </div>
+            <div class="btn-tile" onclick="tg.openTelegramLink('https://t.me/port_support')">
+                <i class="fas fa-comment-dots" style="color:var(--accent)"></i> Поддержка
+            </div>
+            <div class="btn-tile" onclick="nav('p-ref')">
+                <i class="fas fa-users" style="color:var(--accent)"></i> Партнерская программа
+            </div>
+        </div>
     </div>
 
-    <div class="buttons-grid">
-        <a href="https://wa.me/79060650654?text=Здравствуйте!%20Хочу%20консультацию" target="_blank" class="btn btn-whatsapp">
-            <i class="fab fa-whatsapp"></i>
-            <span>Написать в WhatsApp</span>
-            <i class="fas fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
-        </a>
-
-        <button id="telegramBtn" class="btn btn-telegram">
-            <i class="fab fa-telegram"></i>
-            <span>Связаться в Telegram</span>
-            <i class="fas fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
-        </button>
-
-        <button id="maxBtn" class="btn btn-max">
-            <i class="fas fa-comment-dots"></i>
-            <span>Мессенджер Max</span>
-            <i class="fas fa-external-link-alt" style="font-size: 0.8rem; opacity: 0.7;"></i>
-        </button>
-
-        <button id="downloadPriceBtn" class="btn btn-price">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Скачать прайс-лист</span>
-            <i class="fas fa-download" style="font-size: 0.8rem; opacity: 0.7;"></i>
-        </button>
-
-        <button id="callbackBtn" class="btn btn-callback">
-            <i class="fas fa-phone-alt"></i>
-            <span id="callbackText">Перезвонить за 30 секунд</span>
-            <i class="fas fa-bolt" style="font-size: 0.8rem; opacity: 0.7;"></i>
-        </button>
+    <div id="p-plans" class="page">
+        <h2>Выберите тариф</h2>
+        <div class="plan-card active">
+            <div class="badge">🔥 ХИТ ПРОДАЖ</div>
+            <div style="font-weight:700">3 месяца</div>
+            <div style="font-size:24px; font-weight:800; margin:10px 0">790 ₽</div>
+            <div style="font-size:11px; color:var(--hint)">~8.68 ₽ в день</div>
+        </div>
+        <div class="plan-card">
+            <div style="font-weight:700">1 месяц</div>
+            <div style="font-size:24px; font-weight:800; margin:10px 0">299 ₽</div>
+            <div style="font-size:11px; color:var(--hint)">~9.97 ₽ в день</div>
+        </div>
+        <button class="btn-action" onclick="tg.showAlert('Оплата СБП...')">Перейти к оплате</button>
     </div>
 
-    <div class="footnote">
-        <i class="fas fa-shield-alt" style="margin-right: 6px;"></i> Нажмите для связи или получения документов
+    <div id="p-profile" class="page">
+        <h2>Личный кабинет</h2>
+        <div class="status-box">
+            <div style="color:var(--hint); font-size:13px; margin-bottom:10px;">Статус подписки</div>
+            <span style="color:#10b981; font-weight:700; background:rgba(16,185,129,0.1); padding:5px 15px; border-radius:20px;">Действует</span>
+            <div style="margin-top:15px; font-weight:700;">до 26 февраля 2026</div>
+        </div>
+        
+        <b style="font-size:14px;">Ваш ключ:</b>
+        <div class="copy-field">
+            <span id="vpn-key" style="font-size:12px; opacity:0.6; overflow:hidden;">vless://uuid@77.221.154.23:443...</span>
+            <i class="fas fa-copy" style="color:var(--accent)" onclick="copyValue('vpn-key')"></i>
+        </div>
+
+        <div class="btn-tile" onclick="connectProxy()" style="background:rgba(36,129,204,0.1); border-color:rgba(36,129,204,0.3); margin-top:10px;">
+            <i class="fab fa-telegram" style="color:#2481cc; font-size:22px;"></i>
+            <div style="text-align:left"><div style="font-size:14px">Прокси Telegram</div><div style="font-size:10px; color:var(--hint)">Без VPN приложения</div></div>
+        </div>
     </div>
-</div>
 
-<script type="text/javascript" src="https://perezvoni.com/view/widget/3596" charset="UTF-8"></script>
+    <div id="p-setup" class="page">
+        <div id="s1" class="step-box active">
+            <i class="fas fa-download" style="font-size:50px; color:var(--accent); margin-bottom:20px;"></i>
+            <h2>Шаг 1</h2><p style="color:var(--hint)">Установите v2RayTun</p>
+            <button class="btn-action" onclick="nextS(2)">Далее</button>
+        </div>
+        <div id="s2" class="step-box">
+            <i class="fas fa-plus-circle" style="font-size:50px; color:var(--accent); margin-bottom:20px;"></i>
+            <h2>Шаг 2</h2><p style="color:var(--hint)">Добавьте ключ в приложение</p>
+            <button class="btn-action" onclick="nextS(3)">Добавить</button>
+        </div>
+        <div id="s3" class="step-box">
+            <i class="fas fa-check-circle" style="font-size:50px; color:#10b981; margin-bottom:20px;"></i>
+            <h2>Готово!</h2><p style="color:var(--hint)">Включите VPN в приложении</p>
+            <button class="btn-action" onclick="closeAll()">Завершить</button>
+        </div>
+    </div>
 
-<script>
-    const PHONE_NUMBER = '+79060650654';
-    const FORMATTED_PHONE = '+7 906 065-06-54';
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
 
-    // Telegram
-    document.getElementById('telegramBtn').onclick = () => {
-        navigator.clipboard.writeText(PHONE_NUMBER);
-        if(confirm(`Номер ${FORMATTED_PHONE} скопирован. Открыть Telegram?`)) {
-            window.open('https://t.me/+79060650654', '_blank');
+        function nav(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            tg.BackButton.show();
+            tg.HapticFeedback.impactOccurred('medium');
         }
-    };
 
-    // Max Messenger
-    document.getElementById('maxBtn').onclick = () => {
-        navigator.clipboard.writeText(PHONE_NUMBER);
-        alert(`Номер ${FORMATTED_PHONE} скопирован для Max.`);
-        window.open('https://web.max.ru/', '_blank');
-    };
+        tg.onEvent('backButtonClicked', closeAll);
 
-    // Заглушка для прайса
-    document.getElementById('downloadPriceBtn').onclick = () => {
-        if(confirm("Файл обновляется. Перейти в WhatsApp для получения?")) {
-            window.open(`https://wa.me/${PHONE_NUMBER.replace('+','')}`, '_blank');
+        function closeAll() {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            tg.BackButton.hide();
         }
-    };
 
-    // --- ЛОГИКА PEREZVONI.COM ---
-
-    const callbackBtn = document.getElementById('callbackBtn');
-    const callbackText = document.getElementById('callbackText');
-
-    // Клик по вашей кнопке вызывает виджет
-    callbackBtn.onclick = (e) => {
-        e.preventDefault();
-        if (typeof perezvoni_open === 'function') {
-            perezvoni_open(); // Официальная функция вызова окна
-        } else {
-            // Если скрипт еще не загрузился, ищем кнопку-трубку самого сервиса и кликаем по ней
-            const defaultBtn = document.querySelector('.pz-fab, .perezvoni-button');
-            if(defaultBtn) defaultBtn.click();
-            else alert("Сервис звонков загружается, пожалуйста, подождите...");
+        function nextS(n) {
+            document.querySelectorAll('.step-box').forEach(s => s.classList.remove('active'));
+            document.getElementById('s' + n).classList.add('active');
+            tg.HapticFeedback.impactOccurred('light');
         }
-    };
 
-    // Функция таймера
-    function startTimer() {
-        let seconds = 30;
-        callbackBtn.classList.add('timer-active');
-        callbackBtn.disabled = true;
+        function copyValue(id) {
+            const text = document.getElementById(id).innerText;
+            tg.setClipboardText(text);
+            tg.showAlert("Скопировано!");
+        }
 
-        const interval = setInterval(() => {
-            seconds--;
-            if (seconds >= 0) {
-                callbackText.innerText = `Соединяем... ${seconds} сек`;
-            } else {
-                clearInterval(interval);
-                callbackBtn.classList.remove('timer-active');
-                callbackBtn.disabled = false;
-                callbackText.innerText = "Перезвонить за 30 секунд";
-            }
-        }, 1000);
-    }
-
-    // ПОДПИСКА НА СОБЫТИЕ СЕРВИСА
-    // Когда пользователь ввел номер и нажал кнопку в виджете, perezvoni.com генерирует событие
-    window.addEventListener('pz_callback_done', function(e) {
-        startTimer();
-    });
-
-</script>
+        function connectProxy() {
+            // Твои данные из 3X-UI (Inbound Shadowsocks)
+            const server = "77.221.154.23";
+            const port = "1080";
+            const secret = "твой_пароль_из_панели"; 
+            tg.openTelegramLink(`https://t.me/proxy?server=${server}&port=${port}&secret=${secret}`);
+        }
+    </script>
 </body>
 </html>
