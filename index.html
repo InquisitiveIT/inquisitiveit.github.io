@@ -10,16 +10,81 @@
         :root {
             --bg: #0a0f1a;
             --card: #161b26;
-            --accent: #3b82f6;
+            --accent: #00f0ff;
+            --neon-cyan: #00ffff;
+            --neon-pink: #ff00ff;
+            --neon-purple: #c026d3;
             --text: #ffffff;
             --hint: #94a3b8;
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(0, 240, 255, 0.2);
         }
+
+        * { box-sizing: border-box; }
 
         body {
             font-family: -apple-system, system-ui, sans-serif;
-            background: var(--bg); color: var(--text);
+            background: var(--bg);
+            color: var(--text);
             margin: 0; padding: 0; height: 100vh; overflow: hidden;
+            position: relative;
+        }
+
+        /* === ДИНАМИЧЕСКИЙ НЕОНОВЫЙ ФОН === */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background: linear-gradient(45deg, 
+                rgba(0, 240, 255, 0.08) 0%, 
+                rgba(255, 0, 255, 0.08) 25%, 
+                rgba(192, 38, 211, 0.08) 50%,
+                rgba(0, 240, 255, 0.08) 75%, 
+                rgba(255, 0, 255, 0.08) 100%);
+            background-size: 400% 400%;
+            animation: neonFlow 18s linear infinite;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at 30% 20%, rgba(0, 240, 255, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 70% 80%, rgba(255, 0, 255, 0.15) 0%, transparent 40%);
+            animation: neonPulse 12s ease-in-out infinite alternate;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        @keyframes neonFlow {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes neonPulse {
+            0%   { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* НЕОНОВАЯ СЕТКА (лёгкая кибер-фишка) */
+        .grid {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 25s linear infinite;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        @keyframes gridMove {
+            0%   { background-position: 0 0; }
+            100% { background-position: 60px 60px; }
         }
 
         /* ГЛАВНЫЙ ЭКРАН */
@@ -27,27 +92,118 @@
             width: 100%; height: 38vh;
             background: url('https://img.freepik.com/free-photo/cute-animal-wearing-hat_23-2150932220.jpg') center/cover;
             position: relative;
+            box-shadow: inset 0 0 80px rgba(0, 240, 255, 0.6);
         }
-        .hero-fade {
-            position: absolute; inset: 0;
-            background: linear-gradient(to bottom, transparent, var(--bg));
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent, var(--bg) 85%);
+            z-index: 1;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.3) 20%, transparent 70%);
+            animation: heroGlow 4s ease-in-out infinite alternate;
+            z-index: 2;
             pointer-events: none;
         }
 
-        .menu-grid { padding: 0 16px; margin-top: -40px; position: relative; z-index: 10; overflow-y: auto; max-height: 60vh; }
+        @keyframes heroGlow {
+            0%   { opacity: 0.4; }
+            100% { opacity: 0.9; }
+        }
 
+        .hero-fade { display: none; } /* убрали старый fade */
+
+        .menu-grid { 
+            padding: 0 16px; 
+            margin-top: -50px; 
+            position: relative; 
+            z-index: 10; 
+            overflow-y: auto; 
+            max-height: 62vh; 
+        }
+
+        /* === ОБЪЁМНЫЕ НЕОНОВЫЕ КНОПКИ === */
         .btn-tile {
-            background: var(--card); border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 18px; margin-bottom: 12px;
-            display: flex; align-items: center; gap: 15px; font-weight: 600; cursor: pointer;
+            background: var(--card);
+            border: 2px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 18px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-weight: 700;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 12px 30px -6px rgba(0, 240, 255, 0.4),
+                0 4px 12px -2px rgba(255, 0, 255, 0.3),
+                inset 0 3px 0 rgba(255,255,255,0.15);
+            position: relative;
+            overflow: hidden;
         }
+
+        .btn-tile::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transform: translateX(-150%);
+            transition: 0.6s;
+        }
+
+        .btn-tile:hover::before,
+        .btn-tile:active::before {
+            transform: translateX(300%);
+        }
+
+        .btn-tile:active {
+            transform: scale(0.92) translateY(6px);
+            box-shadow: 
+                0 6px 12px -4px rgba(0, 240, 255, 0.3),
+                inset 0 2px 0 rgba(255,255,255,0.2);
+        }
+
         .btn-tile.primary {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none;
-            justify-content: center; font-size: 18px; padding: 22px;
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #00f0ff, #ff00ff);
+            border: none;
+            color: #000;
+            font-size: 19px;
+            padding: 24px;
+            box-shadow: 
+                0 15px 35px -8px rgba(0, 240, 255, 0.6),
+                0 8px 20px -4px rgba(255, 0, 255, 0.5);
+            text-shadow: 0 0 15px rgba(255,255,255,0.9);
         }
-        .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .two-cols .btn-tile { margin-bottom: 0; flex-direction: column; text-align: center; padding: 20px 10px; }
+
+        .btn-tile.primary:active {
+            transform: scale(0.88) translateY(8px);
+        }
+
+        .two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .two-cols .btn-tile { margin-bottom: 0; flex-direction: column; text-align: center; padding: 22px 12px; }
+
+        /* НЕОНОВЫЙ ТЕКСТ */
+        h2 {
+            font-size: 28px;
+            font-weight: 800;
+            text-shadow: 
+                0 0 10px var(--neon-cyan),
+                0 0 25px var(--neon-cyan),
+                0 0 40px var(--neon-pink);
+            margin-bottom: 20px;
+        }
 
         /* ПОД-СТРАНИЦЫ */
         .page {
@@ -57,117 +213,198 @@
         }
         .page.active { display: flex; }
 
-        /* КАРТОЧКА ТАРИФА (PDF "Купить подписку") */
+        /* КАРТОЧКИ ТАРИФОВ */
         .plan-card {
-            background: var(--card); border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 20px; position: relative; margin-bottom: 12px;
+            background: var(--card);
+            border: 2px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 22px;
+            position: relative;
+            margin-bottom: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 240, 255, 0.2);
         }
-        .plan-card.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.1); }
+        .plan-card:hover,
+        .plan-card.active {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+            transform: translateY(-3px);
+        }
         .badge {
-            position: absolute; top: -10px; left: 15px; background: #fff; color: #000;
-            font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 8px;
+            position: absolute; top: -12px; left: 20px;
+            background: linear-gradient(#ff00ff, #00ffff);
+            color: #000;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+            letter-spacing: 1px;
         }
 
-        /* ЛИЧНЫЙ КАБИНЕТ (PDF "Личный кабинет") */
+        /* ЛИЧНЫЙ КАБИНЕТ */
         .status-box {
-            background: var(--card); border-radius: 24px; padding: 24px;
-            text-align: center; border: 1px solid var(--glass-border); margin-bottom: 20px;
-        }
-        .copy-field {
-            background: #000; border-radius: 14px; padding: 16px;
-            display: flex; justify-content: space-between; align-items: center; margin: 10px 0;
+            background: var(--card);
+            border-radius: 28px;
+            padding: 28px;
+            text-align: center;
+            border: 2px solid var(--glass-border);
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
         }
 
-        /* ШАГИ (PDF "Установить VPN") */
-        .step-box { text-align: center; padding: 40px 10px; display: none; }
+        .copy-field {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 18px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        /* КНОПКИ ДЕЙСТВИЯ */
+        .btn-action {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+            color: #000;
+            border: none;
+            padding: 20px;
+            border-radius: 22px;
+            width: 100%;
+            font-weight: 800;
+            font-size: 17px;
+            margin-top: auto;
+            cursor: pointer;
+            box-shadow: 0 15px 35px -10px rgba(0, 240, 255, 0.7);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-action:active {
+            transform: scale(0.9) translateY(4px);
+            box-shadow: 0 8px 20px -8px rgba(0, 240, 255, 0.5);
+        }
+
+        /* ШАГИ */
+        .step-box {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
         .step-box.active { display: block; }
 
-        .btn-action {
-            background: var(--accent); color: #fff; border: none;
-            padding: 18px; border-radius: 18px; width: 100%;
-            font-weight: 700; font-size: 16px; margin-top: auto; cursor: pointer;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
+    <!-- ДИНАМИЧЕСКАЯ СЕТКА -->
+    <div class="grid"></div>
+
     <div id="main-view">
         <div class="hero"><div class="hero-fade"></div></div>
         <div class="menu-grid">
             <div class="btn-tile primary" onclick="nav('p-plans')">
-                <i class="fas fa-shopping-cart"></i> Купить подписку
+                <i class="fas fa-shopping-cart" style="font-size:26px;"></i> 
+                Купить подписку
             </div>
             <div class="two-cols">
                 <div class="btn-tile" onclick="nav('p-setup')">
-                    <i class="fas fa-tools" style="color:var(--accent); font-size:22px; margin-bottom:8px;"></i>
+                    <i class="fas fa-tools" style="color:var(--neon-cyan); font-size:26px; margin-bottom:8px;"></i>
                     Установить VPN
                 </div>
                 <div class="btn-tile" onclick="nav('p-profile')">
-                    <i class="fas fa-user" style="color:var(--accent); font-size:22px; margin-bottom:8px;"></i>
+                    <i class="fas fa-user" style="color:var(--neon-pink); font-size:26px; margin-bottom:8px;"></i>
                     Личный кабинет
                 </div>
             </div>
             <div class="btn-tile" onclick="tg.openTelegramLink('https://t.me/port_support')">
-                <i class="fas fa-comment-dots" style="color:var(--accent)"></i> Поддержка
+                <i class="fas fa-comment-dots" style="color:var(--neon-cyan); font-size:24px;"></i> Поддержка
             </div>
             <div class="btn-tile" onclick="nav('p-ref')">
-                <i class="fas fa-users" style="color:var(--accent)"></i> Партнерская программа
+                <i class="fas fa-users" style="color:var(--neon-purple); font-size:24px;"></i> Партнерская программа
             </div>
         </div>
     </div>
 
+    <!-- ПЛАНЫ -->
     <div id="p-plans" class="page">
         <h2>Выберите тариф</h2>
         <div class="plan-card active">
             <div class="badge">🔥 ХИТ ПРОДАЖ</div>
             <div style="font-weight:700">3 месяца</div>
-            <div style="font-size:24px; font-weight:800; margin:10px 0">790 ₽</div>
-            <div style="font-size:11px; color:var(--hint)">~8.68 ₽ в день</div>
+            <div style="font-size:28px; font-weight:800; margin:12px 0">790 ₽</div>
+            <div style="font-size:12px; color:var(--hint)">\~8.68 ₽ в день</div>
         </div>
         <div class="plan-card">
             <div style="font-weight:700">1 месяц</div>
-            <div style="font-size:24px; font-weight:800; margin:10px 0">299 ₽</div>
-            <div style="font-size:11px; color:var(--hint)">~9.97 ₽ в день</div>
+            <div style="font-size:28px; font-weight:800; margin:12px 0">299 ₽</div>
+            <div style="font-size:12px; color:var(--hint)">\~9.97 ₽ в день</div>
         </div>
-        <button class="btn-action" onclick="tg.showAlert('Оплата СБП...')">Перейти к оплате</button>
+        <button class="btn-action" onclick="tg.showAlert('Оплата через СБП... 🚀')">Перейти к оплате</button>
     </div>
 
+    <!-- ЛИЧНЫЙ КАБИНЕТ -->
     <div id="p-profile" class="page">
         <h2>Личный кабинет</h2>
         <div class="status-box">
-            <div style="color:var(--hint); font-size:13px; margin-bottom:10px;">Статус подписки</div>
-            <span style="color:#10b981; font-weight:700; background:rgba(16,185,129,0.1); padding:5px 15px; border-radius:20px;">Действует</span>
-            <div style="margin-top:15px; font-weight:700;">до 26 февраля 2026</div>
+            <div style="color:var(--hint); font-size:14px; margin-bottom:12px;">Статус подписки</div>
+            <span style="color:#10b981; font-weight:700; background:rgba(16,185,129,0.15); padding:8px 22px; border-radius:9999px;">Действует</span>
+            <div style="margin-top:18px; font-weight:700; font-size:18px;">до 26 февраля 2026</div>
         </div>
         
-        <b style="font-size:14px;">Ваш ключ:</b>
+        <b style="font-size:15px;">Ваш ключ:</b>
         <div class="copy-field">
-            <span id="vpn-key" style="font-size:12px; opacity:0.6; overflow:hidden;">vless://uuid@77.221.154.23:443...</span>
-            <i class="fas fa-copy" style="color:var(--accent)" onclick="copyValue('vpn-key')"></i>
+            <span id="vpn-key" style="font-size:13px; opacity:0.85; word-break:break-all;">vless://uuid@77.221.154.23:443...</span>
+            <i class="fas fa-copy" style="color:var(--neon-cyan); font-size:24px;" onclick="copyValue('vpn-key')"></i>
         </div>
 
-        <div class="btn-tile" onclick="connectProxy()" style="background:rgba(36,129,204,0.1); border-color:rgba(36,129,204,0.3); margin-top:10px;">
-            <i class="fab fa-telegram" style="color:#2481cc; font-size:22px;"></i>
-            <div style="text-align:left"><div style="font-size:14px">Прокси Telegram</div><div style="font-size:10px; color:var(--hint)">Без VPN приложения</div></div>
+        <div class="btn-tile" onclick="connectProxy()" style="background:rgba(36,129,204,0.12); border-color:rgba(0,240,255,0.3);">
+            <i class="fab fa-telegram" style="color:#00f0ff; font-size:26px;"></i>
+            <div style="text-align:left">
+                <div style="font-size:15px">Прокси Telegram</div>
+                <div style="font-size:11px; color:var(--hint)">Без установки приложения</div>
+            </div>
         </div>
     </div>
 
+    <!-- УСТАНОВКА -->
     <div id="p-setup" class="page">
         <div id="s1" class="step-box active">
-            <i class="fas fa-download" style="font-size:50px; color:var(--accent); margin-bottom:20px;"></i>
-            <h2>Шаг 1</h2><p style="color:var(--hint)">Установите v2RayTun</p>
-            <button class="btn-action" onclick="nextS(2)">Далее</button>
+            <i class="fas fa-download" style="font-size:62px; color:var(--neon-cyan); margin-bottom:24px; filter: drop-shadow(0 0 20px currentColor);"></i>
+            <h2>Шаг 1</h2>
+            <p style="color:var(--hint); font-size:17px;">Установите приложение v2RayTun</p>
+            <button class="btn-action" onclick="nextS(2)">Далее →</button>
         </div>
         <div id="s2" class="step-box">
-            <i class="fas fa-plus-circle" style="font-size:50px; color:var(--accent); margin-bottom:20px;"></i>
-            <h2>Шаг 2</h2><p style="color:var(--hint)">Добавьте ключ в приложение</p>
-            <button class="btn-action" onclick="nextS(3)">Добавить</button>
+            <i class="fas fa-plus-circle" style="font-size:62px; color:var(--neon-pink); margin-bottom:24px; filter: drop-shadow(0 0 20px currentColor);"></i>
+            <h2>Шаг 2</h2>
+            <p style="color:var(--hint); font-size:17px;">Добавьте ключ в приложение</p>
+            <button class="btn-action" onclick="nextS(3)">Добавить ключ</button>
         </div>
         <div id="s3" class="step-box">
-            <i class="fas fa-check-circle" style="font-size:50px; color:#10b981; margin-bottom:20px;"></i>
-            <h2>Готово!</h2><p style="color:var(--hint)">Включите VPN в приложении</p>
+            <i class="fas fa-check-circle" style="font-size:62px; color:#10b981; margin-bottom:24px; filter: drop-shadow(0 0 20px #10b981);"></i>
+            <h2>Готово! 🔥</h2>
+            <p style="color:var(--hint); font-size:17px;">Включите VPN и наслаждайтесь</p>
             <button class="btn-action" onclick="closeAll()">Завершить</button>
         </div>
+    </div>
+
+    <!-- ПАРТНЁРКА -->
+    <div id="p-ref" class="page">
+        <h2>Партнёрская программа</h2>
+        <div class="status-box">
+            <p style="color:var(--hint); margin-bottom:20px;">Приглашай друзей и зарабатывай до <b style="color:var(--neon-pink);">30%</b> от их платежей навсегда</p>
+            <div class="copy-field">
+                <span id="ref-link" style="font-size:15px;">https://t.me/port_vpn_bot?start=REF12345</span>
+                <i class="fas fa-copy" style="color:var(--neon-cyan); font-size:24px;" onclick="copyValue('ref-link')"></i>
+            </div>
+        </div>
+        <button class="btn-action" onclick="tg.showAlert('Ссылка скопирована! Разошли друзьям 🚀')">Поделиться реферальной ссылкой</button>
     </div>
 
     <script>
@@ -177,17 +414,22 @@
 
         function nav(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            tg.BackButton.show();
-            tg.HapticFeedback.impactOccurred('medium');
+            const page = document.getElementById(id);
+            if (page) {
+                page.classList.add('active');
+                tg.BackButton.show();
+                tg.HapticFeedback.impactOccurred('heavy');
+            } else {
+                tg.showAlert('Страница скоро появится 🔥');
+            }
         }
-
-        tg.onEvent('backButtonClicked', closeAll);
 
         function closeAll() {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             tg.BackButton.hide();
         }
+
+        tg.onEvent('backButtonClicked', closeAll);
 
         function nextS(n) {
             document.querySelectorAll('.step-box').forEach(s => s.classList.remove('active'));
@@ -196,18 +438,28 @@
         }
 
         function copyValue(id) {
-            const text = document.getElementById(id).innerText;
-            tg.setClipboardText(text);
-            tg.showAlert("Скопировано!");
+            const el = document.getElementById(id);
+            if (el) {
+                tg.setClipboardText(el.innerText.trim());
+                tg.showAlert("✅ Скопировано в буфер обмена!");
+                tg.HapticFeedback.notificationOccurred('success');
+            }
         }
 
         function connectProxy() {
-            // Твои данные из 3X-UI (Inbound Shadowsocks)
             const server = "77.221.154.23";
             const port = "1080";
-            const secret = "твой_пароль_из_панели"; 
-            tg.openTelegramLink(`https://t.me/proxy?server=${server}&port=${port}&secret=${secret}`);
+            const secret = "твой_реальный_пароль_из_3X-UI"; // ← ЗАМЕНИ НА СВОЙ
+            const link = `https://t.me/proxy?server=\( {server}&port= \){port}&secret=${encodeURIComponent(secret)}`;
+            tg.openTelegramLink(link);
         }
+
+        // Глобальные функции для onclick
+        window.nav = nav;
+        window.closeAll = closeAll;
+        window.nextS = nextS;
+        window.copyValue = copyValue;
+        window.connectProxy = connectProxy;
     </script>
 </body>
 </html>
