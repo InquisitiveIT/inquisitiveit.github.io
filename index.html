@@ -3,272 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>СОПРОТИВЛЕНИЕ</title>
+    <title>Прокси</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-            --bg: #110011;
-            --card: rgba(30, 10, 40, 0.92);
-            --glow: #ff0044;
-            --accent: #00ffcc;
-            --rebel: #ff0044;
-            --text: #f0f0ff;
+            --bg: #f2f2f7;
+            --card: #ffffff;
+            --text: #1c1c1e;
+            --secondary: #8e8e93;
+            --accent: #007aff;
         }
 
         * { box-sizing: border-box; margin:0; padding:0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg);
             color: var(--text);
             height: 100vh;
             overflow: hidden;
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* === ФОН СОПРОТИВЛЕНИЯ === */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255, 0, 68, 0.3) 0%, transparent 60%),
-                radial-gradient(circle at 80% 70%, rgba(0, 255, 204, 0.25) 0%, transparent 60%);
-            animation: rebelPulse 25s ease infinite;
-            z-index: -3;
-            pointer-events: none;
-        }
-
-        .glitch-bg {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(transparent, rgba(255,0,68,0.08) 50%, transparent);
-            animation: glitch 8s linear infinite;
-            z-index: -2;
-            pointer-events: none;
-            opacity: 0.15;
-        }
-
-        @keyframes rebelPulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+            padding: 20px;
         }
 
         .container {
             width: 100%;
             max-width: 420px;
-            padding: 20px;
-            z-index: 10;
         }
 
-        .holo-card {
+        .card {
             background: var(--card);
-            backdrop-filter: blur(24px);
-            border: 3px solid var(--rebel);
-            border-radius: 32px;
-            padding: 32px 28px;
-            box-shadow: 
-                0 0 70px -10px var(--glow),
-                0 0 120px -30px var(--accent),
-                inset 0 0 60px -20px rgba(255,255,255,0.15);
-            position: relative;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             overflow: hidden;
+            padding: 24px;
         }
 
-        .holo-card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, 
-                transparent 25%,
-                rgba(255,255,255,0.2) 50%,
-                transparent 75%);
-            animation: scanline 3.5s linear infinite;
-        }
-
-        @keyframes scanline {
-            0%   { transform: translateX(-200%); }
-            100% { transform: translateX(300%); }
-        }
-
-        .logo {
-            font-size: 48px;
-            font-weight: 900;
-            letter-spacing: -4px;
+        .header {
             text-align: center;
-            background: linear-gradient(90deg, #ff0044, #00ffcc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 
-                0 0 20px var(--rebel),
-                0 0 40px var(--accent);
-            margin-bottom: 6px;
-            animation: glitchText 2s infinite alternate;
-        }
-
-        .tagline {
-            text-align: center;
-            font-size: 15px;
-            color: #ff99aa;
-            letter-spacing: 6px;
             margin-bottom: 24px;
+        }
+
+        .title {
+            font-size: 28px;
             font-weight: 700;
+            color: var(--text);
         }
 
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 0, 68, 0.15);
-            color: #ff0044;
-            padding: 8px 20px;
-            border-radius: 9999px;
-            font-size: 14px;
-            font-weight: 800;
-            margin: 0 auto 20px;
-            display: block;
-            width: fit-content;
-            box-shadow: 0 0 20px rgba(255,0,68,0.4);
+        .subtitle {
+            font-size: 17px;
+            color: var(--secondary);
+            margin-top: 4px;
         }
 
-        .proxy-info {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,0,68,0.3);
-            border-radius: 24px;
-            padding: 20px;
+        .info {
+            background: #f8f8f8;
+            border-radius: 12px;
+            padding: 16px;
             margin-bottom: 28px;
         }
 
-        .line {
+        .row {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 14px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid #e5e5ea;
         }
 
-        .line:last-child { border-bottom: none; }
+        .row:last-child {
+            border-bottom: none;
+        }
 
-        .label { 
-            font-size: 14px; 
-            color: #cc99bb; 
+        .label {
+            font-size: 15px;
+            color: var(--secondary);
             font-weight: 500;
         }
 
-        .value { 
-            font-family: monospace; 
-            font-size: 16px; 
-            font-weight: 700;
-            color: #fff;
+        .value {
+            font-size: 16px;
+            font-weight: 600;
+            font-family: monospace;
+            color: var(--text);
+            text-align: right;
+            max-width: 220px;
+            word-break: break-all;
         }
 
-        .btn {
+        .btn-main {
             width: 100%;
-            padding: 24px;
-            font-size: 21px;
-            font-weight: 900;
-            border-radius: 30px;
+            background: var(--accent);
+            color: white;
             border: none;
-            background: linear-gradient(90deg, #ff0044, #00ffcc);
-            color: #000;
-            box-shadow: 0 0 50px -10px var(--glow);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            border-radius: 14px;
+            padding: 18px;
+            font-size: 19px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
-            text-transform: uppercase;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            transition: all 0.2s ease;
         }
 
-        .btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 25px var(--accent);
+        .btn-main:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
         }
 
-        .copy-btn {
+        .btn-secondary {
+            width: 100%;
             background: transparent;
-            border: 2px solid var(--accent);
+            border: 2px solid #c7c7cc;
             color: var(--accent);
-            padding: 16px 32px;
-            border-radius: 9999px;
-            font-weight: 700;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin: 20px auto 0;
-            font-size: 15px;
+            justify-content: center;
+            gap: 8px;
         }
 
         .footer {
             text-align: center;
             font-size: 13px;
-            color: #996688;
-            margin-top: 30px;
-            opacity: 0.7;
+            color: var(--secondary);
+            margin-top: 32px;
+            opacity: 0.8;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #34c759;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
         }
     </style>
 </head>
 <body>
 
-    <div class="glitch-bg"></div>
-
     <div class="container">
-        <div class="holo-card">
-            
-            <!-- ЛОГО -->
-            <div class="logo">СОПРОТИВЛЕНИЕ</div>
-            <div class="tagline">ПРОТИВ РКН</div>
+        <div class="card">
 
-            <!-- СТАТУС -->
-            <div class="status">
-                <span style="animation: pulse 1.5s infinite;">●</span>
-                ЖИВО • 89.22.234.223
+            <!-- Заголовок -->
+            <div class="header">
+                <div class="title">Прокси</div>
+                <div class="subtitle">MTProto • Telegram</div>
             </div>
 
-            <!-- ИНФО ПРОКСИ -->
-            <div class="proxy-info">
-                <div class="line">
+            <!-- Статус -->
+            <div style="text-align:center; margin-bottom:20px; font-size:15px; color:#34c759;">
+                <span class="status-dot"></span>
+                Онлайн • 89.22.234.223
+            </div>
+
+            <!-- Информация -->
+            <div class="info">
+                <div class="row">
                     <span class="label">Сервер</span>
                     <span class="value">89.22.234.223</span>
                 </div>
-                <div class="line">
+                <div class="row">
                     <span class="label">Порт</span>
                     <span class="value">8888</span>
                 </div>
-                <div class="line">
+                <div class="row">
                     <span class="label">Секрет</span>
-                    <span id="secret-text" class="value" style="word-break:break-all; font-size:15px;">a1b2c3d4e5f67890123456789abcdef0</span>
+                    <span id="secret-text" class="value">a1b2c3d4e5f67890123456789abcdef0</span>
                 </div>
             </div>
 
-            <!-- ГЛАВНАЯ КНОПКА -->
-            <button onclick="connectProxy()" class="btn">
-                <i class="fas fa-shield-alt"></i>
-                ПОДКЛЮЧИТЬСЯ
+            <!-- Главная кнопка -->
+            <button onclick="connectProxy()" class="btn-main">
+                <i class="fas fa-plug" style="font-size:22px;"></i>
+                Подключить прокси
             </button>
 
-            <!-- КОПИРОВАТЬ ССЫЛКУ -->
-            <button onclick="copyLink()" class="copy-btn">
+            <!-- Кнопка копировать ссылку -->
+            <button onclick="copyLink()" class="btn-secondary">
                 <i class="fas fa-link"></i>
-                СКОПИРОВАТЬ ССЫЛКУ
+                Скопировать ссылку
             </button>
 
             <div class="footer">
-                Один клик — и блокировка РКН осталась в прошлом
+                Нажми кнопку — Telegram сам предложит включить прокси
             </div>
 
         </div>
@@ -284,28 +213,17 @@
         const PORT = "8888";
         const SECRET = "a1b2c3d4e5f67890123456789abcdef0";
 
-        const PROXY_LINK = `https://t.me/proxy?server=\( {SERVER}&port= \){PORT}&secret=${SECRET}`;
-
         function connectProxy() {
             tg.openTelegramLink(`tg://proxy?server=\( {SERVER}&port= \){PORT}&secret=${SECRET}`);
-            tg.HapticFeedback.impactOccurred('heavy');
+            tg.HapticFeedback.impactOccurred('medium');
         }
 
         function copyLink() {
-            tg.setClipboardText(PROXY_LINK);
-            tg.showAlert("✅ Ссылка скопирована! Отправь себе или друзьям");
+            const link = `https://t.me/proxy?server=\( {SERVER}&port= \){PORT}&secret=${SECRET}`;
+            tg.setClipboardText(link);
+            tg.showAlert("✅ Ссылка скопирована");
             tg.HapticFeedback.notificationOccurred('success');
         }
-
-        // Пасхалка: тройной тап по лого = «Мы не сдаёмся»
-        let taps = 0;
-        document.querySelector('.logo').addEventListener('click', () => {
-            taps++;
-            if (taps >= 3) {
-                tg.showAlert('Мы не сдаёмся. Никогда.');
-                taps = 0;
-            }
-        });
     </script>
 </body>
 </html>
