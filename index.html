@@ -29,34 +29,25 @@
             padding: 20px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 420px;
-        }
+        .container { width: 100%; max-width: 420px; }
 
         .card {
             background: var(--card);
             border-radius: 18px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-            padding: 24px;
+            padding: 28px 24px;
         }
 
-        .header {
+        .header { text-align: center; margin-bottom: 24px; }
+        .title { font-size: 28px; font-weight: 700; }
+        .subtitle { font-size: 17px; color: var(--secondary); margin-top: 4px; }
+
+        .status {
             text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .title {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .subtitle {
-            font-size: 17px;
-            color: var(--secondary);
-            margin-top: 4px;
+            color: #34c759;
+            font-size: 15px;
+            margin-bottom: 20px;
         }
 
         .info {
@@ -73,24 +64,14 @@
             padding: 14px 0;
             border-bottom: 1px solid #e5e5ea;
         }
+        .row:last-child { border-bottom: none; }
 
-        .row:last-child {
-            border-bottom: none;
-        }
-
-        .label {
-            font-size: 15px;
-            color: var(--secondary);
-            font-weight: 500;
-        }
-
-        .value {
-            font-size: 16px;
-            font-weight: 600;
-            font-family: monospace;
-            color: var(--text);
-            text-align: right;
-            max-width: 220px;
+        .label { font-size: 15px; color: var(--secondary); font-weight: 500; }
+        .value { 
+            font-size: 16px; 
+            font-weight: 600; 
+            font-family: monospace; 
+            text-align: right; 
             word-break: break-all;
         }
 
@@ -107,14 +88,9 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.3);
         }
-
-        .btn-main:active {
-            transform: scale(0.96);
-            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
-        }
+        .btn-main:active { transform: scale(0.96); }
 
         .btn-secondary {
             width: 100%;
@@ -137,17 +113,6 @@
             font-size: 13px;
             color: var(--secondary);
             margin-top: 32px;
-            opacity: 0.8;
-        }
-
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #34c759;
-            border-radius: 50%;
-            margin-right: 6px;
-            animation: pulse 2s infinite;
         }
     </style>
 </head>
@@ -156,19 +121,15 @@
     <div class="container">
         <div class="card">
 
-            <!-- Заголовок -->
             <div class="header">
                 <div class="title">Прокси</div>
-                <div class="subtitle">MTProto • Telegram</div>
+                <div class="subtitle">MTProto для Telegram</div>
             </div>
 
-            <!-- Статус -->
-            <div style="text-align:center; margin-bottom:20px; font-size:15px; color:#34c759;">
-                <span class="status-dot"></span>
-                Онлайн • 89.22.234.223
+            <div class="status">
+                ● Онлайн • 89.22.234.223
             </div>
 
-            <!-- Информация -->
             <div class="info">
                 <div class="row">
                     <span class="label">Сервер</span>
@@ -184,20 +145,18 @@
                 </div>
             </div>
 
-            <!-- Главная кнопка -->
             <button onclick="connectProxy()" class="btn-main">
-                <i class="fas fa-plug" style="font-size:22px;"></i>
+                <i class="fas fa-plug"></i>
                 Подключить прокси
             </button>
 
-            <!-- Кнопка копировать ссылку -->
             <button onclick="copyLink()" class="btn-secondary">
                 <i class="fas fa-link"></i>
                 Скопировать ссылку
             </button>
 
             <div class="footer">
-                Нажми кнопку — Telegram сам предложит включить прокси
+                Нажми кнопку — Telegram предложит включить прокси
             </div>
 
         </div>
@@ -208,20 +167,21 @@
         tg.ready();
         tg.expand();
 
-        // === ДАННЫЕ ПРОКСИ ===
         const SERVER = "89.22.234.223";
         const PORT = "8888";
         const SECRET = "a1b2c3d4e5f67890123456789abcdef0";
 
+        const PROXY_URL = `https://t.me/proxy?server=\( {SERVER}&port= \){PORT}&secret=${SECRET}`;
+
         function connectProxy() {
-            tg.openTelegramLink(`tg://proxy?server=\( {SERVER}&port= \){PORT}&secret=${SECRET}`);
+            tg.showAlert("Открываем подключение…");   // ← для отладки
+            tg.openTelegramLink(PROXY_URL);
             tg.HapticFeedback.impactOccurred('medium');
         }
 
         function copyLink() {
-            const link = `https://t.me/proxy?server=\( {SERVER}&port= \){PORT}&secret=${SECRET}`;
-            tg.setClipboardText(link);
-            tg.showAlert("✅ Ссылка скопирована");
+            tg.setClipboardText(PROXY_URL);
+            tg.showAlert("✅ Ссылка скопирована в буфер обмена");
             tg.HapticFeedback.notificationOccurred('success');
         }
     </script>
